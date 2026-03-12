@@ -20,6 +20,14 @@ const app = {
   timerRunning: false,
   timeLeft: 1500,
   searchQuery: '',
+  cardMap: {},
+  catMap: {},
+
+  // Anki Session State
+  currentAnkiTopicId: null,
+  currentAnkiCards: [],
+  currentAnkiIndex: 0,
+  ankiCorrectCount: 0,
 
   quotes: [
     '„Kein Backup, kein Mitleid.“',
@@ -72,6 +80,11 @@ const app = {
         if (infoBox) infoBox.classList.add('hidden');
       }
 
+      if (localStorage.getItem('ap2_release_banner_dismissed_v2')) {
+        const banner = document.getElementById('releaseBanner');
+        if (banner) banner.classList.add('hidden');
+      }
+
       if (!localStorage.getItem('ap2_welcome_dismissed_v2')) {
         setTimeout(() => {
           const welcomeModal = document.getElementById('welcomeModal');
@@ -89,7 +102,8 @@ const app = {
       this.renderActivityGraph();
       this.updateCountdown();
       setInterval(() => this.updateCountdown(), 60000);
-      this.render();
+      this.buildDOM();
+      this.applyFilter();
     } catch (err) {
       console.error('Critical Init Error:', err);
     } finally {
@@ -113,6 +127,12 @@ const app = {
     localStorage.setItem('ap2_infobox_dismissed', 'true');
   },
 
+  hideReleaseBanner() {
+    const el = document.getElementById('releaseBanner');
+    if (el) el.classList.add('hidden');
+    localStorage.setItem('ap2_release_banner_dismissed_v2', 'true');
+  },
+
   getState(id) {
     if (!this.state[id])
       this.state[id] = {
@@ -121,9 +141,118 @@ const app = {
         stars: 0,
         reps: [false, false, false],
         last: null,
+        ankiStats: { total: 0, correct: 0, sessions: 0 }
       };
+    
+    // Fallback falls ankiStats in bestehenden Daten fehlt
+    if (!this.state[id].ankiStats) {
+      this.state[id].ankiStats = { total: 0, correct: 0, sessions: 0 };
+    }
+    
     return this.state[id];
   },
+
+  startTopic(id) {
+    const topic = this.findTopic(id);
+    if (!topic || !topic.sub || topic.sub.length === 0) return;
+
+    const s = this.getState(id);
+    s.ankiStats.sessions++;
+    this.save();
+
+    // Session Setup
+    this.currentAnkiTopicId = id;
+    this.currentAnkiCards = [...topic.sub].sort(() => Math.random() - 0.5);
+    this.currentAnkiIndex = 0;
+    this.ankiCorrectCount = 0;
+
+    // UI Setup
+    document.getElementById('ankiTopicTitle').textContent = topic.title;
+    const modal = document.getElementById('ankiModal');
+    const container = document.getElementById('ankiContainer');
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+      container.classList.remove('scale-95', 'opacity-0');
+      container.classList.add('scale-100', 'opacity-100');
+    }, 10);
+
+    this.showAnkiCard();
+  },
+
+  showAnkiCard() {
+    const card = this.currentAnkiCards[this.currentAnkiIndex];
+    const total = this.currentAnkiCards.length;
+
+    document.getElementById('ankiCardCount').textContent = `Karte ${this.currentAnkiIndex + 1} von ${total}`;
+    document.getElementById('ankiProgress').style.width = `${((this.currentAnkiIndex) / total) * 100}%`;
+
+    document.getElementById('ankiQuestion').textContent = card;
+    document.getElementById('ankiAnswer').textContent = "Hast du diesen Punkt verstanden und kannst ihn erklären?";
+
+    document.getElementById('ankiQuestionArea').classList.remove('hidden');
+    document.getElementById('ankiAnswerArea').classList.add('hidden');
+    document.getElementById('ankiSummaryArea').classList.add('hidden');
+  },
+
+  showAnkiAnswer() {
+    document.getElementById('ankiQuestionArea').classList.add('hidden');
+    document.getElementById('ankiAnswerArea').classList.remove('hidden');
+  },
+
+  nextAnki(isCorrect) {
+    const s = this.getState(this.currentAnkiTopicId);
+    s.ankiStats.total++;
+    if (isCorrect) {
+      s.ankiStats.correct++;
+      this.ankiCorrectCount++;
+    }
+    this.save();
+
+    this.currentAnkiIndex++;
+    if (this.currentAnkiIndex < this.currentAnkiCards.length) {
+      this.showAnkiCard();
+    } else {
+      this.showAnkiSummary();
+    }
+  },
+
+  showAnkiSummary() {
+    document.getElementById('ankiProgress').style.width = '100%';
+    document.getElementById('ankiQuestionArea').classList.add('hidden');
+    document.getElementById('ankiAnswerArea').classList.add('hidden');
+    document.getElementById('ankiSummaryArea').classList.remove('hidden');
+
+    const total = this.currentAnkiCards.length;
+    const pct = Math.round((this.ankiCorrectCount / total) * 100);
+
+    document.getElementById('summaryCorrect').textContent = this.ankiCorrectCount;
+    document.getElementById('summaryPercent').textContent = `${pct}%`;
+
+    if (pct === 100 && typeof confetti === 'function') {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#34d399']
+      });
+    }
+  },
+
+  closeAnki() {
+    const modal = document.getElementById('ankiModal');
+    const container = document.getElementById('ankiContainer');
+
+    container.classList.remove('scale-100', 'opacity-100');
+    container.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 300);
+
+    this.updateStats();
+  },
+
 
   trackActivity() {
     if (!this.state.activity) this.state.activity = {};
@@ -260,7 +389,7 @@ const app = {
   // --- INTERACTION ---
   search() {
     this.searchQuery = document.getElementById('searchInput').value.toLowerCase();
-    this.render();
+    this.applyFilter();
   },
 
   toggleTopic(id, checked, element) {
@@ -440,7 +569,7 @@ const app = {
         b.classList.add('text-dark-muted', 'border-transparent');
       }
     });
-    this.render();
+    this.applyFilter();
   },
 
   findTopic(id) {
@@ -481,7 +610,8 @@ const app = {
         }
       });
       this.save();
-      this.render();
+      this.buildDOM();
+      this.applyFilter();
     }
   },
 
@@ -634,98 +764,47 @@ const app = {
     }
   },
 
-  render() {
+  // --- RENDER ENGINE v2.0 ---
+  buildDOM() {
     const list = document.getElementById('contentList');
     if (!list) return;
     list.innerHTML = '';
-    let hasVisible = false;
-
-    const activityDates = Object.keys(this.state.activity || {});
-    if (activityDates.length > 0) {
-      const badge = document.getElementById('streakBadge');
-      if (badge) badge.classList.remove('hidden');
-      const streakCount = document.getElementById('streakCount');
-      if (streakCount) streakCount.textContent = activityDates.length;
-    }
+    this.cardMap = {};
+    this.catMap = {};
 
     AP2_DATA.forEach((cat) => {
-      const visibleTopics = cat.topics.filter((t) => {
-        const s = this.getState(t.id);
-        let matchesSearch = true;
-        if (this.searchQuery) {
-          matchesSearch =
-            t.title.toLowerCase().includes(this.searchQuery) ||
-            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
-        }
-        if (!matchesSearch) return false;
-        if (this.filter === 'open' && s.done) return false;
-        if (this.filter === 'high' && t.weight < 4) return false;
-        return true;
-      });
-
-      if (visibleTopics.length === 0) return;
-      hasVisible = true;
-
       const catNode = document.getElementById('tpl-category').content.cloneNode(true);
-      catNode.querySelector('.cat-title').textContent = cat.name;
-      const descEl = catNode.querySelector('.cat-desc');
+      const catEl = catNode.querySelector('.category-block');
+      
+      catEl.querySelector('.cat-title').textContent = cat.name;
+      const descEl = catEl.querySelector('.cat-desc');
       if (descEl) descEl.textContent = cat.desc;
-      catNode.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
+      catEl.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
 
-      // Icon setzen
-      const iconContainer = catNode.querySelector('.cat-icon');
+      const iconContainer = catEl.querySelector('.cat-icon');
       if (iconContainer && cat.icon) {
         iconContainer.innerHTML = `<i class="${cat.icon}"></i>`;
       }
 
-      const container = catNode.querySelector('.cat-topics');
+      const container = catEl.querySelector('.cat-topics');
 
-      visibleTopics.forEach((t) => {
+      cat.topics.forEach((t) => {
         const s = this.getState(t.id);
         const node = document.getElementById('tpl-topic').content.cloneNode(true);
         const card = node.querySelector('.topic-card');
         card.dataset.id = t.id;
 
-        if (
-          this.openTopics.has(t.id) ||
-          (this.searchQuery && t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery)))
-        ) {
-          node.querySelector('.topic-body').classList.add('open');
-          const icon = node.querySelector('.accordion-icon');
-          icon.style.transform = 'rotate(180deg)';
-          icon.classList.add('bg-dark-accent', 'text-white');
-          icon.classList.remove('bg-dark-bg/50', 'text-dark-muted');
-        }
-
         node.querySelector('.topic-title').textContent = t.title;
-        node.querySelector(
-          '.time-label'
-        ).innerHTML = `<i class="fa-regular fa-clock mr-1"></i>~${t.time} min`;
-
-        const repIndicator = node.querySelector('.rep-indicator');
-        const repCount = s.reps.filter(Boolean).length;
-        if (repCount > 0) {
-          repIndicator.textContent = repCount + 'x Wiederholt';
-          repIndicator.classList.remove('hidden');
-          if (repCount === 3)
-            repIndicator.classList.add(
-              'bg-dark-success/20',
-              'text-dark-success',
-              'border-dark-success/30'
-            );
-        }
+        node.querySelector('.time-label').innerHTML = `<i class="fa-regular fa-clock mr-1"></i>~${t.time} min`;
 
         const googleLinks = node.querySelectorAll('.google-link, .google-link-mobile');
         googleLinks.forEach((gl) => {
-          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
-            t.title
-          )}`;
+          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
         });
-        const duckduckgoLink = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
-        duckduckgoLink.forEach((dl) => {
-          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
-              t.title
-          )}`;
+        
+        const duckduckgoLinks = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
+        duckduckgoLinks.forEach((dl) => {
+          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
         });
 
         const wb = node.querySelector('.weight-badge');
@@ -757,14 +836,10 @@ const app = {
           li.className = 'flex items-start gap-3 text-xs text-dark-muted group/item transition-all';
           li.innerHTML = `
                   <div class="shrink-0 flex items-center justify-center w-5 h-5 relative">
-                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${
-                        isDone ? 'checked' : ''
-                      }>
+                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${isDone ? 'checked' : ''}>
                       <i class="fa-solid fa-check text-[10px] text-white absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
                   </div>
-                  <span class="transition-colors cursor-pointer pt-0.5 ${
-                    isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'
-                  }">${sub}</span>
+                  <span class="transition-colors cursor-pointer pt-0.5 ${isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'}">${sub}</span>
                 `;
           const subCb = li.querySelector('input');
           subCb.onclick = (e) => e.stopPropagation();
@@ -783,8 +858,64 @@ const app = {
         });
 
         container.appendChild(node);
+        this.cardMap[t.id] = card;
+        this.updateRepHeader(card, s.reps);
       });
-      list.appendChild(catNode);
+
+      this.catMap[cat.id] = catEl;
+      list.appendChild(catEl);
+    });
+  },
+
+  applyFilter() {
+    let hasVisible = false;
+    const activityDates = Object.keys(this.state.activity || {});
+    const badge = document.getElementById('streakBadge');
+    if (badge) {
+        if (activityDates.length > 0) {
+            badge.classList.remove('hidden');
+            document.getElementById('streakCount').textContent = activityDates.length;
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
+    AP2_DATA.forEach((cat) => {
+      let catVisible = false;
+      cat.topics.forEach((t) => {
+        const s = this.getState(t.id);
+        const card = this.cardMap[t.id];
+        
+        let matchesSearch = true;
+        if (this.searchQuery) {
+          matchesSearch = t.title.toLowerCase().includes(this.searchQuery) || 
+                          t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
+        }
+
+        let matchesFilter = true;
+        if (this.filter === 'open' && s.done) matchesFilter = false;
+        if (this.filter === 'high' && t.weight < 4) matchesFilter = false;
+
+        const visible = matchesSearch && matchesFilter;
+        card.style.display = visible ? 'block' : 'none';
+        
+        if (visible) {
+            catVisible = true;
+            hasVisible = true;
+            
+            // Auto-open if searching in subtasks
+            const subMatch = this.searchQuery && !t.title.toLowerCase().includes(this.searchQuery) && 
+                             t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
+            
+            if (subMatch || this.openTopics.has(t.id)) {
+                const body = card.querySelector('.topic-body');
+                if (!body.classList.contains('open')) {
+                    this.toggleAccordion(card.querySelector('.header-area'));
+                }
+            }
+        }
+      });
+      this.catMap[cat.id].style.display = catVisible ? 'block' : 'none';
     });
 
     const emptyState = document.getElementById('emptyState');
