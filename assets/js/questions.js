@@ -895,6 +895,172 @@ window.ANKI_QUESTIONS = {
     { id: '2.3.6_10', q: 'Was beschreibt the Begriff "Topology Discovery"?', a: 'Das automatisierte Erkennen und Zeichnen der Netzwerktopologie durch spezielle Software (z.B. mittels LLDP oder SNMP).' },
     ],
 
+  // --- MODUL 3: BERATEN & QUALITÄTSSICHERUNG (Ziel: 130 Karten) ---
+
+  // Topic 3.1: Projektmanagement & Beratung (60 Karten)
+  '3.1': [
+    // --- 3.1.1 Methodik: Wasserfall, V-Modell, Agil (10 Karten) ---
+    { id: '3.1.1_1', q: 'Was ist das Hauptmerkmal des Wasserfallmodells?', a: 'Linearer, sequenzieller Ablauf in festen Phasen. Eine Phase muss beendet sein, bevor the nächste beginnt (Dokumentationsfokus).' },
+    { id: '3.1.1_2', q: 'Wofür stehen the beiden Schenkel des V-Modells?', a: 'Links: Spezifikation (Anforderungen/Entwurf). Rechts: Verifikation (Teststufen). Mitte: Realisierung.' },
+    { id: '3.1.1_3', q: 'Nenne the drei Rollen in einem Scrum-Team.', a: '1. Product Owner (PO), 2. Scrum Master (SM), 3. Developer (Entwicklungsteam).' },
+    { id: '3.1.1_4', q: 'Was ist das Ziel des "Daily Scrum" Meetings?', a: 'Täglicher Austausch des Teams (max. 15 Min), um Fortschritte zu besprechen, den nächsten Tag zu planen und Hindernisse zu identifizieren.' },
+    { id: '3.1.1_5', q: 'Was beschreibt the "Definition of Done" (DoD)?', a: 'Eine Checkliste von Qualitätskriterien, the ein Inkrement erfüllen muss, um als fertig und auslieferbar zu gelten.' },
+    { id: '3.1.1_6', q: 'Was ist der Unterschied zwischen einem Inkrement und einem Sprint?', a: 'Sprint: Der Zeitraum der Entwicklung (z.B. 2-4 Wochen). Inkrement: Das funktionale, potenziell auslieferbare Ergebnis am Ende des Sprints.' },
+    { id: '3.1.1_7', q: 'Welche Aufgabe hat der "Scrum Master"?', a: 'Er ist der "Servant Leader". Er sorgt für the Einhaltung der Scrum-Regeln, beseitigt Hindernisse und schützt das Team vor Störungen von außen.' },
+    { id: '3.1.1_8', q: 'Was versteht man unter "Agiler Softwareentwicklung"?', a: 'Ein iterativer Ansatz, der Flexibilität, Kunden-Feedback und funktionierende Software gegenüber starren Plänen und Doku priorisiert.' },
+    { id: '3.1.1_9', q: 'Nenne einen Vorteil des Wasserfallmodells.', a: 'Hohe Planungssicherheit, klare Meilensteine und gute Dokumentation (gut geeignet für Projekte mit stabilen Anforderungen).' },
+    { id: '3.1.1_10', q: 'Was ist ein "Backlog" in Scrum?', a: 'Eine nach Priorität sortierte Liste aller gewünschten Anforderungen und Funktionen für das Produkt (Product Backlog) oder den aktuellen Sprint (Sprint Backlog).' },
+
+    // --- 3.1.2 Netzplantechnik: FAZ, FEZ, SAZ, SEZ (10 Karten) ---
+    { id: '3.1.2_1', q: 'Was bedeutet the Abkürzung FAZ im Netzplan?', a: 'Frühestmöglicher Anfangszeitpunkt eines Vorgangs.' },
+    { id: '3.1.2_2', q: 'Wie berechnet man den FEZ (Frühestmöglichen Endzeitpunkt)?', a: 'FEZ = FAZ + Dauer des Vorgangs.' },
+    { id: '3.1.2_3', q: 'Was beschreibt der SAZ (Spätestmöglicher Anfangszeitpunkt)?', a: 'SAZ = SEZ - Dauer. Der Zeitpunkt, zu dem ein Vorgang spätestens beginnen muss, ohne das Projektende zu verzögern.' },
+    { id: '3.1.2_4', q: 'Was versteht man unter dem "Kritischen Weg" (Critical Path)?', a: 'Die Kette von Vorgängen, bei denen der Gesamtpuffer Null ist. Verzögert sich ein Vorgang hier, verzögert sich das gesamte Projekt.' },
+    { id: '3.1.2_5', q: 'Wie berechnet man den Gesamtpuffer (GP)?', a: 'GP = SAZ - FAZ (oder SEZ - FEZ). Gibt an, um wie viel Zeit ein Vorgang verschoben werden kann, ohne das Projektende zu gefährden.' },
+    { id: '3.1.2_6', q: 'Was ist the Unterschied zwischen dem Freien Puffer (FP) und dem Gesamtpuffer (GP)?', a: 'GP beeinflusst das Projektende. FP ist the Zeit, um the ein Vorgang verschoben werden kann, ohne den FAZ des direkten Nachfolgers zu beeinflussen.' },
+    { id: '3.1.2_7', q: 'Wie findet man the Root-Bridge (Anfang) im Netzplan beim Vorwärtsrechnen?', a: 'Man startet beim ersten Vorgang mit FAZ = 0.' },
+    { id: '3.1.2_8', q: 'Was muss man bei der Rückwärtsrechnung beachten, wenn ein Vorgang mehrere Nachfolger hat?', a: 'Man wählt beim Rückwärtsrechnen den kleinsten SAZ der Nachfolger als SEZ für den aktuellen Vorgang.' },
+    { id: '3.1.2_9', q: 'Welche Informationen enthält ein "Knoten" in einem Standard-Netzplan?', a: 'Vorgangsname, Dauer, FAZ, FEZ, SAZ, SEZ, GP und FP.' },
+    { id: '3.1.2_10', q: 'Warum ist Netzplantechnik für FISIs wichtig?', a: 'Zur Planung komplexer IT-Infrastrukturprojekte, zur Identifikation von Zeitrisiken und zur effizienten Ressourcenplanung.' },
+
+    // --- 3.1.3 Pufferzeiten: GP & FP (10 Karten) ---
+    { id: '3.1.3_1', q: 'Definition des Gesamtpuffers (GP)?', a: 'Die Zeitspanne, um the ein Vorgang gegenüber seinem frühestmöglichen Anfang verschoben werden kann, ohne das Projektende zu gefährden.' },
+    { id: '3.1.3_2', q: 'Definition des Freien Puffers (FP)?', a: 'Die Zeitspanne, um the ein Vorgang verschoben werden kann, ohne den frühestmöglichen Anfang (FAZ) des direkten Nachfolgers zu beeinflussen.' },
+    { id: '3.1.3_3', q: 'Wie berechnet man den Freien Puffer (FP) eines Vorgangs?', a: 'FP = FAZ(Nachfolger) - FEZ(aktueller Vorgang). Falls mehrere Nachfolger existieren, wird der kleinste FAZ genommen.' },
+    { id: '3.1.3_4', q: 'Kann der Freie Puffer (FP) größer sein als der Gesamtpuffer (GP)?', a: 'Nein, der FP ist immer kleiner oder gleich dem GP.' },
+    { id: '3.1.3_5', q: 'Was bedeutet es für einen Vorgang, wenn GP = 0 ist?', a: 'Der Vorgang liegt auf dem kritischen Weg. Jede Verzögerung führt sofort zu einer Verschiebung des Projektendes.' },
+    { id: '3.1.3_6', q: 'Warum ist the Unterscheidung zwischen GP und FP für Projektleiter wichtig?', a: 'Sie zeigt the Flexibilität im Zeitplan. GP zeigt the Sicherheit zum Projektende, FP the Unabhängigkeit gegenüber dem nächsten Arbeitsschritt.' },
+    { id: '3.1.3_7', q: 'Was passiert mit dem Gesamtpuffer (GP) nachfolgender Vorgänge, wenn ein Vorgang seinen GP komplett aufbraucht?', a: 'Der GP der nachfolgenden Vorgänge auf diesem Pfad verringert sich entsprechend (bis auf Null).' },
+    { id: '3.1.3_8', q: 'Welchen GP hat der letzte Vorgang in einem abgeschlossenen Netzplan standardmäßig?', a: 'In der Regel Null, da er das Projektende definiert.' },
+    { id: '3.1.3_9', q: 'Was ist the "Vorwärtsrechnung" im Netzplan?', a: 'Das Berechnen der frühestmöglichen Zeitpunkte (FAZ, FEZ) vom Projektstart bis zum Projektende.' },
+    { id: '3.1.3_10', q: 'Was ist the "Rückwärtsrechnung" im Netzplan?', a: 'Das Berechnen der spätestmöglichen Zeitpunkte (SAZ, SEZ) vom Projektende zurück zum Projektstart.' },
+
+    // --- 3.1.4 Projektstrukturplan: PSP (10 Karten) ---
+    { id: '3.1.4_1', q: 'Was ist the Hauptzweck eines Projektstrukturplans (PSP)?', a: 'Die vollständige, hierarchische Darstellung aller wesentlichen Elemente (Aufgaben) eines Projekts zur Schaffung von Transparenz und Struktur.' },
+    { id: '3.1.4_2', q: 'Nenne the drei gängigen Gliederungsprinzipien eines PSP.', a: '1. Funktionsorientiert (Tätigkeiten), 2. Objektorientiert (Bauteile/Komponenten), 3. Phasenorientiert (Projektablauf).' },
+    { id: '3.1.4_3', q: 'Was beschreibt the Begriff "Arbeitspaket" im PSP?', a: 'Die kleinste, nicht weiter zu unterteilende Einheit im PSP, the in sich abgeschlossen ist und einem Verantwortlichen zugeordnet werden kann.' },
+    { id: '3.1.4_4', q: 'Was ist the Unterschied zwischen einem PSP und einem Netzplan?', a: 'PSP zeigt "Was" alles getan werden muss (hierarchisch). Netzplan zeigt "Wann" und in welcher logischen Reihenfolge es getan wird (zeitlich).' },
+    { id: '3.1.4_5', q: 'Welche Ebene im PSP steht ganz oben?', a: 'Das Gesamtprojekt (Wurzelelement).' },
+    { id: '3.1.4_6', q: 'Zweck der Kodierung (Nummerierung) im PSP (z.B. 1.2.1)?', a: 'Eindeutige Identifizierung der Aufgaben und Darstellung der hierarchischen Zugehörigkeit.' },
+    { id: '3.1.4_7', q: 'Warum sollte ein PSP vollständig sein (100%-Regel)?', a: 'Damit keine Aufgaben vergessen werden und the Aufwands-, Kosten- und Zeitplanung auf einer soliden Basis steht.' },
+    { id: '3.1.4_8', q: 'Was versteht man unter der "Ablauforganisation" im Projektmanagement?', a: 'Die zeitliche und logische Abfolge der Arbeitsschritte (wird oft aus dem PSP abgeleitet und im Netzplan visualisiert).' },
+    { id: '3.1.4_9', q: 'Welche Information gehört typischerweise in eine Arbeitspaket-Beschreibung?', a: 'Ziele, Inhalte, Verantwortliche, Ressourcen, geschätzter Aufwand, Start- und Endtermine.' },
+    { id: '3.1.4_10', q: 'Unterschied Top-Down vs. Bottom-Up Erstellung des PSP?', a: 'Top-Down: Vom Ganzen ins Detail (Verschachtelung). Bottom-Up: Sammeln aller Einzelaufgaben und anschließendes Gruppieren.' },
+
+    // --- 3.1.5 Präsentation & Medieneinsatz (10 Karten) ---
+    { id: '3.1.5_1', q: 'Welche Rolle spielt the "Zielgruppenanalyse" vor einer Präsentation?', a: 'Sie bestimmt the Tiefe und Sprache des Inhalts (z.B. technisches Detail für Admins vs. Nutzenfokus für Geschäftsführer).' },
+    { id: '3.1.5_2', q: 'Nenne the "7-mal-7-Regel" für Präsentationsfolien.', a: 'Maximal 7 Zeilen pro Folie und maximal 7 Wörter pro Zeile, um the Lesbarkeit und Fokussierung zu gewährleisten.' },
+    { id: '3.1.5_3', q: 'Was ist der Vorteil von Visualisierungen (Bilder, Diagramme) gegenüber reinem Text?', a: 'Informationen werden schneller aufgenommen, bleiben länger im Gedächtnis und lockern the Präsentation auf (Bildüberlegenheitseffekt).' },
+    { id: '3.1.5_4', q: 'Warum ist "Lampenfieber" vor der Abschlusspräsentation normal und wie geht man damit um?', a: 'Es ist eine natürliche Stressreaktion. Abhilfe: Gute Vorbereitung, Atemübungen, positive Visualisierung und ein sicherer Einstieg.' },
+    { id: '3.1.5_5', q: 'Welchen Zweck hat ein "Handout" bei einer Präsentation?', a: 'Es dient den Zuhörern als Gedächtnisstütze für the Zeit nach der Präsentation und enthält oft weiterführende Details oder Quellen.' },
+    { id: '3.1.5_6', q: 'Was beschreibt the "Medienmix" in einer Präsentation?', a: 'Der abwechslungsreiche Einsatz verschiedener Medien (z.B. Beamer, Flipchart, Whiteboard, Live-Demo), um the Aufmerksamkeit hochzuhalten.' },
+    { id: '3.1.5_7', q: 'Wie sollte the Körpersprache während einer Präsentation idealerweise sein?', a: 'Offene Haltung, Blickkontakt zum Publikum, angemessene Gestik zur Unterstützung des Gesagten und fester Stand.' },
+    { id: '3.1.5_8', q: 'Was ist der Unterschied zwischen einer informierenden und einer überzeugenden Präsentation?', a: 'Informierend: Sachliche Wissensvermittlung. Überzeugend: Beeinflussung der Meinung oder Herbeiführen einer Entscheidung (z.B. Investitionsfreigabe).' },
+    { id: '3.1.5_9', q: 'Warum ist the "Sicherung der Technik" (Backup-Plan) vor der Präsentation wichtig?', a: 'Um bei Ausfall von Beamer, Laptop oder Internet handlungsfähig zu bleiben (z.B. PDF auf USB-Stick, ausgedruckte Notizen).' },
+    { id: '3.1.5_10', q: 'Was versteht man unter der "AIDA-Formel" in Bezug auf Präsentationen?', a: 'Attention (Aufmerksamkeit erregen), Interest (Interesse wecken), Desire (Wunsch wecken), Action (Handlungsaufforderung).' },
+
+    // --- 3.1.6 Kundenberatung & Bedarfsanalyse (10 Karten) ---
+    { id: '3.1.6_1', q: 'Was ist das Ziel der Bedarfsanalyse im Kundengespräch?', a: 'Herauszufinden, was der Kunde wirklich benötigt (Probleme, Ziele, Wünsche), um eine passgenaue Lösung anzubieten.' },
+    { id: '3.1.6_2', q: 'Unterschied zwischen offenen und geschlossenen Fragen?', a: 'Offen (W-Fragen): Animieren zum Erzählen ("Wie nutzen Sie...?"). Geschlossen: Erfordern nur Ja/Nein ("Haben Sie ein Backup?").' },
+    { id: '3.1.6_3', q: 'Was gehört in ein professionelles "Angebot"?', a: 'Leistungsbeschreibung, Preise, Liefertermine, Zahlungsbedingungen und Bezugnahme auf the AGB.' },
+    { id: '3.1.6_4', q: 'Wie geht man professionell mit Einwänden des Kunden um (Einwandbehandlung)?', a: 'Zuhören, Verständnis zeigen, the wahren Grund hinter dem Einwand finden und Nutzenargumente liefern (z.B. Referenz-Methode, Bumerang-Methode).' },
+    { id: '3.1.6_5', q: 'Was beschreibt the Begriff "After-Sales-Service"?', a: 'Die Betreuung des Kunden nach dem Kauf (z.B. Support, Schulungen, Wartung), um the Kundenzufriedenheit und langfristige Bindung zu sichern.' },
+    { id: '3.1.6_6', q: 'Warum ist the Protokollierung von Kundengesprächen wichtig?', a: 'Zur Dokumentation getroffener Vereinbarungen, zur Vorbereitung von Folgeterminen und als rechtliche Absicherung.' },
+    { id: '3.1.6_7', q: 'Was versteht man unter "Up-Selling" im Beratungskontext?', a: 'Dem Kunden eine höherwertige, teurere Version eines Produkts anbieten, the seinen Bedarf noch besser deckt.' },
+    { id: '3.1.6_8', q: 'Was versteht man unter "Cross-Selling" (Querverkauf)?', a: 'Dem Kunden ergänzende Produkte oder Dienstleistungen passend zum Hauptkauf anbieten (z.B. Servicevertrag zum Serverkauf).' },
+    { id: '3.1.6_9', q: 'Zweck einer "Einweisung" des Kunden in ein neues System?', a: 'Sicherstellen, dass der Kunde the Lösung effektiv nutzen kann, Fehlbedienungen vermeiden und the Akzeptanz der neuen Lösung erhöhen.' },
+    { id: '3.1.6_10', q: 'Was ist eine "Nutzwertargumentation"?', a: 'Dem Kunden nicht nur technische Merkmale aufzählen, sondern den konkreten Nutzen (Vorteil) für sein Unternehmen erklären (Merkmal -> Vorteil -> Nutzen).' },
+  ],
+
+  // Topic 3.2: Qualität & IT-Sicherheit (Methodik) (70 Karten)
+  '3.2': [
+    // --- 3.2.1 Qualitätsmanagement: PDCA & ISO 9001 (10 Karten) ---
+    { id: '3.2.1_1', q: 'Erkläre den PDCA-Zyklus (Deming-Kreis).', a: 'Plan (Planen), Do (Umsetzen), Check (Überprüfen), Act (Verbessern/Standardisieren). Ein iteratives Modell zur kontinuierlichen Prozessverbesserung.' },
+    { id: '3.2.1_2', q: 'Was ist das Hauptziel des Qualitätsmanagements (QM)?', a: 'Die systematische Sicherstellung und Verbesserung der Qualität von Produkten oder Dienstleistungen zur Steigerung der Kundenzufriedenheit.' },
+    { id: '3.2.1_3', q: 'Wofür steht the Abkürzung KVP?', a: 'Kontinuierlicher Verbesserungsprozess. Das ständige Bestreben, Prozesse in kleinen Schritten immer weiter zu optimieren.' },
+    { id: '3.2.1_4', q: 'Was beschreibt the Norm ISO 9001?', a: 'Den weltweit anerkannten Standard für Anforderungen an ein Qualitätsmanagementsystem (QMS) in Unternehmen.' },
+    { id: '3.2.1_5', q: 'Was ist the Unterschied zwischen Qualitätssicherung (QS) und Qualitätsmanagement (QM)?', a: 'QM ist das übergeordnete System/Strategie. QS umfasst the konkreten operativen Maßnahmen (z.B. Tests), um the Qualitätsanforderungen zu erfüllen.' },
+    { id: '3.2.1_6', q: 'Was versteht man unter einem "Audit"?', a: 'Eine systematische Untersuchung, ob Prozesse, Richtlinien oder Anforderungen erfüllt werden (intern oder extern durch Zertifizierer).' },
+    { id: '3.2.1_7', q: 'Welche Rolle spielt the Dokumentation im Qualitätsmanagement?', a: 'Sie sichert the Nachvollziehbarkeit von Prozessen, dient als Wissensbasis und ist Voraussetzung für Zertifizierungen.' },
+    { id: '3.2.1_8', q: 'Was beschreibt the Begriff "Null-Fehler-Strategie"?', a: 'Ein Ziel des QM, bei dem durch Fehlerprävention bereits bei der Entstehung von Leistungen jegliche Fehler vermieden werden sollen.' },
+    { id: '3.2.1_9', q: 'Warum ist Kundenfeedback für den PDCA-Zyklus essenziell?', a: 'Es liefert the notwendigen Daten für the "Check"-Phase, um Abweichungen zwischen Soll-Qualität und Ist-Qualität zu erkennen.' },
+    { id: '3.2.1_10', q: 'Was ist ein "Qualitätszirkel"?', a: 'Eine moderierte Gruppe von Mitarbeitern, the sich regelmäßig trifft, um Probleme im eigenen Arbeitsbereich zu analysieren und Lösungsvorschläge zu erarbeiten.' },
+
+    // --- 3.2.2 Testverfahren: Unit bis Abnahme (10 Karten) ---
+    { id: '3.2.2_1', q: 'Was ist ein Unit-Test (Modultest)?', a: 'Der Test der kleinsten funktionalen Einheit des Codes (z.B. eine einzelne Methode oder Klasse) in Isolation.' },
+    { id: '3.2.2_2', q: 'Welches Ziel verfolgt der Integrationstest?', a: 'Das Testen des Zusammenspiels mehrerer Komponenten oder Subsysteme über deren Schnittstellen.' },
+    { id: '3.2.2_3', q: 'Was wird beim Systemtest geprüft?', a: 'Das komplette System gegen the ursprünglichen funktionalen und nicht-funktionalen Anforderungen in einer produktionsnahen Umgebung.' },
+    { id: '3.2.2_4', q: 'Was ist der Abnahmetest (User Acceptance Test - UAT)?', a: 'Der abschließende Test durch den Kunden oder Endnutzer, um zu entscheiden, ob the Software/Infrastruktur vertraglich erfüllt ist.' },
+    { id: '3.2.2_5', q: 'Erkläre the Begriff "Regressionstest".', a: 'Wiederholung von bereits erfolgreichen Tests nach Änderungen am System, um sicherzustellen, dass keine neuen Fehler in bestehenden Funktionen eingebaut wurden.' },
+    { id: '3.2.2_6', q: 'Was versteht man unter einem "Smoke Test" (Rauchtest)?', a: 'Ein oberflächlicher Kurztest der wichtigsten Kernfunktionen nach einem Build, um grobe Fehler sofort zu identifizieren.' },
+    { id: '3.2.2_7', q: 'Was ist der Unterschied zwischen Verifikation und Validierung?', a: 'Verifikation: "Wird das Produkt richtig gebaut?" (Prozessprüfung). Validierung: "Wird das richtige Produkt gebaut?" (Erfüllung des Kundennutzens).' },
+    { id: '3.2.2_8', q: 'Welche Aufgabe haben "Stubs" und "Mocks" beim Testen?', a: 'Platzhalter für noch nicht existierende oder externe Komponenten, um the zu testende Einheit isolieren zu können.' },
+    { id: '3.2.2_9', q: 'Was beschreibt the "Testabdeckung" (Code Coverage)?', a: 'Ein Maß dafür, wie viel Prozent des Quellcodes durch automatisierte Tests tatsächlich ausgeführt wurde.' },
+    { id: '3.2.2_10', q: 'Warum sollten Tests idealerweise von anderen Personen durchgeführt werden als the Entwicklung/Installation?', a: 'Vermeidung von "Betriebsblindheit" und objektivere Bewertung der Ergebnisse.' },
+
+    // --- 3.2.3 Testmethoden: Black-Box & White-Box (10 Karten) ---
+    { id: '3.2.3_1', q: 'Was charakterisiert den Black-Box-Test?', a: 'Das Testen ohne Kenntnis des internen Quellcodes oder Aufbaus. Der Fokus liegt allein auf dem funktionalen Verhalten (Input -> Output).' },
+    { id: '3.2.3_2', q: 'Was charakterisiert den White-Box-Test?', a: 'Das Testen mit Kenntnis der internen Logik und des Quellcodes. Es wird geprüft, ob alle Pfade, Bedingungen und Schleifen korrekt durchlaufen werden.' },
+    { id: '3.2.3_3', q: 'Erkläre das Ziel der "Äquivalenzklassenbildung".', a: 'Einteilung von Testdaten in Gruppen (Klassen), the vom System gleich behandelt werden. Pro Klasse wird nur ein Testfall benötigt, um den Testaufwand zu reduzieren.' },
+    { id: '3.2.3_4', q: 'Warum ist the "Grenzwertanalyse" beim Testen so wichtig?', a: 'Weil Fehler besonders häufig an den Grenzen von Wertebereichen (z.B. 0, 100, Übergang zwischen Rabattstufen) auftreten.' },
+    { id: '3.2.3_5', q: 'Was ist ein statischer Test?', a: 'Die Prüfung von Dokumenten oder Quellcode, OHNE das Programm auszuführen (z.B. Code-Reviews, Walkthroughs, statische Code-Analyse).' },
+    { id: '3.2.3_6', q: 'Was ist ein dynamischer Test?', a: 'Die Prüfung des Systems durch tatsächliche Ausführung des Programmcodes mit Testdaten.' },
+    { id: '3.2.3_7', q: 'Welchen Vorteil bietet the "Grey-Box-Test"?', a: 'Kombination aus beidem: Der Tester hat grobe Kenntnis der Architektur (z.B. Datenbank-Struktur), testet aber über the funktionale Oberfläche.' },
+    { id: '3.2.3_8', q: 'Was versteht man unter "Explorativem Testen"?', a: 'Ein freies Testen ohne vordefinierte Testfälle, bei dem der Tester basierend auf Erfahrung und Intuition Schwachstellen sucht.' },
+    { id: '3.2.3_9', q: 'Was gehört in ein professionelles "Fehlerprotokoll" (Bug Report)?', a: 'ID, Titel, Beschreibung, Schritte zur Reproduktion, erwartetes vs. tatsächliches Ergebnis, Priorität, Status und Screenshots/Logs.' },
+    { id: '3.2.3_10', q: 'Warum ist the Dokumentation erfolgreicher Tests genauso wichtig wie the von Fehlern?', a: 'Als Beweis für the vertraglich vereinbarte Qualität und zur Nachvollziehbarkeit bei späteren Regressionstests.' },
+
+    // --- 3.2.4 IT-Grundschutz (BSI) & Standards (10 Karten) ---
+    { id: '3.2.4_1', q: 'Was ist the Hauptaufgabe des BSI (Bundesamt für Sicherheit in der Informationstechnik)?', a: 'Die Förderung der IT-Sicherheit in Deutschland durch Standards, Beratung und Zertifizierungen (z.B. für Behörden und KRITIS-Betreiber).' },
+    { id: '3.2.4_2', q: 'Erkläre das Prinzip des "BSI IT-Grundschutz".', a: 'Ein ganzheitliches Modell zur Absicherung von Institutionen durch the Anwendung standardisierter Sicherheitsmaßnahmen (Bausteine).' },
+    { id: '3.2.4_3', q: 'Nenne the drei grundlegenden Schutzziele der IT-Sicherheit.', a: 'Vertraulichkeit (Confidentiality), Integrität (Integrity), Verfügbarkeit (Availability).' },
+    { id: '3.2.4_4', q: 'Was beschreibt the "Schutzbedarfsfeststellung" im IT-Grundschutz?', a: 'Die Bewertung der Auswirkungen eines Schadens bei Verlust der Schutzziele für jedes IT-System (Stufen: Normal, Hoch, Sehr Hoch).' },
+    { id: '3.2.4_5', q: 'Was ist ein "Informationsverbund" laut BSI?', a: 'Die Gesamtheit aller infrastrukturellen, organisatorischen, personellen und technischen Komponenten, the der Erfüllung von Aufgaben in einem Bereich dienen.' },
+    { id: '3.2.4_6', q: 'Was beschreibt the Norm ISO/IEC 27001?', a: 'Den internationalen Standard für ein Informationssicherheits-Managementsystem (ISMS). Sie ist prozessorientiert und risikobasiert.' },
+    { id: '3.2.4_7', q: 'Was versteht man unter "KRITIS"?', a: 'Kritische Infrastrukturen (z.B. Energie, Wasser, Gesundheit, Finanzen), deren Ausfall dramatische Folgen für the Gesellschaft hätte und the deshalb besonders geschützt werden müssen.' },
+    { id: '3.2.4_8', q: 'Zweck eines "Sicherheitskonzepts"?', a: 'Systematische Dokumentation der Sicherheitsziele, Bedrohungen und konkreten Gegenmaßnahmen für einen Informationsverbund.' },
+    { id: '3.2.4_9', q: 'Was ist ein "Baustein" im BSI IT-Grundschutz-Kompendium?', a: 'Ein Modul, das Gefährdungen und Anforderungen für ein spezifisches Thema (z.B. Windows 10, Serverraum, Backup) beschreibt.' },
+    { id: '3.2.4_10', q: 'Warum ist the Sensibilisierung der Mitarbeiter (Security Awareness) Teil des IT-Grundschutzes?', a: 'Weil der Mensch oft das schwächste Glied in der Sicherheitskette ist (Schutz vor Social Engineering, Phishing).' },
+
+    // --- 3.2.5 Risikoanalyse: Matrix & Bewertung (10 Karten) ---
+    { id: '3.2.5_1', q: 'Definition von "Risiko" im IT-Kontext?', a: 'Die Kombination aus der Eintrittswahrscheinlichkeit einer Bedrohung und dem daraus resultierenden Schadensausmaß für the Institution.' },
+    { id: '3.2.5_2', q: 'Wie funktioniert eine "Risikomatrix"?', a: 'Ein Diagramm mit zwei Achsen (Eintrittswahrscheinlichkeit vs. Schadenshöhe). Risiken werden in the Felder eingetragen, um the Priorität der Gegenmaßnahmen zu bestimmen (z.B. Ampelsystem).' },
+    { id: '3.2.5_3', q: 'Was beschreibt the Begriff "Restrisiko"?', a: 'Das Risiko, das nach Umsetzung aller geplanten Sicherheitsmaßnahmen noch verbleibt. Es muss von der Geschäftsführung explizit akzeptiert werden.' },
+    { id: '3.2.5_4', q: 'Nenne the vier gängigen Strategien zum Risikomanagement.', a: '1. Risikovermeidung (Ursache eliminieren), 2. Risikoreduktion (Maßnahmen treffen), 3. Risikotransfer (Versicherung), 4. Risikoakzeptanz (Restrisiko tragen).' },
+    { id: '3.2.5_5', q: 'Was ist eine "Gefährdung" im Unterschied zu einer "Schwachstelle"?', a: 'Gefährdung: Ein Ereignis, das einen Schaden verursachen kann (z.B. Blitzschlag). Schwachstelle: Eine Sicherheitslücke, the the Schaden erst ermöglicht (z.B. fehlender Blitzschutz).' },
+    { id: '3.2.5_6', q: 'Warum ist eine regelmäßige Risikoanalyse notwendig?', a: 'Weil sich Bedrohungslagen (neue Malware) und the eigene IT-Infrastruktur (neue Systeme) ständig ändern.' },
+    { id: '3.2.5_7', q: 'Was versteht man unter einer "quantitativen" Risikoanalyse?', a: 'Die Bewertung von Risiken in konkreten Zahlenwerten (z.B. Euro-Betrag des Schadens pro Jahr).' },
+    { id: '3.2.5_8', q: 'Was versteht man unter einer "qualitativen" Risikoanalyse?', a: 'Die Bewertung von Risiken in beschreibenden Stufen (z.B. Gering, Mittel, Hoch) basierend auf Expertenwissen.' },
+    { id: '3.2.5_9', q: 'Was ist the Zweck einer "Asset-Inventarisierung" vor der Risikoanalyse?', a: 'Herauszufinden, welche Werte (Hardware, Daten, Prozesse) überhaupt geschützt werden müssen.' },
+    { id: '3.2.5_10', q: 'Wer trägt letztlich the Verantwortung für das Risikomanagement im Unternehmen?', a: 'Die Unternehmensleitung (Geschäftsführung/Vorstand).' },
+
+    // --- 3.2.6 Kryptografie: Grundlagen & Verfahren (10 Karten) ---
+    { id: '3.2.6_1', q: 'Was zeichnet the symmetrische Verschlüsselung aus?', a: 'Sender und Empfänger nutzen denselben geheimen Schlüssel zum Ver- und Entschlüsseln (z.B. AES).' },
+    { id: '3.2.6_2', q: 'Was ist das Hauptproblem der symmetrischen Verschlüsselung?', a: 'Der sichere Austausch des Schlüssels zwischen den Kommunikationspartnern (Key Distribution Problem).' },
+    { id: '3.2.6_3', q: 'Erkläre das Prinzip der asymmetrischen Verschlüsselung.', a: 'Jeder Partner hat ein Schlüsselpaar: Ein öffentlicher Schlüssel (zum Verschlüsseln) und ein privater Schlüssel (zum Entschlüsseln).' },
+    { id: '3.2.6_4', q: 'Was ist eine "Hashfunktion"?', a: 'Eine Einwegfunktion, the aus einer beliebig langen Eingabe eine feste Zeichenfolge (Hashwert) erzeugt. Rückrechnung ist unmöglich.' },
+    { id: '3.2.6_5', q: 'Wofür wird der AES-Standard typischerweise genutzt?', a: 'Zur schnellen und sicheren Verschlüsselung großer Datenmengen (z.B. Festplatten, VPN-Tunnel, Datenbanken).' },
+    { id: '3.2.6_6', q: 'Warum ist RSA ein asymmetrisches Verfahren?', a: 'Weil es auf mathematischen Problemen (Primfaktorzerlegung) basiert, the das Berechnen des privaten Schlüssels aus dem öffentlichen Schlüssel praktisch unmöglich machen.' },
+    { id: '3.2.6_7', q: 'Was beschreibt the Begriff "Kollision" bei Hashfunktionen?', a: 'Wenn zwei unterschiedliche Eingabedaten denselben Hashwert ergeben (ein Zeichen für eine unsichere Hashfunktion).' },
+    { id: '3.2.6_8', q: 'Zweck von "Salting" bei der Speicherung von Passwörtern?', a: 'Anhängen eines zufälligen Wertes vor dem Hashen, um Rainbow-Table-Angriffe (vorausberechnete Hashes) zu verhindern.' },
+    { id: '3.2.6_9', q: 'Was ist the Unterschied zwischen Verschlüsselung und Codierung?', a: 'Verschlüsselung: Geheimhaltung mittels Schlüssel. Codierung: Umwandlung von Daten in ein anderes Format (z.B. Base64) ohne Geheimhaltung.' },
+    { id: '3.2.6_10', q: 'Welche Rolle spielen Schlüssellängen (z.B. 256 Bit) für the Sicherheit?', a: 'Je länger der Schlüssel, desto höher der Aufwand für einen Brute-Force-Angriff (exponentieller Anstieg der Kombinationen).' },
+
+    // --- 3.2.7 Digitale Signatur & Zertifikate (10 Karten) ---
+    { id: '3.2.7_1', q: 'Welche Schutzziele garantiert eine digitale Signatur?', a: 'Authentizität (Echtheit des Senders) und Integrität (Unverändertheit der Daten).' },
+    { id: '3.2.7_2', q: 'Wie wird eine digitale Signatur technisch erstellt?', a: 'Der Sender hasht the Nachricht und verschlüsselt diesen Hashwert mit seinem PRIVATEN Schlüssel.' },
+    { id: '3.2.7_3', q: 'Wie prüft der Empfänger eine digitale Signatur?', a: 'Er entschlüsselt the Signatur mit dem ÖFFENTLICHEN Schlüssel des Senders und vergleicht das Ergebnis mit dem selbst berechneten Hash der Nachricht.' },
+    { id: '3.2.7_4', q: 'Was ist ein "digitales Zertifikat" (z.B. X.509)?', a: 'Ein elektronischer Datensatz, der the Identität eines Inhabers bestätigt und seinen öffentlichen Schlüssel beglaubigt.' },
+    { id: '3.2.7_5', q: 'Welche Aufgabe hat eine "Certificate Authority" (CA)?', a: 'Eine vertrauenswürdige Instanz, the Zertifikate prüft, ausstellt, signiert und deren Gültigkeit verwaltet.' },
+    { id: '3.2.7_6', q: 'Wofür steht the Abkürzung PKI?', a: 'Public Key Infrastructure. Ein System zum Erstellen, Verwalten, Verteilen und Widerrufen von digitalen Zertifikaten.' },
+    { id: '3.2.7_7', q: 'Was ist eine "CRL" (Certificate Revocation List)?', a: 'Eine Liste gesperrter Zertifikate (Sperrliste), the vor Ablauf ihrer Gültigkeit für ungültig erklärt wurden (z.B. bei Kompromittierung des Schlüssels).' },
+    { id: '3.2.7_8', q: 'Was beschreibt the "Vertrauenskette" (Chain of Trust)?', a: 'Die hierarchische Struktur von Zertifikaten, the bei einem Root-Zertifikat einer vertrauenswürdigen CA beginnt.' },
+    { id: '3.2.7_9', q: 'Warum warnt der Browser vor "selbstsignierten" Zertifikaten?', a: 'Weil keine unabhängige, vertrauenswürdige CA the Identität des Servers bestätigt hat (Gefahr von MITM-Angriffen).' },
+    { id: '3.2.7_10', q: 'Was regelt das OCSP-Protokoll?', a: 'Online Certificate Status Protocol. Dient zur Echtzeit-Abfrage des Status eines Zertifikats bei der CA (Alternative zur CRL).' },
+    ],
     };
+
+
+
 
 
