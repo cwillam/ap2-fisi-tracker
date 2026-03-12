@@ -109,7 +109,7 @@ const app = {
       app.save();
       app.updateStats();
 
-      // Karten mischen
+      // Karten mischen (alle laden)
       this.cards = [...this.cards].sort(() => Math.random() - 0.5);
       
       const badge = document.getElementById('ankiModeBadge');
