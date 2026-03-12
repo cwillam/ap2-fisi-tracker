@@ -219,14 +219,16 @@ const app = {
   ],
 
   ranks: [
-    { min: 0, name: 'Hello World', color: '#94a3b8' },
-    { min: 5, name: 'Support Hero', color: '#0ea5e9' },
-    { min: 15, name: 'Network Admin', color: '#38bdf8' },
-    { min: 30, name: 'Security Expert', color: '#0284c7' },
-    { min: 50, name: 'System Architect', color: '#10b981' },
-    { min: 75, name: 'Cloud Master', color: '#f59e0b' },
-    { min: 100, name: 'Infrastructure Legend', color: '#ef4444' },
-    { min: 125, name: 'IT-Gott', color: '#FFDD00' },
+    { min: 0, name: 'Packet Trainee', color: '#94a3b8' },
+    { min: 10, name: 'First Level Hero', color: '#0ea5e9' },
+    { min: 25, name: 'Cable Management Pro', color: '#38bdf8' },
+    { min: 50, name: 'Network Admin', color: '#0284c7' },
+    { min: 100, name: 'Security Architect', color: '#10b981' },
+    { min: 200, name: 'Cloud Specialist', color: '#8b5cf6' },
+    { min: 350, name: 'Server Overlord', color: '#f59e0b' },
+    { min: 500, name: 'Infrastructure Legend', color: '#ef4444' },
+    { min: 750, name: 'Datacenter Master', color: '#ec4899' },
+    { min: 1000, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
   ],
 
   // --- INIT ---
