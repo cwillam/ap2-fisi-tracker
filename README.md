@@ -17,7 +17,7 @@ Das Projekt ist einsatzbereit gehostet:
 
 ## 💡 Über das Projekt
 
-Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturierte und detaillierte Übersicht über the komplexen Lerninhalte der Abschlussprüfung Teil 2 zu geben. 
+Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturierte und detaillierte Übersicht über die komplexen Lerninhalte der Abschlussprüfung Teil 2 zu geben. 
 
 Im Gegensatz zum FIAE-Tracker liegt hier der Fokus auf Netzwerktechnik, Server-Infrastruktur, Cloud-Modellen und komplexen Security-Szenarien.
 
