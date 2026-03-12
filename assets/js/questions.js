@@ -129,17 +129,190 @@ window.ANKI_QUESTIONS = {
     { id: '1.1.10_10', q: 'Zweck eines Lastprobelaufs (Generator-Test)?', a: 'Regelmäßiges Testen der Notstromdiesel unter echter Last, um sicherzustellen, dass sie im Ernstfall innerhalb weniger Sekunden die gesamte Last des RZ übernehmen können.' },
   ],
 
-  // Topic 1.2: Administration & Systemmanagement (10 Karten)
+  // Topic 1.2: Administration & Systemmanagement (Ziel: 90 Karten)
   '1.2': [
-    { id: '1.2_1', q: 'Nenne die logischen Komponenten einer Active Directory Struktur von klein nach groß.', a: '1. Objekt, 2. Organizational Unit (OU), 3. Domain, 4. Tree (Baum), 5. Forest (Gesamtstruktur).' },
-    { id: '1.2_2', q: 'Erkläre das AGDLP-Prinzip bei der Rechtevergabe.', a: 'Accounts werden in Globale Gruppen aufgenommen, diese in Domänenlokale Gruppen verschachtelt, und letztere erhalten die Permissions (Berechtigungen).' },
-    { id: '1.2_3', q: 'Was passiert, wenn sich NTFS-Berechtigungen und Freigabeberechtigungen widersprechen?', a: 'Die restriktivste (engste) Berechtigung gewinnt. Beispiel: NTFS "Ändern", Freigabe "Lesen" ergibt im Ergebnis nur "Lesen".' },
-    { id: '1.2_4', q: 'Wofür steht MFA und nenne zwei Beispiele für Faktoren.', a: 'Multi-Faktor-Authentifizierung. Faktoren: Wissen (Passwort), Besitz (Token/Smartphone), Inhärenz (Biometrie).' },
-    { id: '1.2_5', q: 'Was ist der Hauptvorteil von Single Sign-On (SSO)?', a: 'Ein Benutzer muss sich nur einmal authentifizieren, um auf mehrere Dienste zuzugreifen. Erhöht Benutzerkomfort und Sicherheit (weniger Passwort-Wildwuchs).' },
-    { id: '1.2_6', q: 'Welche Aufgabe übernimmt ein WSUS-Server im Netzwerk?', a: 'Zentrale Verwaltung und Verteilung von Microsoft-Updates. Spart Bandbreite (nur ein Download für alle) und ermöglicht Staging (Testen vor Rollout).' },
-    { id: '1.2_7', q: 'Nenne die 5 Phasen des ITIL Service Lifecycles.', a: '1. Service Strategy, 2. Service Design, 3. Service Transition, 4. Service Operation, 5. Continual Service Improvement.' },
-    { id: '1.2_8', q: 'Was ist der Unterschied zwischen einem Incident und einem Problem laut ITIL?', a: 'Incident: Eine ungeplante Störung (Feuer löschen). Problem: Die unbekannte Ursache eines oder mehrerer Incidents (Brandursache finden).' },
-    { id: '1.2_9', q: 'Was regelt ein Service Level Agreement (SLA)?', a: 'Die vertraglich zugesicherten Leistungswerte, wie Verfügbarkeit (z.B. 99,9%), maximale Reaktionszeit und Wiederherstellungsdauer.' },
-    { id: '1.2_10', q: 'Was ist der Unterschied zwischen einer OEM- und einer Volumenlizenz?', a: 'OEM: An Hardware gebunden, meist kein Support durch Microsoft. Volumenlizenz: Für Unternehmen ab einer bestimmten PC-Anzahl, flexibler Rollout (KMS/MAK).' }
-  ]
+    // --- 1.2.1 Verzeichnisdienste: Active Directory (10 Karten) ---
+    { id: '1.2.1_1', q: 'Was ist der Unterschied zwischen einem AD-Forest (Gesamtstruktur) und einer AD-Domain?', a: 'Die Domain ist die logische Partitionierung (Sicherheitsgrenze). Der Forest ist die oberste Instanz, die mehrere Domains enthalten kann und ein gemeinsames Schema sowie einen gemeinsamen Global Catalog teilt.' },
+    { id: '1.2.1_2', q: 'Welche Aufgabe hat der "Global Catalog" (GC) im Active Directory?', a: 'Er enthält eine Teilmenge der Attribute aller Objekte im Forest. Er ermöglicht die Suche nach Objekten über Domänengrenzen hinweg und ist für die Anmeldung (Universal Groups) essenziell.' },
+    { id: '1.2.1_3', q: 'Was sind FSMO-Rollen und wie viele gibt es pro Forest/Domain?', a: 'Flexible Single Master Operations. Es gibt 5 Rollen: 2 pro Forest (Schema Master, Domain Naming Master) und 3 pro Domain (PDC Emulator, RID Master, Infrastructure Master).' },
+    { id: '1.2.1_4', q: 'Warum ist DNS für das Funktionieren von Active Directory zwingend erforderlich?', a: 'Clients finden Dienste (wie Domain Controller) über SRV-Records im DNS. Ohne korrektes DNS schlägt die Anmeldung und Replikation fehl.' },
+    { id: '1.2.1_5', q: 'In welcher Reihenfolge werden Gruppenrichtlinien (GPOs) verarbeitet (LSDOU-Regel)?', a: '1. Lokal, 2. Site (Standort), 3. Domain, 4. OU (Organisationseinheit). Die zuletzt angewendete Richtlinie gewinnt bei Konflikten.' },
+    { id: '1.2.1_6', q: 'Was ist der Hauptzweck einer Organizational Unit (OU)?', a: 'Logische Gruppierung von Objekten zur Delegation von Verwaltungsrechten und zur gezielten Zuweisung von Gruppenrichtlinien.' },
+    { id: '1.2.1_7', q: 'Was passiert bei der "Vererbung" von GPOs und wie kann man sie unterbrechen?', a: 'GPOs auf höheren Ebenen gelten auch für Unter-OUs. Mit "Vererbung deaktivieren" (Block Inheritance) kann dies gestoppt werden; "Erzwingen" (Enforce) hebelt diese Deaktivierung wieder aus.' },
+    { id: '1.2.1_8', q: 'Was beschreibt das AD-Schema?', a: 'Das Regelwerk, das definiert, welche Objektklassen (z.B. User, Computer) existieren dürfen und welche Attribute (z.B. Telefonnummer, E-Mail) diese Klassen haben.' },
+    { id: '1.2.1_9', q: 'Was ist der Unterschied zwischen einem physischen Standort (Site) und einer logischen Domain?', a: 'Domains bilden die logische Struktur (Wer darf was?). Sites bilden die physische IP-Topologie ab (Wo steht der Server?) und steuern den Replikationsverkehr.' },
+    { id: '1.2.1_10', q: 'Welches Protokoll wird primär für die Abfrage von AD-Objekten genutzt?', a: 'LDAP (Lightweight Directory Access Protocol) über Port 389 (unverschlüsselt) oder 636 (LDAPS/verschlüsselt).' },
+
+    // --- 1.2.2 Berechtigungskonzepte: AGDLP-Prinzip (10 Karten) ---
+    { id: '1.2.2_1', q: 'Wofür steht das Akronym AGDLP?', a: 'Accounts -> Global Groups -> Domain Local Groups -> Permissions.' },
+    { id: '1.2.2_2', q: 'Warum werden Benutzerkonten (Accounts) nicht direkt auf Ressourcen berechtigt?', a: 'Es wäre extrem unübersichtlich und schwer zu pflegen. Bei Mitarbeiterwechseln müssten hunderte ACLs manuell angepasst werden.' },
+    { id: '1.2.2_3', q: 'Was ist die Aufgabe der "Globalen Gruppe" im AGDLP-Prinzip?', a: 'Sie fasst Accounts mit gleicher Rolle oder Funktion zusammen (z.B. "G_Buchhaltung").' },
+    { id: '1.2.2_4', q: 'Welche Rolle spielt die "Domänenlokale Gruppe" im AGDLP-Prinzip?', a: 'Sie definiert den Zugriff auf eine konkrete Ressource (z.B. "DL_Fileserver_Projekte_RW") und erhält die eigentlichen NTFS-Rechte (Permissions).' },
+    { id: '1.2.2_5', q: 'Was ist der entscheidende Vorteil der Verschachtelung (Nesting) von Gruppen?', a: 'Die Trennung von Administration der Nutzer (Global) und Administration der Ressourcen (Domänenlokal). Nutzer können einfach Gruppen hinzugefügt werden, ohne die ACL der Datei anzufassen.' },
+    { id: '1.2.2_6', q: 'In welcher AD-Gruppe sollten Mitglieder aus verschiedenen Domänen desselben Forests zusammengefasst werden?', a: 'In einer Universellen Gruppe (Universal Group).' },
+    { id: '1.2.2_7', q: 'Warum ist es Best Practice, Domänenlokale Gruppen nach der Ressource zu benennen?', a: 'Damit der Administrator sofort erkennt, welchen Zweck die Gruppe erfüllt (z.B. "DL_Drucker_EG_Print").' },
+    { id: '1.2.2_8', q: 'Darf eine Globale Gruppe eine andere Globale Gruppe enthalten?', a: 'Ja, das ist möglich und oft sinnvoll, um Hierarchien abzubilden.' },
+    { id: '1.2.2_9', q: 'Was passiert mit den Berechtigungen eines Nutzers, wenn er aus einer Globalen Gruppe entfernt wird?', a: 'Er verliert sofort den Zugriff auf alle Ressourcen, die über diese Gruppe im AGDLP-Pfad berechtigt waren.' },
+    { id: '1.2.2_10', q: 'Was beschreibt der Begriff "RBAC" im Zusammenhang mit Berechtigungen?', a: 'Role-Based Access Control. Zugriff wird basierend auf der geschäftlichen Rolle (Funktion) gewährt, nicht basierend auf der individuellen Person.' },
+
+    // --- 1.2.3 NTFS- vs. Freigabeberechtigungen (10 Karten) ---
+    { id: '1.2.3_1', q: 'Welche Berechtigungsebene greift beim lokalen Zugriff auf einen Windows-Server?', a: 'Ausschließlich die NTFS-Berechtigungen. Freigabeberechtigungen spielen beim lokalen Login keine Rolle.' },
+    { id: '1.2.3_2', q: 'Wie werden die "Effektiven Rechte" berechnet, wenn ein Nutzer über das Netzwerk auf eine Freigabe zugreift?', a: 'Es wird jeweils das effektivste Recht der Freigabe und der NTFS-Ebene ermittelt. Das Endergebnis ist das restriktivere (engere) Recht aus beiden Ebenen.' },
+    { id: '1.2.3_3', q: 'Was passiert, wenn ein Nutzer über verschiedene Gruppen "Lesen" und "Schreiben" erhält, aber ein explizites "Verweigern" auf "Schreiben" vorliegt?', a: 'Das explizite "Verweigern" (Deny) gewinnt immer. Der Nutzer darf nur lesen.' },
+    { id: '1.2.3_4', q: 'Was ist der Unterschied zwischen den NTFS-Rechten "Ändern" und "Vollzugriff"?', a: 'Vollzugriff erlaubt zusätzlich das Ändern von Berechtigungen und das Übernehmen des Besitzes (Ownership). "Ändern" erlaubt nur das Bearbeiten und Löschen von Daten.' },
+    { id: '1.2.3_5', q: 'Bleiben NTFS-Berechtigungen erhalten, wenn eine Datei innerhalb desselben Volumes VERSCHOBEN wird?', a: 'Ja, die Datei behält ihre ursprünglichen expliziten Berechtigungen.' },
+    { id: '1.2.3_6', q: 'Was passiert mit den NTFS-Berechtigungen, wenn eine Datei auf ein anderes Volume KOPIERT wird?', a: 'Die Datei verliert ihre alten Rechte und erbt die Berechtigungen des neuen Zielordners.' },
+    { id: '1.2.3_7', q: 'Welchen Zweck hat die "Vererbung" bei NTFS-Rechten?', a: 'Berechtigungen werden automatisch von Ordnern auf Unterordner und Dateien übertragen, was die Administration großer Datenmengen vereinfacht.' },
+    { id: '1.2.3_8', q: 'Was ist die "Besitzübernahme" (Take Ownership)?', a: 'Ein Administrator kann den Besitz einer Datei übernehmen, auch wenn ihm der Zugriff zuvor verweigert wurde, um z.B. Berechtigungen zu korrigieren.' },
+    { id: '1.2.3_9', q: 'Erkläre "Access-Based Enumeration" (ABE).', a: 'Ein Feature für Dateifreigaben, das dafür sorgt, dass Nutzer nur die Ordner und Dateien sehen, für die sie auch mindestens Leserechte haben. Alles andere wird ausgeblendet.' },
+    { id: '1.2.3_10', q: 'Was ist der "CREATOR OWNER" bei NTFS?', a: 'Ein Platzhalter-Konto. Der Nutzer, der eine Datei erstellt, wird automatisch Besitzer und erhält die hier definierten Rechte (meist Vollzugriff auf seine eigenen Dateien).' },
+
+    // --- 1.2.4 Identitätsschutz (10 Karten) ---
+    { id: '1.2.4_1', q: 'Nenne die drei Faktoren der Multi-Faktor-Authentifizierung (MFA).', a: '1. Wissen (Passwort, PIN), 2. Besitz (Token, Smartphone, Chipkarte), 3. Inhärenz (Biometrie wie Fingerabdruck, Face-ID).' },
+    { id: '1.2.4_2', q: 'Wie funktioniert das Kerberos-Protokoll grob (Tickets)?', a: 'Ein Nutzer meldet sich am Authentication Service (AS) an und erhält ein Ticket Granting Ticket (TGT). Mit diesem TGT fordert er beim Ticket Granting Service (TGS) Service-Tickets für einzelne Dienste an.' },
+    { id: '1.2.4_3', q: 'Was ist der Vorteil von SSO (Single Sign-On)?', a: 'Der Nutzer authentifiziert sich nur einmal zentral und kann danach ohne erneute Passworteingabe auf alle angebundenen Dienste zugreifen.' },
+    { id: '1.2.4_4', q: 'Was ist der Unterschied zwischen RADIUS und TACACS+?', a: 'Beides sind AAA-Protokolle. RADIUS nutzt UDP und verschlüsselt nur das Passwort. TACACS+ nutzt TCP und verschlüsselt das gesamte Paket (sicherer, oft bei Cisco-Geräten).' },
+    { id: '1.2.4_5', q: 'Wofür steht TOTP bei der Zwei-Faktor-Authentifizierung?', a: 'Time-based One-Time Password. Ein Algorithmus, der alle 30-60 Sekunden ein neues, zeitlich begrenztes Passwort generiert (z.B. Google Authenticator).' },
+    { id: '1.2.4_6', q: 'Warum ist "Salting" beim Speichern von Passworthashes wichtig?', a: 'Ein zufälliger Wert (Salt) wird vor dem Hashen an das Passwort gehängt. Dies verhindert Rainbow-Table-Angriffe, da gleiche Passwörter unterschiedliche Hashes ergeben.' },
+    { id: '1.2.4_7', q: 'Was beschreibt eine "Brute-Force-Attacke"?', a: 'Das automatisierte, systematische Ausprobieren aller möglichen Zeichenkombinationen, um ein Passwort zu knacken.' },
+    { id: '1.2.4_8', q: 'Was ist eine "Dictionary Attack" (Wörterbuchangriff)?', a: 'Ein Angriff, bei dem Listen mit häufig verwendeten Passwörtern oder Begriffen aus Wörterbüchern durchprobiert werden.' },
+    { id: '1.2.4_9', q: 'Was ist der Unterschied zwischen Identifikation und Authentifizierung?', a: 'Identifikation: Behauptung einer Identität (z.B. Benutzername eingeben). Authentifizierung: Beweis dieser Identität (z.B. Passwort eingeben).' },
+    { id: '1.2.4_10', q: 'Was regelt das LDAP-Protokoll?', a: 'Es dient dem Abfragen und Modifizieren von Verzeichnisdiensten (wie Active Directory). LDAPS ist die verschlüsselte Variante über TLS.' },
+
+    // --- 1.2.5 Update-Management (10 Karten) ---
+    { id: '1.2.5_1', q: 'Welche Aufgabe übernimmt ein WSUS-Server im Unternehmen?', a: 'Windows Server Update Services. Er lädt Updates zentral von Microsoft herunter und verteilt sie gezielt an Clients im LAN, was Internet-Bandbreite spart und Kontrolle über den Patch-Zeitpunkt ermöglicht.' },
+    { id: '1.2.5_2', q: 'Erkläre das Prinzip des "Staging" beim Update-Rollout.', a: 'Updates werden nicht sofort an alle verteilt, sondern erst in Testgruppen (Ringen) geprüft. Erst nach erfolgreichem Test erfolgt die Freigabe für die gesamte Produktion.' },
+    { id: '1.2.5_3', q: 'Was ist der Unterschied zwischen einem Paketmanager (wie APT) und einem Repository?', a: 'Das Repository ist die Quelle (Lagerhaus) für Softwarepakete. Der Paketmanager (APT, DNF) ist das Werkzeug, das Pakete aus dem Repository sucht, herunterlädt und Abhängigkeiten auflöst.' },
+    { id: '1.2.5_4', q: 'Wofür steht SCCM (jetzt MECM)?', a: 'Microsoft Endpoint Configuration Manager. Ein mächtiges Werkzeug zur Verwaltung von Hardware, Software-Verteilung, Patch-Management und OS-Deployment.' },
+    { id: '1.2.5_5', q: 'Was bedeutet "Zero-Day-Exploit" im Kontext des Patch-Managements?', a: 'Eine Sicherheitslücke, die dem Hersteller noch nicht bekannt ist und für die es noch keinen Patch gibt. Angreifer nutzen den "Tag Null" vor dem ersten Schutz aus.' },
+    { id: '1.2.5_6', q: 'Warum ist eine Inventarisierung der Hardware Voraussetzung für gutes Update-Management?', a: 'Nur wer weiß, welche Hardware und OS-Versionen im Netz sind, kann gezielt Patches ausrollen und Inkompatibilitäten vorab prüfen.' },
+    { id: '1.2.5_7', q: 'Was ist ein "Feature Update" im Vergleich zu einem "Quality Update" bei Windows?', a: 'Feature Updates bringen neue Funktionen (1x pro Jahr). Quality Updates sind monatliche Sicherheits- und Bugfixes (Patchday).' },
+    { id: '1.2.5_8', q: 'Welchen Zweck hat ein Rollback-Plan beim Patching?', a: 'Ein vordefiniertes Verfahren, um ein fehlerhaftes Update schnellstmöglich wieder rückgängig zu machen und den alten stabilen Zustand wiederherzustellen.' },
+    { id: '1.2.5_9', q: 'Was beschreibt der Begriff "Patchday"?', a: 'Der feste Termin (meist der zweite Dienstag im Monat bei Microsoft), an dem Hersteller gesammelt Sicherheitsupdates veröffentlichen.' },
+    { id: '1.2.5_10', q: 'Was versteht man unter "Vulnerability Scanning"?', a: 'Das automatisierte Scannen von Systemen im Netzwerk auf bekannte, noch nicht gepatchte Sicherheitslücken.' },
+
+    // --- 1.2.6 Service-Management: ITIL (10 Karten) ---
+    { id: '1.2.6_1', q: 'Was ist das Hauptziel von ITIL?', a: 'Die Ausrichtung der IT-Services an den geschäftlichen Anforderungen (Service Management). IT wird nicht als Technik, sondern als Dienstleister für das Business gesehen.' },
+    { id: '1.2.6_2', q: 'Was ist eine "Störung" (Incident) laut ITIL?', a: 'Jede ungeplante Unterbrechung oder Qualitätsminderung eines IT-Services (z.B. Drucker geht nicht).' },
+    { id: '1.2.6_3', q: 'Was ist die Aufgabe des Incident Managements?', a: 'Die schnellstmögliche Wiederherstellung des normalen Servicebetriebs (Feuerwehr-Funktion).' },
+    { id: '1.2.6_4', q: 'Definiere den Begriff "Problem" im ITIL-Kontext.', a: 'Die (unbekannte) Ursache eines oder mehrerer Incidents.' },
+    { id: '1.2.6_5', q: 'Was ist das Ziel des Problem Managements?', a: 'Die Ursachen von Störungen dauerhaft zu finden und zu beseitigen, um zukünftige Incidents zu verhindern.' },
+    { id: '1.2.6_6', q: 'Was beschreibt ein "Change" laut ITIL?', a: 'Das Hinzufügen, Modifizieren oder Entfernen eines Elements, das Einfluss auf die IT-Services haben könnte (z.B. Austausch eines Core-Switches).' },
+    { id: '1.2.6_7', q: 'Was ist die Aufgabe des CAB (Change Advisory Board)?', a: 'Ein Gremium, das geplante Änderungen bewertet, priorisiert und freigibt (oder ablehnt), um Risiken für den Betrieb zu minimieren.' },
+    { id: '1.2.6_8', q: 'Was versteht man unter "Service Request Fulfillment"?', a: 'Die Bearbeitung von Standard-Anfragen der Nutzer (keine Störungen!), wie z.B. Passwort zurücksetzen oder neue Hardware bestellen.' },
+    { id: '1.2.6_9', q: 'Was ist der Single Point of Contact (SPOC)?', a: 'Die zentrale Anlaufstelle für Nutzer bei allen IT-Fragen (meist der Service Desk).' },
+    { id: '1.2.6_10', q: 'Was beschreibt die CMDB (Configuration Management Database)?', a: 'Eine zentrale Datenbank, die alle IT-Komponenten (CIs - Configuration Items) und deren Beziehungen untereinander speichert.' },
+
+    // --- 1.2.7 SLA: Service Level Agreement (10 Karten) ---
+    { id: '1.2.7_1', q: 'Was ist der Hauptzweck eines SLA?', a: 'Die schriftliche Fixierung von Dienstleistungsqualitäten (Levels) zwischen Dienstleister und Kunden, um Erwartungen und Verantwortlichkeiten klar zu definieren.' },
+    { id: '1.2.7_2', q: 'Wie wird die "Verfügbarkeit" in Prozent meist berechnet (Formel)?', a: '(Ist-Servicezeit / Soll-Servicezeit) * 100. Beispiel: (8750h / 8760h) * 100 = 99,88%.' },
+    { id: '1.2.7_3', q: 'Was ist the Unterschied zwischen "Reaktionszeit" und "Wiederherstellungszeit"?', a: 'Reaktionszeit: Zeit bis zur ersten Rückmeldung/Beginn der Arbeit. Wiederherstellungszeit: Zeit bis der Service wieder voll funktionsfähig zur Verfügung steht.' },
+    { id: '1.2.7_4', q: 'Welchen Einfluss haben "geplante Wartungsfenster" auf die SLA-Berechnung?', a: 'Geplante Wartungen werden meist von der Soll-Servicezeit abgezogen und gelten somit nicht als Ausfallzeit (Downtime).' },
+    { id: '1.2.7_5', q: 'Was beschreibt the Begriff "Servicezeit" (Business Hours) in einem SLA?', a: 'Der Zeitraum, in dem der Dienstleister den Service garantiert (z.B. Mo-Fr, 08:00 - 17:00 Uhr). Ausfälle außerhalb dieser Zeit zählen nicht gegen das SLA.' },
+    { id: '1.2.7_6', q: 'Was sind "Pönalen" (Service Credits) im SLA-Kontext?', a: 'Vertragsstrafen oder Gutschriften, die der Dienstleister an den Kunden leisten muss, wenn die vereinbarten Service-Levels nicht eingehalten werden.' },
+    { id: '1.2.7_7', q: 'Was versteht man unter einem "OLA" (Operational Level Agreement)?', a: 'Eine interne Vereinbarung zwischen verschiedenen Abteilungen desselben Unternehmens, um die Einhaltung eines externen SLAs zu unterstützen.' },
+    { id: '1.2.7_8', q: 'Bedeutung von "MTTR" (Mean Time to Repair)?', a: 'Die durchschnittliche Zeit, die benötigt wird, um ein System nach einem Ausfall wieder in Betrieb zu nehmen. Ein wichtiger KPI für die Service-Qualität.' },
+    { id: '1.2.7_9', q: 'Was bedeutet die Verfügbarkeit "99,9%" umgerechnet in maximale Ausfallzeit pro Jahr?', a: 'Ca. 8,76 Stunden Ausfallzeit pro Jahr sind bei 99,9% erlaubt.' },
+    { id: '1.2.7_10', q: 'Was ist the Unterschied zwischen einem kundenbezogenen und einem servicebezogenen SLA?', a: 'Kundenbezogen: Ein SLA für alle Services eines Kunden. Servicebezogen: Ein SLA für einen bestimmten Service (z.B. E-Mail), der für alle Kunden gleich gilt.' },
+
+    // --- 1.2.8 Lizenzrecht (10 Karten) ---
+    { id: '1.2.8_1', q: 'Was ist the Kernmerkmal einer OEM-Lizenz?', a: 'Original Equipment Manufacturer. Die Software ist an eine bestimmte Hardware gebunden und wird oft ohne direkten Herstellersupport günstiger verkauft.' },
+    { id: '1.2.8_2', q: 'Was sind "CALs" (Client Access Licenses)?', a: 'Zugriffslizenzen. Zusätzlich zur Server-Lizenz benötigt jeder Nutzer oder jedes Gerät, das auf den Server zugreift, eine eigene Lizenz (User-CAL oder Device-CAL).' },
+    { id: '1.2.8_3', q: 'Erkläre den Unterschied zwischen einer User-CAL und einer Device-CAL.', a: 'User-CAL: Ein Nutzer darf von beliebig vielen Geräten zugreifen (gut für Außendienst). Device-CAL: Ein Gerät darf von beliebig vielen Nutzern verwendet werden (gut für Schichtarbeit/Terminals).' },
+    { id: '1.2.8_4', q: 'Was ist the Vorteil einer Volumenlizenz (z.B. Microsoft Open Value)?', a: 'Einfache Verwaltung über ein Portal, Reimaging-Rechte, Zweitnutzungsrechte (Laptop) und oft die Möglichkeit zur Ratenzahlung oder Software Assurance.' },
+    { id: '1.2.8_5', q: 'Was bedeutet "MAK" bei der Aktivierung von Volumenlizenzen?', a: 'Multiple Activation Key. Ein Key mit einer festen Anzahl an Aktivierungen über das Internet (ähnlich wie Retail-Keys).' },
+    { id: '1.2.8_6', q: 'Was ist ein "KMS" (Key Management Service)?', a: 'Ein lokaler Aktivierungsdienst im Unternehmen. Clients aktivieren sich gegen den internen KMS-Server, statt einzeln über das Internet zu gehen (gut für isolierte Netze).' },
+    { id: '1.2.8_7', q: 'Welche Freiheit gewährt the GPL (GNU General Public License)?', a: 'Sie erlaubt das Nutzen, Studieren, Ändern und Weitergeben der Software, verpflichtet aber dazu, Änderungen unter derselben Lizenz zu veröffentlichen (Copyleft-Prinzip).' },
+    { id: '1.2.8_8', q: 'Was ist "Proprietäre Software"?', a: 'Software, bei der the Quellcode geheim bleibt und the Nutzung durch den Hersteller stark eingeschränkt ist (Gegenteil von Open Source).' },
+    { id: '1.2.8_9', q: 'Darf man in Deutschland "gebrauchte" Softwarelizenzen weiterverkaufen?', a: 'Ja, laut EuGH-Urteil ist dies legal, sofern the ursprüngliche Kopie unbrauchbar gemacht wurde (Erschöpfungsgrundsatz).' },
+    { id: '1.2.8_10', q: 'Was beschreibt eine "Site License" (Standortlizenz)?', a: 'Eine Lizenz, the es erlaubt, eine Software an einem bestimmten physischen Standort auf beliebig vielen Rechnern zu installieren.' },
+
+    // --- 1.2.9 MDM & BYOD (10 Karten) ---
+    { id: '1.2.9_1', q: 'Was ist das Hauptziel von Mobile Device Management (MDM)?', a: 'Die zentrale Verwaltung, Konfiguration und Absicherung von mobilen Endgeräten (Smartphones, Tablets, Laptops) im Unternehmen.' },
+    { id: '1.2.9_2', q: 'Was versteht man unter dem "Container-Prinzip" bei MDM?', a: 'Die strikte logische Trennung von privaten und geschäftlichen Daten auf einem Gerät. Geschäftliche Apps laufen in einem geschützten Bereich (Container), auf den private Apps keinen Zugriff haben.' },
+    { id: '1.2.9_3', q: 'Erkläre den Begriff "BYOD" (Bring Your Own Device).', a: 'Mitarbeiter nutzen ihre privaten Endgeräte für geschäftliche Zwecke. Dies erfordert klare Richtlinien zu Sicherheit und Datenschutz.' },
+    { id: '1.2.9_4', q: 'Was bedeutet "Remote Wipe" im MDM-Kontext?', a: 'Das ferngesteuerte Löschen aller (oder nur der geschäftlichen) Daten auf einem Gerät, z.B. bei Verlust oder Diebstahl.' },
+    { id: '1.2.9_5', q: 'Was ist "Geofencing" bei mobilen Geräten?', a: 'Das Auslösen von Aktionen oder Einschränkungen (z.B. Deaktivieren der Kamera), sobald sich ein Gerät in einem definierten geografischen Bereich (z.B. Firmengelände) befindet oder diesen verlässt.' },
+    { id: '1.2.9_6', q: 'Nenne zwei Sicherheitsrisiken bei BYOD.', a: '1. Vermischung von privater und geschäftlicher Datennutzung (Datenschutz), 2. Infektionsgefahr durch unsichere private Apps/Downloads, 3. Schwierige Durchsetzung von Compliance-Regeln.' },
+    { id: '1.2.9_7', q: 'Was ist "MAM" (Mobile Application Management) im Unterschied zu MDM?', a: 'MDM verwaltet das komplette Gerät. MAM konzentriert sich nur auf die Verwaltung und Absicherung der darauf installierten geschäftlichen Applikationen.' },
+    { id: '1.2.9_8', q: 'Welche Rolle spielen Zertifikate bei MDM?', a: 'Sie dienen zur sicheren Authentifizierung des Geräts gegenüber dem Unternehmensnetzwerk (z.B. für WLAN oder VPN) ohne manuelle Passworteingabe.' },
+    { id: '1.2.9_9', q: 'Was beschreibt eine "Compliance-Richtlinie" im MDM?', a: 'Regeln, die ein Gerät erfüllen muss, um Zugriff auf Firmendaten zu erhalten (z.B. Mindestversion des OS, kein Jailbreak/Root, aktive Verschlüsselung).' },
+    { id: '1.2.9_10', q: 'Was ist der Unterschied zwischen BYOD und COPE?', a: 'BYOD: Privatgerät für Arbeit. COPE (Corporate Owned, Personally Enabled): Firmengerät, das auch privat genutzt werden darf (höhere Kontrolle für die IT).' },
+    ],
+
+    // Topic 1.3: Datensicherung & Disaster Recovery (Ziel: 60 Karten)
+    '1.3': [
+    // --- 1.3.1 Backup-Strategien (10 Karten) ---
+    { id: '1.3.1_1', q: 'Erkläre die 3-2-1 Backup-Regel.', a: 'Mindestens 3 Kopien der Daten, auf 2 unterschiedlichen Medientypen, davon mindestens 1 Kopie außer Haus (offsite).' },
+    { id: '1.3.1_2', q: 'Wie funktioniert das "Großvater-Vater-Sohn" Prinzip (Generationenprinzip)?', a: 'Ein rotierendes System: Sohn (Täglich), Vater (Wöchentlich), Großvater (Monatlich). Ermöglicht die Wiederherstellung verschiedener Zeitstände bei geringem Medienverbrauch.' },
+    { id: '1.3.1_3', q: 'Was ist the Unterschied zwischen einem Backup und einer Archivierung?', a: 'Backup: Kurz-/mittelfristige Kopie zur Wiederherstellung bei Datenverlust. Archivierung: Langfristige, meist unveränderbare Aufbewahrung (revisionssicher) aus rechtlichen Gründen.' },
+    { id: '1.3.1_4', q: 'Warum ist ein "Air Gap" beim Backup heute so wichtig?', a: 'Eine physische oder logische Trennung des Backups vom restlichen Netzwerk schützt the Sicherungen vor Ransomware, the sich sonst auch im Backup-Speicher ausbreiten würde.' },
+    { id: '1.3.1_5', q: 'Was beschreibt the Begriff "Immutability" (Unveränderbarkeit) bei Backups?', a: 'Ein Schutzmechanismus (oft WORM), der verhindert, dass geschriebene Backups für einen definierten Zeitraum gelöscht oder verändert werden können (Schutz vor Insider-Bedrohungen und Ransomware).' },
+    { id: '1.3.1_6', q: 'Welche Aufgabe hat the "Backup-Server" in einer Backup-Infrastruktur?', a: 'Er steuert the Sicherungsaufträge, verwaltet the Metadaten (Katalog) und koordiniert the Datenströme zwischen Quelle und Ziel.' },
+    { id: '1.3.1_7', q: 'Was ist ein "Pull-Backup" im Gegensatz zum "Push-Backup"?', a: 'Pull: Der Backup-Server holt sich the Daten aktiv vom Client (sicherer). Push: Der Client schickt the Daten aktiv an den Backup-Server.' },
+    { id: '1.3.1_8', q: 'Warum sollte ein Backup-Konzept regelmäßig getestet werden (Restore-Test)?', a: 'Ein Backup ist wertlos, wenn the Wiederherstellung im Ernstfall nicht funktioniert. Tests finden defekte Medien oder fehlerhafte Konfigurationen rechtzeitig.' },
+    { id: '1.3.1_9', q: 'Was ist the Zweck eines "Offsite-Backups"?', a: 'Schutz vor physischen Katastrophen am Hauptstandort (Brand, Diebstahl, Überschwemmung) durch räumliche Trennung der Daten.' },
+    { id: '1.3.1_10', q: 'Was beschreibt the "Aufbewahrungsfrist" (Retention Policy)?', a: 'Festlegung, wie lange Sicherungskopien vorgehalten werden müssen, bevor sie überschrieben oder gelöscht werden dürfen.' },
+
+    // --- 1.3.2 Sicherungstypen (10 Karten) ---
+    { id: '1.3.2_1', q: 'Was ist eine Voll-Sicherung (Full Backup)?', a: 'Alle ausgewählten Daten werden komplett gesichert. Vorteil: Schnellster Restore. Nachteil: Hoher Speicherplatzbedarf und lange Sicherungsdauer.' },
+    { id: '1.3.2_2', q: 'Wie funktioniert eine Inkrementelle Sicherung?', a: 'Es werden nur the Daten gesichert, the sich seit der LETZTEN Sicherung (egal welchen Typs) geändert haben. Vorteil: Kleinste Datenmenge. Nachteil: Langsamster Restore (alle Inkremente nötig).' },
+    { id: '1.3.2_3', q: 'Wie funktioniert eine Differenzielle Sicherung?', a: 'Es werden alle Daten gesichert, the sich seit der letzten VOLL-Sicherung geändert haben. Sicherungsmenge wächst bis zum nächsten Full-Backup an.' },
+    { id: '1.3.2_4', q: 'Welche Medien werden für einen Restore bei einer differenziellen Sicherung benötigt?', a: 'Nur the letzte Voll-Sicherung und the aktuellste differenzielle Sicherung.' },
+    { id: '1.3.2_5', q: 'Was ist ein "Synthetic Full Backup"?', a: 'Der Backup-Server erstellt aus einem alten Full-Backup und den vorhandenen Inkrementen ein neues Voll-Backup, ohne the Daten erneut vom Client lesen zu müssen (entlastet Netzwerk).' },
+    { id: '1.3.2_6', q: 'Erkläre the Begriff "Image-Level Backup" im Vergleich zum "File-Level Backup".', a: 'File-Level sichert einzelne Dateien/Ordner. Image-Level sichert the gesamte Partition/Festplatte als Block-Abbild (ermöglicht Bare-Metal-Recovery).' },
+    { id: '1.3.2_7', q: 'Was ist ein Snapshot und ersetzt er ein Backup?', a: 'Ein Snapshot ist ein "Schnappschuss" des Dateisystems/VM-Zustands zu einem Zeitpunkt (Metadaten-Pointer). Er ist KEIN Backup, da er auf demselben Speicher liegt und bei Hardwareausfall verloren geht.' },
+    { id: '1.3.2_8', q: 'Was bewirkt the VSS-Dienst (Volume Shadow Copy Service) unter Windows beim Backup?', a: 'Er ermöglicht the Sicherung von Dateien, the gerade im Zugriff sind oder von Anwendungen gesperrt werden (konsistente Sicherung im laufenden Betrieb).' },
+    { id: '1.3.2_9', q: 'Was ist "Deduplizierung" beim Backup?', a: 'Das Vermeiden von redundanten Datenblöcken. Identische Blöcke werden nur einmal physisch gespeichert, was massiv Speicherplatz spart.' },
+    { id: '1.3.2_10', q: 'Welche Sicherungsmethode hat the geringste Belastung für das Produktionsnetzwerk?', a: 'Die inkrementelle Sicherung, da sie the geringste Datenmenge überträgt.' },
+
+    // --- 1.3.3 Wiederherstellungsziele: RPO & RTO (10 Karten) ---
+    { id: '1.3.3_1', q: 'Was bedeutet die Abkürzung RPO (Recovery Point Objective)?', a: 'Maximal tolerierbarer Datenverlust. Der Zeitraum zwischen dem letzten Backup und dem Systemausfall (Wie viele Daten dürfen im Ernstfall verloren gehen?).' },
+    { id: '1.3.3_2', q: 'Was bedeutet die Abkürzung RTO (Recovery Time Objective)?', a: 'Maximal tolerierbare Ausfallzeit. Die Zeit, the von der Störung bis zur vollständigen Wiederherstellung des Services vergehen darf (Wie lange darf the IT stillstehen?).' },
+    { id: '1.3.3_3', q: 'Welchen Einfluss hat ein RPO von "Null" auf the Backup-Infrastruktur?', a: 'Es erfordert eine permanente, synchrone Spiegelung der Daten in Echtzeit (Continuous Data Protection), da keinerlei Datenverlust erlaubt ist.' },
+    { id: '1.3.3_4', q: 'Warum ist ein sehr niedriges RTO meist sehr teuer?', a: 'Es erfordert hohe Investitionen in schnelle Hardware, automatisierte Failover-Cluster und redundante Systeme, um the Wiederherstellungszeit zu minimieren.' },
+    { id: '1.3.3_5', q: 'Wie hängen RPO und the Sicherungsintervall zusammen?', a: 'Das Sicherungsintervall darf maximal so groß wie das RPO sein. Wenn RPO = 4 Stunden, muss mindestens alle 4 Stunden gesichert werden.' },
+    { id: '1.3.3_6', q: 'Was beschreibt the Begriff "MTPD" (Maximum Tolerable Period of Disruption)?', a: 'Der absolut maximale Zeitraum, den ein Geschäftsprozess unterbrochen sein darf, bevor the Existenz des Unternehmens gefährdet ist (liegt meist über dem RTO).' },
+    { id: '1.3.3_7', q: 'Wer legt the Werte für RPO und RTO fest?', a: 'Die Geschäftsführung (Business-Seite) basierend auf einer Business Impact Analyse (BIA), nicht the IT allein.' },
+    { id: '1.3.3_8', q: 'Was versteht man unter "WRT" (Work Recovery Time)?', a: 'Die Zeit, the nach der technischen Wiederherstellung benötigt wird, um Daten zu prüfen, Konsistenzchecks zu machen und the Nutzer wieder arbeiten zu lassen.' },
+    { id: '1.3.3_9', q: 'Zweck einer Business Impact Analyse (BIA)?', a: 'Identifikation kritischer Geschäftsprozesse und Bewertung der Auswirkungen eines Ausfalls, um daraus RTO und RPO abzuleiten.' },
+    { id: '1.3.3_10', q: 'Was ist the Unterschied zwischen Disaster Recovery und Business Continuity?', a: 'Disaster Recovery: Fokus auf the technische Wiederherstellung der IT. Business Continuity: Fokus auf the Aufrechterhaltung der gesamten Geschäftsprozesse (auch ohne IT).' },
+
+    // --- 1.3.4 Speichermedien (10 Karten) ---
+    { id: '1.3.4_1', q: 'Was ist the Kernvorteil von LTO-Magnetbändern (Tapes) für the Langzeitarchivierung?', a: 'Sehr geringe Kosten pro Terabyte, extrem lange Lebensdauer (bis zu 30 Jahre) und the Möglichkeit der physischen Trennung vom Netz (Offline-Speicher).' },
+    { id: '1.3.4_2', q: 'Was bedeutet das WORM-Prinzip bei Speichermedien?', a: 'Write Once, Read Many. Daten können einmal geschrieben, aber niemals geändert oder gelöscht werden (wichtig für Revisionssicherheit).' },
+    { id: '1.3.4_3', q: 'Erkläre the Backup-Ansatz "Disk-to-Disk-to-Tape" (D2D2T).', a: 'Daten werden zuerst schnell auf Festplatten gesichert (schneller Restore) und später zur langfristigen Aufbewahrung auf Tapes ausgelagert (kostengünstig/sicher).' },
+    { id: '1.3.4_4', q: 'Was ist eine "Tape Library"?', a: 'Ein automatisiertes Speichersystem, das mehrere Bandlaufwerke und viele Tape-Slots enthält. Ein Roboterarm wechselt the Bänder automatisch nach Bedarf.' },
+    { id: '1.3.4_5', q: 'Nenne einen Nachteil von Cloud-Backup gegenüber lokalem Backup.', a: 'Die Abhängigkeit von der Internet-Bandbreite (besonders beim ersten Vollbackup oder einem großen Restore) und the laufenden Kosten für den Speicherplatz.' },
+    { id: '1.3.4_6', q: 'Welche Aufgabe hat the "Cleaning Tape" bei LTO-Laufwerken?', a: 'Die automatische Reinigung der Schreib-/Leseköpfe des Laufwerks zur Vermeidung von Fehlern durch Abrieb oder Staub.' },
+    { id: '1.3.4_7', q: 'Was beschreibt the Begriff "VTL" (Virtual Tape Library)?', a: 'Ein Festplattensystem, das sich gegenüber der Backup-Software wie ein Bandlaufwerk verhält. Kombiniert the Geschwindigkeit von Disks mit der Logik von Tapes.' },
+    { id: '1.3.4_8', q: 'Warum ist Verschlüsselung bei Backup-Medien (besonders Tapes) essenziell?', a: 'Da Tapes oft transportiert oder extern gelagert werden, schützt Verschlüsselung the Daten bei Verlust oder Diebstahl des physischen Mediums.' },
+    { id: '1.3.4_9', q: 'Bedeutung von "LTFS" (Linear Tape File System)?', a: 'Ermöglicht es, auf Tapes wie auf eine Festplatte oder einen USB-Stick über den Dateiexplorer zuzugreifen (Drag & Drop).' },
+    { id: '1.3.4_10', q: 'Was ist the Unterschied zwischen einer SSD und einer HDD als Backup-Ziel?', a: 'SSD: Extrem schnell, teurer (gut für RTO-kritische Daten). HDD: Günstiger bei großen Kapazitäten, langsamer (Standard für the meisten Backups).' },
+
+    // --- 1.3.5 Revisionssicherheit (10 Karten) ---
+    { id: '1.3.5_1', q: 'Was bedeutet "Revisionssicherheit" bei der Archivierung?', a: 'Dass Informationen sicher, unveränderbar, jederzeit verfügbar und nachvollziehbar (wer hat was wann gemacht) aufbewahrt werden.' },
+    { id: '1.3.5_2', q: 'Wofür steht the Abkürzung GoBD?', a: 'Grundsätze zur ordnungsgemäßen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form sowie zum Datenzugriff.' },
+    { id: '1.3.5_3', q: 'Was ist the Kernunterschied zwischen Backup und Archivierung im rechtlichen Sinne?', a: 'Backup dient der technischen Wiederherstellung nach Datenverlust. Archivierung dient der Erfüllung gesetzlicher Aufbewahrungspflichten und der Beweiskraft.' },
+    { id: '1.3.5_4', q: 'Welche Rolle spielt the "Verfahrensdokumentation" bei der GoBD?', a: 'Sie beschreibt lückenlos den gesamten Prozess der Entstehung, Verarbeitung, Speicherung und Sicherung von steuerrelevanten Daten im Unternehmen.' },
+    { id: '1.3.5_5', q: 'Wie lange müssen steuerrelevante Belege (z.B. Rechnungen) laut Gesetz archiviert werden?', a: 'In der Regel 10 Jahre (beginnend mit dem Ende des Kalenderjahres, in dem the Beleg erstellt wurde).' },
+    { id: '1.3.5_6', q: 'Was ist ein WORM-Medium?', a: 'Write Once, Read Many. Ein Speichermedium, auf das Daten nur einmal geschrieben werden können und danach nur noch gelesen, aber nicht mehr gelöscht oder geändert werden können.' },
+    { id: '1.3.5_7', q: 'Darf eine Archivierung in der Cloud erfolgen?', a: 'Ja, sofern the Provider entsprechende Zertifizierungen (z.B. IDW PS 880) vorweisen kann und the Daten gegen unbefugten Zugriff und Veränderung geschützt sind.' },
+    { id: '1.3.5_8', q: 'Was bedeutet "Vollständigkeit" im Kontext der Archivierung?', a: 'Alle archivierungspflichtigen Dokumente müssen lückenlos und ohne Verluste im Archivsystem erfasst sein.' },
+    { id: '1.3.5_9', q: 'Was ist ein DMS (Dokumentenmanagementsystem)?', a: 'Eine Software zur Verwaltung, Archivierung und Suche von elektronischen Dokumenten, the oft the Grundlage für revisionssichere Archivierung bildet.' },
+    { id: '1.3.5_10', q: 'Warum ist ein Zeitstempel (Timestamp) bei der Archivierung wichtig?', a: 'Er dient als manipulationssicherer Beweis dafür, dass ein Dokument zu einem bestimmten Zeitpunkt im Archiv existiert hat.' },
+
+    // --- 1.3.6 Desaster-Szenarien & Recovery (10 Karten) ---
+    { id: '1.3.6_1', q: 'Was versteht man unter einem "Brandabschnitt" im Rechenzentrum?', a: 'Ein durch feuerfeste Wände und Türen abgetrennter Bereich, der verhindert, dass sich ein Feuer auf das gesamte RZ ausbreitet. Wichtig für den Betrieb von redundanter Hardware.' },
+    { id: '1.3.6_2', q: 'Welchen Zweck haben regelmäßige Disaster-Recovery-Tests (K-Fall-Übungen)?', a: 'Sicherstellen, dass the Notfallpläne aktuell sind, the Technik funktioniert und the Mitarbeiter wissen, was im Ernstfall zu tun ist (Validierung von RTO/RPO).' },
+    { id: '1.3.6_3', q: 'Was ist eine "Cold Site" als Ausweichstandort?', a: 'Ein angemieteter Raum mit Basis-Infrastruktur (Strom, Klima), aber ohne Hardware. Lange Wiederanlaufzeit, da Hardware erst beschafft und konfiguriert werden muss.' },
+    { id: '1.3.6_4', q: 'Was zeichnet eine "Hot Site" als Ausweichstandort aus?', a: 'Ein voll ausgestattetes Rechenzentrum mit aktueller Hardware und gespiegelten Daten. Ermöglicht eine extrem schnelle Wiederaufnahme des Betriebs (sehr kurzes RTO).' },
+    { id: '1.3.6_5', q: 'Erkläre the Begriff "Cloud Disaster Recovery" (DRaaS).', a: 'Disaster Recovery as a Service. Die Wiederherstellung von IT-Services in einer Cloud-Umgebung, falls das eigene Rechenzentrum ausfällt.' },
+    { id: '1.3.6_6', q: 'Warum ist räumliche Distanz zwischen Backup-Standort und Hauptstandort wichtig?', a: 'Um the Daten vor regionalen Katastrophen zu schützen, the beide Standorte gleichzeitig treffen könnten (z.B. Hochwasser, Erdbeben, großflächiger Stromausfall).' },
+    { id: '1.3.6_7', q: 'Was gehört zwingend in einen Disaster Recovery Plan (Notfallhandbuch)?', a: 'Kontaktlisten, Prioritätenliste der Wiederherstellung, Systemdokumentationen, detaillierte Schritt-für-Schritt-Anleitungen für den Restore und Konfigurationen.' },
+    { id: '1.3.6_8', q: 'Welche Aufgabe hat the "Business Impact Analysis" (BIA) im Notfallkonzept?', a: 'Sie bewertet the Auswirkungen von Ausfällen auf einzelne Geschäftsprozesse, um the Wiederherstellung sinnvoll zu priorisieren.' },
+    { id: '1.3.6_9', q: 'Warum sind Ersatz-Switches und Ersatz-Router Teil eines guten Disaster Recovery Konzepts?', a: 'Damit am Ausweichstandort sofort the notwendige Netzwerk-Infrastruktur aufgebaut werden kann, um the Server wieder erreichbar zu machen.' },
+    { id: '1.3.6_10', q: 'Was beschreibt the "Wiederanlaufplan"?', a: 'Der Teil des Notfallkonzepts, der genau festlegt, in welcher Reihenfolge und mit welchen Schritten the IT-Systeme nach einem Totalausfall wieder hochgefahren werden.' },
+    ],
+
 };
