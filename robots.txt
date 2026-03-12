@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /ap2-tracker/
+
+Sitemap: https://ap2-fisi.cwillam.de/sitemap.xml
