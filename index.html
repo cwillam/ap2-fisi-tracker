@@ -236,16 +236,14 @@
             <!-- Update Button -->
             <a
               href="updates.html"
-              class="p-2 text-dark-muted hover:text-white transition-all"
+              class="p-2 text-dark-muted hover:text-white transition-all relative group"
               title="Updates"
             >
-              <div class="relative">
-                <i class="fa-solid fa-bell text-xs sm:text-sm"></i>
-                <span class="absolute -top-1 -right-1 flex h-1.5 w-1.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                </span>
-              </div>
+              <i class="fa-solid fa-bell text-xs sm:text-sm group-hover:rotate-12 transition-transform"></i>
+              <span class="absolute top-2 right-2 flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
             </a>
 
             <a
@@ -317,9 +315,6 @@
             <a href="updates.html" class="px-6 py-2.5 bg-dark-accent hover:bg-emerald-400 text-white text-xs font-black rounded-xl transition-all shadow-glow hover:scale-105 whitespace-nowrap uppercase tracking-wider">
               Changelog ansehen
             </a>
-            <button onclick="app.hideReleaseBanner()" class="text-[10px] text-dark-muted hover:text-white transition-colors font-bold uppercase tracking-widest">
-              Ausblenden
-            </button>
           </div>
         </div>
       </div>
