@@ -146,7 +146,7 @@
                 Der spezialisierte Tracker für die <span class="text-white font-bold">Abschlussprüfung Teil 2 (FISI)</span> ist nun offiziell live! Bereite dich mit gewichteten Themen und aktuellem IHK-Katalog optimal vor.
               </p>
               <!-- Andere Tracker Section -->
-              <div class="bg-dark-bg/50 border border-dark-border/50 rounded-xl p-3 space-y-2">
+              <div class="bg-dark-bg/50 border border-dark-border rounded-xl p-3 space-y-2">
                 <span class="text-[10px] font-bold text-dark-muted uppercase tracking-widest">Andere Tracker</span>
                 <div class="grid grid-cols-2 gap-2">
                   <!-- Link zu AP1 -->
@@ -206,7 +206,7 @@
             onclick="window.scrollTo({top:0, behavior:'smooth'})"
           >
             <div
-              class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center shadow-glow transition-transform group-hover:scale-105 shrink-0"
+              class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 items-center justify-center shadow-glow transition-transform group-hover:scale-105 shrink-0"
             >
               <i class="fa-solid fa-network-wired text-white text-sm sm:text-base"></i>
             </div>
@@ -214,6 +214,7 @@
               <h1 class="font-bold text-base sm:text-lg leading-none text-white tracking-tight">
                 AP2 <span class="text-dark-accent">Tracker</span>
                 <span class="ml-0.5 text-[9px] bg-dark-accent/20 text-dark-accent px-1 py-0.5 rounded border border-dark-accent/30">FISI</span>
+                <span class="sm:hidden ml-0.5 text-[9px] font-bold text-dark-accent bg-dark-accent/10 px-1 rounded border border-dark-accent/20">v2.0</span>
               </h1>
               <div class="hidden sm:flex items-center gap-2 mt-0.5">
                 <span class="text-[10px] font-mono text-dark-muted leading-none">by cwillam</span>
@@ -290,27 +291,33 @@
     <!-- Main Content -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       <!-- v2.0 Release Banner -->
-      <div id="releaseBanner" class="relative overflow-hidden bg-gradient-to-r from-emerald-950/40 via-teal-900/30 to-dark-card border border-dark-accent/30 rounded-2xl p-5 sm:p-6 no-print shadow-glow group">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-dark-accent/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none group-hover:bg-dark-accent/10 transition-colors"></div>
+      <div id="releaseBanner" class="relative overflow-hidden bg-gradient-to-r from-emerald-950/40 via-teal-900/30 to-dark-card border border-dark-accent/30 rounded-2xl p-5 sm:p-6 no-print animate-in fade-in slide-in-from-top-4 duration-700 group">
+        <!-- Decoration -->
+        <div class="absolute -right-8 -top-8 w-32 h-32 bg-dark-accent/10 rounded-full blur-3xl group-hover:bg-dark-accent/20 transition-colors"></div>
         
-        <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 bg-dark-accent/20 rounded-2xl flex items-center justify-center border border-dark-accent/30 shadow-glow shrink-0 animate-pulse-slow">
-            <i class="fa-solid fa-wand-magic-sparkles text-dark-accent text-2xl sm:text-3xl"></i>
+        <div class="flex flex-col md:flex-row items-center gap-5 relative z-10">
+          <div class="w-14 h-14 rounded-2xl bg-dark-accent/20 flex items-center justify-center text-dark-accent shrink-0 shadow-glow border border-dark-accent/20 animate-pulse-slow">
+            <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
           </div>
-          
-          <div class="flex-grow">
-            <div class="flex items-center justify-center sm:justify-start gap-2 mb-1">
-              <span class="px-2 py-0.5 rounded-full bg-dark-accent text-dark-bg text-[10px] font-bold uppercase tracking-wider animate-bounce">v2.0 Release</span>
-              <div class="h-1.5 w-1.5 rounded-full bg-dark-accent animate-ping"></div>
+          <div class="flex-1 text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start gap-3 mb-1.5">
+              <h4 class="text-sm font-black text-white uppercase tracking-tighter">
+                Version 2.0 <span class="text-dark-accent ml-1">Release</span>
+              </h4>
+              <span class="flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-dark-accent opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-dark-accent"></span>
+              </span>
             </div>
-            <h2 class="text-lg sm:text-xl font-bold text-white mb-1">FISI Tracker Upgrade abgeschlossen!</h2>
-            <p class="text-xs sm:text-sm text-dark-muted max-w-2xl leading-relaxed">
-              Die neue Engine ist da! Erlebe <span class="text-white font-semibold">blitzschnelles Filtern</span>, verbesserte Architektur und das optimierte UI für dein Training. Alle deine Daten wurden sicher übernommen.
+            <p class="text-[13px] text-dark-text/90 leading-relaxed font-medium">
+              Das ultimative Content-Update ist da: Erlebe <span class="text-dark-accent font-bold">FISI-Lernkarten</span> für alle Module, ein intelligentes <span class="text-dark-accent font-bold">Spaced-Repetition System</span> im neuen Strategie-Modus und ein komplett überarbeitetes Design für deine Prüfungsvorbereitung.
             </p>
           </div>
-          
-          <div class="flex flex-col gap-2 shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
-            <button onclick="app.hideReleaseBanner()" class="px-5 py-2.5 bg-dark-accent/10 hover:bg-dark-accent/20 border border-dark-accent/30 text-dark-accent text-xs font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <div class="flex flex-col items-center gap-3">
+            <a href="updates.html" class="px-6 py-2.5 bg-dark-accent hover:bg-emerald-400 text-white text-xs font-black rounded-xl transition-all shadow-glow hover:scale-105 whitespace-nowrap uppercase tracking-wider">
+              Changelog ansehen
+            </a>
+            <button onclick="app.hideReleaseBanner()" class="text-[10px] text-dark-muted hover:text-white transition-colors font-bold uppercase tracking-widest">
               Ausblenden
             </button>
           </div>
@@ -496,7 +503,7 @@
       </div>
 
       <!-- Filter Bar -->
-      <div class="sticky top-4 z-40 no-print" id="filterBar">
+      <div class="sm:sticky top-4 z-40 no-print" id="filterBar">
         <div
           class="bg-dark-bg/95 backdrop-blur-md border border-dark-border rounded-xl p-2 flex flex-col sm:flex-row gap-3 justify-between items-center shadow-2xl ring-1 ring-white/5"
         >
@@ -564,93 +571,127 @@
           </div>
         </footer>
     
-        <!-- Anki Learning Modal -->
-    <div
-      id="ankiModal"
-      class="fixed inset-0 z-[110] hidden bg-dark-bg/95 backdrop-blur-md overflow-y-auto no-print"
-    >
-      <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-2xl bg-dark-card border border-dark-border rounded-2xl shadow-2xl relative overflow-hidden transition-all transform scale-95 opacity-0" id="ankiContainer">
-          
-          <!-- Progress Bar -->
-          <div class="absolute top-0 left-0 w-full h-1.5 bg-dark-bg">
-            <div id="ankiProgress" class="h-full bg-dark-accent transition-all duration-300 w-0 shadow-glow"></div>
+        <!-- ANKI Lernkarten Modal (Full Screen & Opaque) -->
+    <div id="ankiModal" class="fixed inset-0 z-[9999] hidden bg-[#020617] no-print flex flex-col">
+      <!-- Modal Header (Solid) -->
+      <div class="p-4 border-b border-dark-border flex items-center justify-between bg-[#0f172a] shrink-0">
+        <div class="flex-1 sm:flex hidden"></div>
+        <div class="flex flex-col items-center text-center flex-[3] min-w-0 px-2">
+          <h2 id="ankiTopicTitle" class="text-sm font-bold text-white truncate w-full">Thema</h2>
+          <div id="ankiModeBadge" class="flex items-center justify-center gap-1.5 mt-0.5">
+            <!-- Wird per JS befüllt -->
           </div>
+        </div>
+        <div class="flex-1 flex justify-end">
+          <button onclick="app.anki.close()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#020617] border border-dark-border text-dark-muted hover:text-white transition-all hover:scale-105 active:scale-95 shrink-0">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
 
-          <div class="p-6 sm:p-8">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-8 pt-2">
-              <div class="flex flex-col">
-                <span id="ankiTopicTitle" class="text-[10px] font-bold text-dark-muted uppercase tracking-widest">Thema</span>
-                <h3 id="ankiCardCount" class="text-sm font-bold text-white">Karte 1 von X</h3>
+      <!-- Progress Bar (Subtle) -->
+      <div class="h-1 w-full bg-[#020617] shrink-0">
+        <div id="ankiProgress" class="h-full bg-dark-accent shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-500 w-0"></div>
+      </div>
+
+      <!-- Scrollable Content Area -->
+      <div class="flex-grow overflow-y-auto flex flex-col items-center bg-[#020617]">
+        <div class="w-full max-w-2xl px-6 py-12 flex-grow flex flex-col justify-center min-h-full text-center">
+
+          <div id="ankiModeView" class="w-full space-y-6 animate-in fade-in zoom-in duration-300">
+            <div class="mb-10">
+              <div class="w-20 h-20 bg-dark-accent/10 rounded-2xl flex items-center justify-center text-dark-accent mx-auto mb-6 border border-dark-accent/20">
+                <i class="fa-solid fa-layer-group text-4xl"></i>
               </div>
-              <button onclick="app.closeAnki()" class="p-2 text-dark-muted hover:text-white transition-colors">
-                <i class="fa-solid fa-xmark text-xl"></i>
+              <h3 class="text-2xl font-bold text-white tracking-tight">Lern-Zentrale</h3>
+              <p class="text-dark-muted mt-2 text-sm">Wähle deine Strategie für dieses Modul.</p>
+
+              <!-- Themen-Statistik -->
+              <div id="ankiTopicStats" class="hidden"></div>
+            </div>
+            <div class="grid gap-4">
+              <!-- Strategie Modus -->
+              <button onclick="app.anki.start('spaced')" class="w-full p-6 bg-dark-card border border-dark-accent/30 hover:border-dark-accent rounded-2xl text-center group transition-all shadow-lg hover:shadow-dark-accent/5">
+                <div class="flex flex-col items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-dark-accent/20 flex items-center justify-center text-dark-accent group-hover:scale-110 transition-transform shrink-0">
+                    <i class="fa-solid fa-brain text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-base font-bold text-white group-hover:text-dark-accent transition-colors">Strategie-Modus</h4>
+                    <p class="text-xs text-dark-muted leading-relaxed mt-1 max-w-sm">
+                      <span class="text-dark-accent font-bold">Intelligente Intervalle.</span> Richtige Antworten erhöhen die Pause bis zur nächsten Wiederholung.
+                    </p>
+                  </div>
+                </div>
               </button>
-            </div>
 
-            <!-- Card Area -->
-            <div class="min-h-[250px] flex flex-col justify-center items-center text-center py-10">
-              <div id="ankiQuestionArea" class="space-y-6 w-full">
-                <p id="ankiQuestion" class="text-xl sm:text-2xl font-bold text-white leading-tight px-4"></p>
-                <button 
-                  onclick="app.showAnkiAnswer()" 
-                  id="showAnswerBtn"
-                  class="px-8 py-3 bg-dark-accent/10 border border-dark-accent/30 text-dark-accent rounded-xl font-bold hover:bg-dark-accent/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Antwort zeigen
-                </button>
-              </div>
-
-              <div id="ankiAnswerArea" class="hidden space-y-8 w-full animate-fade-in">
-                <div class="p-6 bg-dark-bg/50 border border-dark-border rounded-2xl">
-                  <p id="ankiAnswer" class="text-lg text-dark-muted leading-relaxed"></p>
+              <!-- Freies Training -->
+              <button onclick="app.anki.start('manual')" class="w-full p-6 bg-dark-card border border-dark-border hover:border-dark-muted rounded-2xl text-center group transition-all shadow-lg">
+                <div class="flex flex-col items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-dark-bg flex items-center justify-center text-dark-muted group-hover:scale-110 transition-transform shrink-0">
+                    <i class="fa-solid fa-dumbbell text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-base font-bold text-white">Freies Training</h4>
+                    <p class="text-xs text-dark-muted leading-relaxed mt-1 max-w-sm">
+                      <span class="text-white font-bold text-opacity-70">Reinpauken ohne Limit.</span> Alle Karten sofort wiederholen. Kein Speichern, kein Druck.
+                    </p>
+                  </div>
                 </div>
-                
-                <div class="flex gap-4">
-                  <button 
-                    onclick="app.nextAnki(false)"
-                    class="flex-1 py-4 bg-dark-danger/10 border border-dark-danger/30 text-dark-danger rounded-xl font-bold hover:bg-dark-danger/20 transition-all flex items-center justify-center gap-2"
-                  >
-                    <i class="fa-solid fa-xmark"></i> Nicht gewusst
-                  </button>
-                  <button 
-                    onclick="app.nextAnki(true)"
-                    class="flex-1 py-4 bg-dark-success/10 border border-dark-success/30 text-dark-success rounded-xl font-bold hover:bg-dark-success/20 transition-all shadow-glow flex items-center justify-center gap-2"
-                  >
-                    <i class="fa-solid fa-check"></i> Sicher gewusst
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Summary Area (Hidden by default) -->
-            <div id="ankiSummaryArea" class="hidden text-center space-y-8 py-6">
-              <div class="w-20 h-20 bg-dark-accent/20 rounded-full flex items-center justify-center mx-auto border border-dark-accent/30 shadow-glow">
-                <i class="fa-solid fa-check-double text-dark-accent text-3xl"></i>
-              </div>
-              <div>
-                <h3 class="text-2xl font-bold text-white mb-2">Sitzung beendet!</h3>
-                <p class="text-dark-muted">Du hast dieses Thema erfolgreich wiederholt.</p>
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-dark-bg/50 border border-dark-border rounded-xl">
-                  <span class="block text-[10px] text-dark-muted uppercase font-bold tracking-widest">Korrekt</span>
-                  <span id="summaryCorrect" class="text-2xl font-bold text-dark-success">0</span>
-                </div>
-                <div class="p-4 bg-dark-bg/50 border border-dark-border rounded-xl">
-                  <span class="block text-[10px] text-dark-muted uppercase font-bold tracking-widest">Genauigkeit</span>
-                  <span id="summaryPercent" class="text-2xl font-bold text-white">0%</span>
-                </div>
-              </div>
-              <button 
-                onclick="app.closeAnki()"
-                class="w-full py-4 bg-dark-accent text-white rounded-xl font-bold hover:bg-emerald-400 transition-all shadow-glow"
-              >
-                Zurück zur Übersicht
               </button>
             </div>
           </div>
+
+          <!-- QUESTION VIEW -->
+          <div id="ankiQuestionView" class="w-full hidden animate-in fade-in slide-in-from-bottom-8 duration-500 text-center">
+            <div class="mb-12">
+              <span class="hidden" id="ankiCardCounter">Karte 1 von X</span>
+              <h4 id="ankiQuestionText" class="text-2xl sm:text-4xl font-bold text-white leading-tight tracking-tight px-4">Frage wird geladen...</h4>
+            </div>
+
+            <button id="ankiShowAnswerBtn" onclick="app.anki.showAnswer()" class="w-full py-6 px-8 bg-dark-accent hover:bg-emerald-400 text-white font-bold rounded-2xl transition-all shadow-glow transform hover:scale-[1.02] active:scale-[0.98] text-lg">
+              Antwort aufdecken
+              <i class="fa-solid fa-eye ml-2"></i>
+            </button>
+          </div>
+
+          <!-- ANSWER VIEW -->
+          <div id="ankiAnswerView" class="w-full hidden animate-in fade-in zoom-in duration-300 text-center">
+            <div class="mb-8 flex flex-col items-center">
+               <span class="inline-block px-3 py-1 bg-dark-accent/10 border border-dark-accent/30 rounded-full text-[10px] text-dark-accent uppercase font-bold tracking-widest mb-6">Lösung</span>
+               <div class="bg-dark-card border border-dark-border rounded-3xl p-8 sm:p-12 shadow-2xl w-full">
+                  <p id="ankiAnswerText" class="text-lg sm:text-2xl text-white leading-relaxed font-medium">Antwort wird geladen...</p>
+               </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button onclick="app.anki.next(false)" class="order-2 sm:order-1 py-5 px-6 bg-dark-bg border border-dark-danger/30 text-dark-danger hover:bg-dark-danger/10 font-bold rounded-2xl transition-all flex items-center justify-center gap-3 group">
+                <i class="fa-solid fa-xmark text-lg group-hover:rotate-12 transition-transform"></i>
+                Nicht gewusst
+              </button>
+              <button onclick="app.anki.next(true)" class="order-1 sm:order-2 py-5 px-6 bg-dark-success text-dark-bg font-bold rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg transform hover:scale-[1.02] active:scale-[0.98]">
+                <i class="fa-solid fa-check text-lg"></i>
+                Sicher gewusst
+              </button>
+            </div>
+          </div>
+
+          <!-- FINISH VIEW -->
+          <div id="ankiFinishView" class="w-full hidden animate-in fade-in zoom-in duration-500 flex flex-col items-center text-center">
+            <div class="relative mb-8">
+              <div class="w-32 h-32 bg-dark-success/20 rounded-full flex items-center justify-center mx-auto border border-dark-success/30 relative z-10">
+                <i class="fa-solid fa-circle-check text-5xl text-dark-success"></i>
+              </div>
+              <div class="absolute inset-0 bg-dark-success/10 blur-3xl rounded-full"></div>
+            </div>
+            <h3 class="text-3xl font-bold text-white mb-4 tracking-tight">Thema abgeschlossen!</h3>
+            <p class="text-dark-muted mb-12 max-w-xs mx-auto text-sm leading-relaxed">Hervorragend! Du hast alle Karten für dieses Modul durchgearbeitet.</p>
+
+            <button onclick="app.anki.close()" class="w-full py-5 px-8 bg-dark-accent text-white font-bold rounded-2xl shadow-glow transform hover:scale-[1.02] active:scale-[0.98]">
+              Zurück zur Übersicht
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -677,8 +718,8 @@
 
     <template id="tpl-topic">
       <div class="topic-card bg-dark-card border border-dark-border rounded-xl hover:border-dark-accent/30 transition-all duration-300 group shadow-card" data-id="">
-        <div class="p-3 sm:p-4 cursor-pointer select-none header-area relative">
-          <div class="flex gap-3 sm:gap-4 pl-1 sm:pl-3 items-center">
+        <div class="p-3 sm:p-4 cursor-pointer select-none header-area relative flex items-center min-h-[70px] sm:min-h-[80px]">
+          <div class="flex gap-3 sm:gap-4 pl-1 sm:pl-3 items-center w-full">
             <div class="shrink-0 flex items-center justify-center h-full" onclick="event.stopPropagation()">
               <label class="checkbox-wrapper relative flex items-center justify-center cursor-pointer w-6 h-6 sm:w-7 sm:h-7">
                 <input type="checkbox" class="peer sr-only topic-check" />
@@ -689,19 +730,30 @@
                 </div>
               </label>
             </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start sm:items-center flex-col sm:flex-row gap-1 sm:gap-3 mb-1">
-                <h3 class="text-sm sm:text-base font-bold text-white topic-title group-hover:text-dark-accent transition-colors leading-tight">Title</h3>
-                <div class="flex gap-2 items-center flex-wrap">
-                  <span class="weight-badge text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider shrink-0"></span>
-                  <span class="rep-indicator hidden text-[9px] font-bold px-2 py-0.5 rounded border border-dark-accent/30 bg-dark-accent/10 text-dark-accent uppercase tracking-wider shrink-0"></span>
-                  <a href="#" target="_blank" class="google-link hidden sm:inline-flex items-center text-dark-muted hover:text-dark-accent transition-colors text-[10px] bg-dark-bg px-2 py-1 rounded border border-dark-border uppercase tracking-wider font-bold" onclick="event.stopPropagation()"><i class="fa-brands fa-google mr-1"></i>Suche</a>
-                  <a href="#" target="_blank" class="duckduckgo-link hidden sm:inline-flex items-center text-dark-muted hover:text-dark-accent transition-colors text-[10px] bg-dark-bg px-2 py-1 rounded border border-dark-border uppercase tracking-wider font-bold" onclick="event.stopPropagation()">DuckDuckGo</a>
-                  <button class="learn-btn inline-flex items-center text-white hover:bg-dark-accent transition-colors text-[10px] bg-dark-accent/20 px-2 py-1 rounded border border-dark-accent/30 uppercase tracking-wider font-bold" onclick="event.stopPropagation(); app.startTopic(this.closest('.topic-card').dataset.id)"><i class="fa-solid fa-brain mr-1"></i>Lernkarten</button>
+            <div class="flex-1 min-w-0 flex flex-col justify-center py-1">
+              <h3 class="text-sm sm:text-base font-bold text-white topic-title group-hover:text-dark-accent transition-colors leading-tight mb-1.5 sm:mb-2">Title</h3>
+              
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                <!-- Links: Gewichtung & Suche -->
+                <div class="flex items-center gap-3 flex-wrap">
+                  <div class="flex gap-2 items-center">
+                    <span class="weight-badge text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider shrink-0"></span>
+                    <span class="rep-indicator hidden text-[9px] font-bold px-2 py-0.5 rounded border border-dark-accent/30 bg-dark-accent/10 text-dark-accent uppercase tracking-wider shrink-0"></span>
+                  </div>
+                  
+                  <div class="hidden sm:flex gap-2 items-center border-l border-dark-border/50 pl-3">
+                    <a href="#" target="_blank" class="google-link inline-flex items-center text-dark-muted hover:text-dark-accent transition-colors text-[10px] bg-dark-bg px-2 py-1 rounded border border-dark-border uppercase tracking-wider font-bold" onclick="event.stopPropagation()"><i class="fa-brands fa-google mr-1"></i>Suche</a>
+                    <a href="#" target="_blank" class="duckduckgo-link inline-flex items-center text-dark-muted hover:text-dark-accent transition-colors text-[10px] bg-dark-bg px-2 py-1 rounded border border-dark-border uppercase tracking-wider font-bold" onclick="event.stopPropagation()"><i class="fa-solid fa-magnifying-glass mr-1"></i>DuckDuckGo</a>
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-3 text-[10px] font-mono text-dark-muted mt-1 sm:mt-0">
-                <span class="time-label"><i class="fa-regular fa-clock mr-1"></i>-- min</span>
+
+                <!-- Rechts/Unten: Lernkarten -->
+                <div class="relative flex items-center group/anki w-fit mt-0.5 sm:mt-0">
+                  <button class="anki-btn flex items-center text-dark-accent hover:bg-dark-accent hover:text-white transition-all text-[10px] bg-dark-accent/10 px-2.5 py-1 rounded border border-dark-accent/30 uppercase tracking-wider font-bold" onclick="event.stopPropagation(); app.anki.open(this.closest('.topic-card').dataset.id)">
+                    <i class="fa-solid fa-layer-group mr-1.5"></i> Lernkarten
+                  </button>
+                  <span class="anki-badge absolute -top-2 -right-2 text-[7px] sm:text-[8px] font-extrabold px-1.5 py-0.5 rounded border bg-dark-bg leading-none transition-transform group-hover/anki:scale-110 shadow-sm z-10 border-dark-accent/30 text-dark-accent">NEU</span>
+                </div>
               </div>
             </div>
             <div class="w-8 h-8 flex items-center justify-center text-dark-muted accordion-icon transition-transform duration-300 bg-dark-bg/50 rounded-full border border-dark-border group-hover:border-dark-muted shrink-0">
@@ -714,13 +766,17 @@
             <div>
               <div class="flex justify-between items-center mb-3">
                 <h4 class="text-[10px] font-bold text-dark-muted uppercase flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Lerninhalte</h4>
-                <a href="#" target="_blank" class="google-link-mobile sm:hidden inline-flex items-center text-dark-accent text-[10px] uppercase font-bold" onclick="event.stopPropagation()"><i class="fa-brands fa-google mr-1"></i> Google</a>
+                <div class="flex gap-3 sm:hidden">
+                  <a href="#" target="_blank" class="google-link-mobile inline-flex items-center text-dark-accent text-[10px] uppercase font-bold" onclick="event.stopPropagation()"><i class="fa-brands fa-google mr-1"></i> Google</a>
+                  <a href="#" target="_blank" class="duckduckgo-link-mobile inline-flex items-center text-dark-muted text-[10px] uppercase font-bold" onclick="event.stopPropagation()"><i class="fa-solid fa-magnifying-glass mr-1"></i> DuckDuckGo</a>
+                </div>
               </div>
               <ul class="subtask-list space-y-2.5"></ul>
             </div>
-            <div class="flex flex-col gap-5 border-l border-dark-border pl-0 md:pl-6 md:border-l-0 border-t md:border-t-0 pt-4 md:pt-0">
+            <div class="flex flex-col gap-5 border-t md:border-t-0 md:border-l border-dark-border pt-5 md:pt-0 md:pl-6">
               <div>
-                <span class="text-[10px] font-bold text-dark-muted uppercase mb-2 block">Wiederholungen</span>
+                <span class="text-[10px] font-bold text-dark-muted uppercase mb-1 block">Wiederholungen</span>
+                <p class="text-[10px] text-dark-muted/70 mb-3 leading-tight">Empfehlung: Festige dein Wissen durch mindestens 3 Wiederholungen.</p>
                 <div class="flex gap-2">
                   <label class="cursor-pointer group/rep w-10 h-10">
                     <input type="checkbox" class="rep-check sr-only" data-idx="0" />
@@ -744,6 +800,7 @@
 
     <script src="assets/js/confetti.js"></script>
     <script src="assets/js/data.js"></script>
+    <script src="assets/js/questions.js"></script>
     <script src="assets/js/app.js"></script>
   </body>
 </html>

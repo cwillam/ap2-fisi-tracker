@@ -23,11 +23,187 @@ const app = {
   cardMap: {},
   catMap: {},
 
-  // Anki Session State
-  currentAnkiTopicId: null,
-  currentAnkiCards: [],
-  currentAnkiIndex: 0,
-  ankiCorrectCount: 0,
+  // --- ANKI / FLASHCARDS ---
+  anki: {
+    currentTopicId: null,
+    cards: [],
+    currentIndex: 0,
+    mode: 'manual', // 'manual' oder 'spaced'
+
+    open(topicId) {
+      const topic = app.findTopic(topicId);
+      if (!topic) return;
+
+      // Priorität: Echte Lernkarten aus questions.js, sonst Fallback auf sub-Tasks
+      const allQuestions = window.ANKI_QUESTIONS || {};
+      if (allQuestions[topicId]) {
+        this.cards = allQuestions[topicId];
+      } else if (topic.sub && topic.sub.length > 0) {
+        this.cards = topic.sub.map((text, index) => ({
+          id: `${topicId}_${index}`,
+          q: text,
+          a: "Hast du diesen Punkt verstanden und kannst ihn erklären?"
+        }));
+      } else {
+        return;
+      }
+
+      this.currentTopicId = topicId;
+      document.getElementById('ankiTopicTitle').textContent = topic.title;
+      
+      // Statistiken laden
+      if (!app.state.ankiStats) app.state.ankiStats = {};
+      const stats = app.state.ankiStats[topicId] || { total: 0, correct: 0, sessions: 0 };
+      
+      const statsContainer = document.getElementById('ankiTopicStats');
+      if (statsContainer) {
+        if (stats.total > 0) {
+          const accuracy = Math.round((stats.correct / stats.total) * 100);
+          statsContainer.innerHTML = `
+            <div class="flex items-center justify-center gap-6 mt-4 p-3 bg-dark-bg/50 rounded-xl border border-dark-border/50">
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Gelernt</span>
+                <span class="text-sm font-bold text-white">${stats.total} Karten</span>
+              </div>
+              <div class="w-px h-6 bg-dark-border"></div>
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Quote</span>
+                <span class="text-sm font-bold text-dark-success">${accuracy}%</span>
+              </div>
+              <div class="w-px h-6 bg-dark-border"></div>
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Sessions</span>
+                <span class="text-sm font-bold text-dark-accent">${stats.sessions}x</span>
+              </div>
+            </div>
+          `;
+          statsContainer.classList.remove('hidden');
+        } else {
+          statsContainer.classList.add('hidden');
+        }
+      }
+
+      // Reset Views
+      document.getElementById('ankiModeView').classList.remove('hidden');
+      document.getElementById('ankiQuestionView').classList.add('hidden');
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+      document.getElementById('ankiFinishView').classList.add('hidden');
+      document.getElementById('ankiModeBadge').innerHTML = '';
+      document.getElementById('ankiProgress').style.width = '0%';
+
+      const modal = document.getElementById('ankiModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    },
+
+    start(mode) {
+      this.mode = mode;
+      this.currentIndex = 0;
+      
+      // Global Stats tracken (Session zählt ab Start)
+      if (!app.state.ankiStats) app.state.ankiStats = {};
+      if (!app.state.ankiStats[this.currentTopicId]) {
+        app.state.ankiStats[this.currentTopicId] = { total: 0, correct: 0, sessions: 0 };
+      }
+      app.state.ankiStats[this.currentTopicId].sessions++;
+      app.save();
+      app.updateStats();
+
+      // Karten mischen
+      this.cards = [...this.cards].sort(() => Math.random() - 0.5);
+      
+      const badge = document.getElementById('ankiModeBadge');
+      if (mode === 'spaced') {
+        badge.innerHTML = '<i class="fa-solid fa-brain mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
+      } else {
+        badge.innerHTML = '<i class="fa-solid fa-dumbbell mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
+      }
+
+      document.getElementById('ankiModeView').classList.add('hidden');
+      document.getElementById('ankiQuestionView').classList.remove('hidden');
+      this.showCard();
+    },
+
+    showCard() {
+      const card = this.cards[this.currentIndex];
+      const progress = (this.currentIndex / this.cards.length) * 100;
+      
+      document.getElementById('ankiProgress').style.width = `${progress}%`;
+      document.getElementById('ankiQuestionText').textContent = card.q;
+      document.getElementById('ankiAnswerText').textContent = card.a;
+
+      document.getElementById('ankiQuestionView').classList.remove('hidden');
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+    },
+
+    showAnswer() {
+      document.getElementById('ankiQuestionView').classList.add('hidden');
+      document.getElementById('ankiAnswerView').classList.remove('hidden');
+    },
+
+    next(isCorrect) {
+      // Global Stats tracken
+      const gStats = app.state.ankiStats[this.currentTopicId];
+      gStats.total++;
+      if (isCorrect) gStats.correct++;
+
+      if (this.mode === 'spaced') {
+        this.updateCardLevel(this.cards[this.currentIndex].id, isCorrect);
+      }
+
+      this.currentIndex++;
+      if (this.currentIndex < this.cards.length) {
+        this.showCard();
+      } else {
+        this.showFinish();
+      }
+      app.save();
+    },
+
+    updateCardLevel(cardId, isCorrect) {
+      if (!app.state.anki) app.state.anki = {};
+      if (!app.state.anki[cardId]) {
+        app.state.anki[cardId] = { level: 0, nextReview: 0 };
+      }
+
+      const cardData = app.state.anki[cardId];
+      if (isCorrect) {
+        cardData.level = Math.min(cardData.level + 1, 5);
+      } else {
+        cardData.level = 1;
+      }
+
+      const intervals = [0, 1, 3, 7, 14, 30];
+      const daysToAdd = intervals[cardData.level] || 1;
+      
+      const nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + daysToAdd);
+      nextDate.setHours(0, 0, 0, 0);
+      cardData.nextReview = nextDate.getTime();
+    },
+
+    showFinish() {
+      document.getElementById('ankiProgress').style.width = '100%';
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+      document.getElementById('ankiFinishView').classList.remove('hidden');
+      
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#10b981', '#34d399']
+        });
+      }
+    },
+
+    close() {
+      const modal = document.getElementById('ankiModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      app.updateStats();
+    }
+  },
 
   quotes: [
     '„Kein Backup, kein Mitleid.“',
@@ -151,108 +327,6 @@ const app = {
     
     return this.state[id];
   },
-
-  startTopic(id) {
-    const topic = this.findTopic(id);
-    if (!topic || !topic.sub || topic.sub.length === 0) return;
-
-    const s = this.getState(id);
-    s.ankiStats.sessions++;
-    this.save();
-
-    // Session Setup
-    this.currentAnkiTopicId = id;
-    this.currentAnkiCards = [...topic.sub].sort(() => Math.random() - 0.5);
-    this.currentAnkiIndex = 0;
-    this.ankiCorrectCount = 0;
-
-    // UI Setup
-    document.getElementById('ankiTopicTitle').textContent = topic.title;
-    const modal = document.getElementById('ankiModal');
-    const container = document.getElementById('ankiContainer');
-
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-      container.classList.remove('scale-95', 'opacity-0');
-      container.classList.add('scale-100', 'opacity-100');
-    }, 10);
-
-    this.showAnkiCard();
-  },
-
-  showAnkiCard() {
-    const card = this.currentAnkiCards[this.currentAnkiIndex];
-    const total = this.currentAnkiCards.length;
-
-    document.getElementById('ankiCardCount').textContent = `Karte ${this.currentAnkiIndex + 1} von ${total}`;
-    document.getElementById('ankiProgress').style.width = `${((this.currentAnkiIndex) / total) * 100}%`;
-
-    document.getElementById('ankiQuestion').textContent = card;
-    document.getElementById('ankiAnswer').textContent = "Hast du diesen Punkt verstanden und kannst ihn erklären?";
-
-    document.getElementById('ankiQuestionArea').classList.remove('hidden');
-    document.getElementById('ankiAnswerArea').classList.add('hidden');
-    document.getElementById('ankiSummaryArea').classList.add('hidden');
-  },
-
-  showAnkiAnswer() {
-    document.getElementById('ankiQuestionArea').classList.add('hidden');
-    document.getElementById('ankiAnswerArea').classList.remove('hidden');
-  },
-
-  nextAnki(isCorrect) {
-    const s = this.getState(this.currentAnkiTopicId);
-    s.ankiStats.total++;
-    if (isCorrect) {
-      s.ankiStats.correct++;
-      this.ankiCorrectCount++;
-    }
-    this.save();
-
-    this.currentAnkiIndex++;
-    if (this.currentAnkiIndex < this.currentAnkiCards.length) {
-      this.showAnkiCard();
-    } else {
-      this.showAnkiSummary();
-    }
-  },
-
-  showAnkiSummary() {
-    document.getElementById('ankiProgress').style.width = '100%';
-    document.getElementById('ankiQuestionArea').classList.add('hidden');
-    document.getElementById('ankiAnswerArea').classList.add('hidden');
-    document.getElementById('ankiSummaryArea').classList.remove('hidden');
-
-    const total = this.currentAnkiCards.length;
-    const pct = Math.round((this.ankiCorrectCount / total) * 100);
-
-    document.getElementById('summaryCorrect').textContent = this.ankiCorrectCount;
-    document.getElementById('summaryPercent').textContent = `${pct}%`;
-
-    if (pct === 100 && typeof confetti === 'function') {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#10b981', '#34d399']
-      });
-    }
-  },
-
-  closeAnki() {
-    const modal = document.getElementById('ankiModal');
-    const container = document.getElementById('ankiContainer');
-
-    container.classList.remove('scale-100', 'opacity-100');
-    container.classList.add('scale-95', 'opacity-0');
-
-    setTimeout(() => {
-      modal.classList.add('hidden');
-    }, 300);
-
-    this.updateStats();
-  },
-
 
   trackActivity() {
     if (!this.state.activity) this.state.activity = {};
@@ -795,7 +869,6 @@ const app = {
         card.dataset.id = t.id;
 
         node.querySelector('.topic-title').textContent = t.title;
-        node.querySelector('.time-label').innerHTML = `<i class="fa-regular fa-clock mr-1"></i>~${t.time} min`;
 
         const googleLinks = node.querySelectorAll('.google-link, .google-link-mobile');
         googleLinks.forEach((gl) => {
@@ -856,6 +929,15 @@ const app = {
           r.checked = s.reps[i];
           r.onchange = (e) => this.setRep(t.id, i, e.target);
         });
+
+        // ANKI Button Logik
+        const ankiBtn = node.querySelector('.anki-btn');
+        if (ankiBtn) {
+          ankiBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.anki.open(t.id);
+          };
+        }
 
         container.appendChild(node);
         this.cardMap[t.id] = card;
