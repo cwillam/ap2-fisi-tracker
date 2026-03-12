@@ -20,6 +20,190 @@ const app = {
   timerRunning: false,
   timeLeft: 1500,
   searchQuery: '',
+  cardMap: {},
+  catMap: {},
+
+  // --- ANKI / FLASHCARDS ---
+  anki: {
+    currentTopicId: null,
+    cards: [],
+    currentIndex: 0,
+    mode: 'manual', // 'manual' oder 'spaced'
+
+    open(topicId) {
+      const topic = app.findTopic(topicId);
+      if (!topic) return;
+
+      // Priorität: Echte Lernkarten aus questions.js, sonst Fallback auf sub-Tasks
+      const allQuestions = window.ANKI_QUESTIONS || {};
+      if (allQuestions[topicId]) {
+        this.cards = allQuestions[topicId];
+      } else if (topic.sub && topic.sub.length > 0) {
+        this.cards = topic.sub.map((text, index) => ({
+          id: `${topicId}_${index}`,
+          q: text,
+          a: "Hast du diesen Punkt verstanden und kannst ihn erklären?"
+        }));
+      } else {
+        return;
+      }
+
+      this.currentTopicId = topicId;
+      document.getElementById('ankiTopicTitle').textContent = topic.title;
+      
+      // Statistiken laden
+      if (!app.state.ankiStats) app.state.ankiStats = {};
+      const stats = app.state.ankiStats[topicId] || { total: 0, correct: 0, sessions: 0 };
+      
+      const statsContainer = document.getElementById('ankiTopicStats');
+      if (statsContainer) {
+        if (stats.total > 0) {
+          const accuracy = Math.round((stats.correct / stats.total) * 100);
+          statsContainer.innerHTML = `
+            <div class="flex items-center justify-center gap-6 mt-4 p-3 bg-dark-bg/50 rounded-xl border border-dark-border/50">
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Gelernt</span>
+                <span class="text-sm font-bold text-white">${stats.total} Karten</span>
+              </div>
+              <div class="w-px h-6 bg-dark-border"></div>
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Quote</span>
+                <span class="text-sm font-bold text-dark-success">${accuracy}%</span>
+              </div>
+              <div class="w-px h-6 bg-dark-border"></div>
+              <div class="text-center">
+                <span class="block text-[10px] text-dark-muted uppercase font-bold">Sessions</span>
+                <span class="text-sm font-bold text-dark-accent">${stats.sessions}x</span>
+              </div>
+            </div>
+          `;
+          statsContainer.classList.remove('hidden');
+        } else {
+          statsContainer.classList.add('hidden');
+        }
+      }
+
+      // Reset Views
+      document.getElementById('ankiModeView').classList.remove('hidden');
+      document.getElementById('ankiQuestionView').classList.add('hidden');
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+      document.getElementById('ankiFinishView').classList.add('hidden');
+      document.getElementById('ankiModeBadge').innerHTML = '';
+      document.getElementById('ankiProgress').style.width = '0%';
+
+      const modal = document.getElementById('ankiModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    },
+
+    start(mode) {
+      this.mode = mode;
+      this.currentIndex = 0;
+      
+      // Global Stats tracken (Session zählt ab Start)
+      if (!app.state.ankiStats) app.state.ankiStats = {};
+      if (!app.state.ankiStats[this.currentTopicId]) {
+        app.state.ankiStats[this.currentTopicId] = { total: 0, correct: 0, sessions: 0 };
+      }
+      app.state.ankiStats[this.currentTopicId].sessions++;
+      app.save();
+      app.updateStats();
+
+      // Karten mischen (alle laden)
+      this.cards = [...this.cards].sort(() => Math.random() - 0.5);
+      
+      const badge = document.getElementById('ankiModeBadge');
+      if (mode === 'spaced') {
+        badge.innerHTML = '<i class="fa-solid fa-brain mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
+      } else {
+        badge.innerHTML = '<i class="fa-solid fa-dumbbell mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
+      }
+
+      document.getElementById('ankiModeView').classList.add('hidden');
+      document.getElementById('ankiQuestionView').classList.remove('hidden');
+      this.showCard();
+    },
+
+    showCard() {
+      const card = this.cards[this.currentIndex];
+      const progress = (this.currentIndex / this.cards.length) * 100;
+      
+      document.getElementById('ankiProgress').style.width = `${progress}%`;
+      document.getElementById('ankiQuestionText').textContent = card.q;
+      document.getElementById('ankiAnswerText').textContent = card.a;
+
+      document.getElementById('ankiQuestionView').classList.remove('hidden');
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+    },
+
+    showAnswer() {
+      document.getElementById('ankiQuestionView').classList.add('hidden');
+      document.getElementById('ankiAnswerView').classList.remove('hidden');
+    },
+
+    next(isCorrect) {
+      // Global Stats tracken
+      const gStats = app.state.ankiStats[this.currentTopicId];
+      gStats.total++;
+      if (isCorrect) gStats.correct++;
+
+      if (this.mode === 'spaced') {
+        this.updateCardLevel(this.cards[this.currentIndex].id, isCorrect);
+      }
+
+      this.currentIndex++;
+      if (this.currentIndex < this.cards.length) {
+        this.showCard();
+      } else {
+        this.showFinish();
+      }
+      app.save();
+    },
+
+    updateCardLevel(cardId, isCorrect) {
+      if (!app.state.anki) app.state.anki = {};
+      if (!app.state.anki[cardId]) {
+        app.state.anki[cardId] = { level: 0, nextReview: 0 };
+      }
+
+      const cardData = app.state.anki[cardId];
+      if (isCorrect) {
+        cardData.level = Math.min(cardData.level + 1, 5);
+      } else {
+        cardData.level = 1;
+      }
+
+      const intervals = [0, 1, 3, 7, 14, 30];
+      const daysToAdd = intervals[cardData.level] || 1;
+      
+      const nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + daysToAdd);
+      nextDate.setHours(0, 0, 0, 0);
+      cardData.nextReview = nextDate.getTime();
+    },
+
+    showFinish() {
+      document.getElementById('ankiProgress').style.width = '100%';
+      document.getElementById('ankiAnswerView').classList.add('hidden');
+      document.getElementById('ankiFinishView').classList.remove('hidden');
+      
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#10b981', '#34d399']
+        });
+      }
+    },
+
+    close() {
+      const modal = document.getElementById('ankiModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      app.updateStats();
+    }
+  },
 
   quotes: [
     '„Kein Backup, kein Mitleid.“',
@@ -72,6 +256,11 @@ const app = {
         if (infoBox) infoBox.classList.add('hidden');
       }
 
+      if (localStorage.getItem('ap2_release_banner_dismissed_v2')) {
+        const banner = document.getElementById('releaseBanner');
+        if (banner) banner.classList.add('hidden');
+      }
+
       if (!localStorage.getItem('ap2_welcome_dismissed_v2')) {
         setTimeout(() => {
           const welcomeModal = document.getElementById('welcomeModal');
@@ -89,7 +278,8 @@ const app = {
       this.renderActivityGraph();
       this.updateCountdown();
       setInterval(() => this.updateCountdown(), 60000);
-      this.render();
+      this.buildDOM();
+      this.applyFilter();
     } catch (err) {
       console.error('Critical Init Error:', err);
     } finally {
@@ -113,6 +303,12 @@ const app = {
     localStorage.setItem('ap2_infobox_dismissed', 'true');
   },
 
+  hideReleaseBanner() {
+    const el = document.getElementById('releaseBanner');
+    if (el) el.classList.add('hidden');
+    localStorage.setItem('ap2_release_banner_dismissed_v2', 'true');
+  },
+
   getState(id) {
     if (!this.state[id])
       this.state[id] = {
@@ -121,7 +317,14 @@ const app = {
         stars: 0,
         reps: [false, false, false],
         last: null,
+        ankiStats: { total: 0, correct: 0, sessions: 0 }
       };
+    
+    // Fallback falls ankiStats in bestehenden Daten fehlt
+    if (!this.state[id].ankiStats) {
+      this.state[id].ankiStats = { total: 0, correct: 0, sessions: 0 };
+    }
+    
     return this.state[id];
   },
 
@@ -260,7 +463,7 @@ const app = {
   // --- INTERACTION ---
   search() {
     this.searchQuery = document.getElementById('searchInput').value.toLowerCase();
-    this.render();
+    this.applyFilter();
   },
 
   toggleTopic(id, checked, element) {
@@ -440,7 +643,7 @@ const app = {
         b.classList.add('text-dark-muted', 'border-transparent');
       }
     });
-    this.render();
+    this.applyFilter();
   },
 
   findTopic(id) {
@@ -481,7 +684,8 @@ const app = {
         }
       });
       this.save();
-      this.render();
+      this.buildDOM();
+      this.applyFilter();
     }
   },
 
@@ -634,98 +838,46 @@ const app = {
     }
   },
 
-  render() {
+  // --- RENDER ENGINE v2.0 ---
+  buildDOM() {
     const list = document.getElementById('contentList');
     if (!list) return;
     list.innerHTML = '';
-    let hasVisible = false;
-
-    const activityDates = Object.keys(this.state.activity || {});
-    if (activityDates.length > 0) {
-      const badge = document.getElementById('streakBadge');
-      if (badge) badge.classList.remove('hidden');
-      const streakCount = document.getElementById('streakCount');
-      if (streakCount) streakCount.textContent = activityDates.length;
-    }
+    this.cardMap = {};
+    this.catMap = {};
 
     AP2_DATA.forEach((cat) => {
-      const visibleTopics = cat.topics.filter((t) => {
-        const s = this.getState(t.id);
-        let matchesSearch = true;
-        if (this.searchQuery) {
-          matchesSearch =
-            t.title.toLowerCase().includes(this.searchQuery) ||
-            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
-        }
-        if (!matchesSearch) return false;
-        if (this.filter === 'open' && s.done) return false;
-        if (this.filter === 'high' && t.weight < 4) return false;
-        return true;
-      });
-
-      if (visibleTopics.length === 0) return;
-      hasVisible = true;
-
       const catNode = document.getElementById('tpl-category').content.cloneNode(true);
-      catNode.querySelector('.cat-title').textContent = cat.name;
-      const descEl = catNode.querySelector('.cat-desc');
+      const catEl = catNode.querySelector('.category-block');
+      
+      catEl.querySelector('.cat-title').textContent = cat.name;
+      const descEl = catEl.querySelector('.cat-desc');
       if (descEl) descEl.textContent = cat.desc;
-      catNode.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
+      catEl.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
 
-      // Icon setzen
-      const iconContainer = catNode.querySelector('.cat-icon');
+      const iconContainer = catEl.querySelector('.cat-icon');
       if (iconContainer && cat.icon) {
         iconContainer.innerHTML = `<i class="${cat.icon}"></i>`;
       }
 
-      const container = catNode.querySelector('.cat-topics');
+      const container = catEl.querySelector('.cat-topics');
 
-      visibleTopics.forEach((t) => {
+      cat.topics.forEach((t) => {
         const s = this.getState(t.id);
         const node = document.getElementById('tpl-topic').content.cloneNode(true);
         const card = node.querySelector('.topic-card');
         card.dataset.id = t.id;
 
-        if (
-          this.openTopics.has(t.id) ||
-          (this.searchQuery && t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery)))
-        ) {
-          node.querySelector('.topic-body').classList.add('open');
-          const icon = node.querySelector('.accordion-icon');
-          icon.style.transform = 'rotate(180deg)';
-          icon.classList.add('bg-dark-accent', 'text-white');
-          icon.classList.remove('bg-dark-bg/50', 'text-dark-muted');
-        }
-
         node.querySelector('.topic-title').textContent = t.title;
-        node.querySelector(
-          '.time-label'
-        ).innerHTML = `<i class="fa-regular fa-clock mr-1"></i>~${t.time} min`;
-
-        const repIndicator = node.querySelector('.rep-indicator');
-        const repCount = s.reps.filter(Boolean).length;
-        if (repCount > 0) {
-          repIndicator.textContent = repCount + 'x Wiederholt';
-          repIndicator.classList.remove('hidden');
-          if (repCount === 3)
-            repIndicator.classList.add(
-              'bg-dark-success/20',
-              'text-dark-success',
-              'border-dark-success/30'
-            );
-        }
 
         const googleLinks = node.querySelectorAll('.google-link, .google-link-mobile');
         googleLinks.forEach((gl) => {
-          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
-            t.title
-          )}`;
+          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
         });
-        const duckduckgoLink = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
-        duckduckgoLink.forEach((dl) => {
-          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
-              t.title
-          )}`;
+        
+        const duckduckgoLinks = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
+        duckduckgoLinks.forEach((dl) => {
+          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
         });
 
         const wb = node.querySelector('.weight-badge');
@@ -757,14 +909,10 @@ const app = {
           li.className = 'flex items-start gap-3 text-xs text-dark-muted group/item transition-all';
           li.innerHTML = `
                   <div class="shrink-0 flex items-center justify-center w-5 h-5 relative">
-                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${
-                        isDone ? 'checked' : ''
-                      }>
+                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${isDone ? 'checked' : ''}>
                       <i class="fa-solid fa-check text-[10px] text-white absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
                   </div>
-                  <span class="transition-colors cursor-pointer pt-0.5 ${
-                    isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'
-                  }">${sub}</span>
+                  <span class="transition-colors cursor-pointer pt-0.5 ${isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'}">${sub}</span>
                 `;
           const subCb = li.querySelector('input');
           subCb.onclick = (e) => e.stopPropagation();
@@ -782,9 +930,74 @@ const app = {
           r.onchange = (e) => this.setRep(t.id, i, e.target);
         });
 
+        // ANKI Button Logik
+        const ankiBtn = node.querySelector('.anki-btn');
+        if (ankiBtn) {
+          ankiBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.anki.open(t.id);
+          };
+        }
+
         container.appendChild(node);
+        this.cardMap[t.id] = card;
+        this.updateRepHeader(card, s.reps);
       });
-      list.appendChild(catNode);
+
+      this.catMap[cat.id] = catEl;
+      list.appendChild(catEl);
+    });
+  },
+
+  applyFilter() {
+    let hasVisible = false;
+    const activityDates = Object.keys(this.state.activity || {});
+    const badge = document.getElementById('streakBadge');
+    if (badge) {
+        if (activityDates.length > 0) {
+            badge.classList.remove('hidden');
+            document.getElementById('streakCount').textContent = activityDates.length;
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
+    AP2_DATA.forEach((cat) => {
+      let catVisible = false;
+      cat.topics.forEach((t) => {
+        const s = this.getState(t.id);
+        const card = this.cardMap[t.id];
+        
+        let matchesSearch = true;
+        if (this.searchQuery) {
+          matchesSearch = t.title.toLowerCase().includes(this.searchQuery) || 
+                          t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
+        }
+
+        let matchesFilter = true;
+        if (this.filter === 'open' && s.done) matchesFilter = false;
+        if (this.filter === 'high' && t.weight < 4) matchesFilter = false;
+
+        const visible = matchesSearch && matchesFilter;
+        card.style.display = visible ? 'block' : 'none';
+        
+        if (visible) {
+            catVisible = true;
+            hasVisible = true;
+            
+            // Auto-open if searching in subtasks
+            const subMatch = this.searchQuery && !t.title.toLowerCase().includes(this.searchQuery) && 
+                             t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
+            
+            if (subMatch || this.openTopics.has(t.id)) {
+                const body = card.querySelector('.topic-body');
+                if (!body.classList.contains('open')) {
+                    this.toggleAccordion(card.querySelector('.header-area'));
+                }
+            }
+        }
+      });
+      this.catMap[cat.id].style.display = catVisible ? 'block' : 'none';
     });
 
     const emptyState = document.getElementById('emptyState');

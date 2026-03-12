@@ -22,7 +22,7 @@
               'dark-border': '#1e293b',
               'dark-muted': '#64748b',
               'dark-text': '#f8fafc',
-              'dark-accent': '#10b981',
+              'dark-accent': '#10b981', // FISI Emerald
               'dark-accent-hover': '#059669',
               'dark-success': '#34d399',
               'dark-warning': '#f59e0b',
@@ -81,14 +81,14 @@
           </div>
           <div class="flex flex-col">
             <span class="font-bold text-lg tracking-tight leading-none">AP2 <span class="text-dark-accent">Tracker</span></span>
-            <span class="text-[10px] text-dark-muted font-mono">FISI Edition</span>
+            <span class="text-[10px] text-dark-muted font-mono">Zurück zum Dashboard</span>
           </div>
         </a>
 
         <div class="flex items-center gap-4">
           <span
             class="text-xs font-mono bg-dark-card border border-dark-border px-2 py-1 rounded text-dark-muted"
-            >v1.0</span
+            >v2.0</span
           >
         </div>
       </div>
@@ -99,12 +99,12 @@
       <!-- Intro Section -->
       <div class="text-center mb-12 fade-in">
         <h1
-          class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent mb-4 pb-2 leading-tight"
+          class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-dark-accent to-teal-400 bg-clip-text text-transparent mb-4 pb-2 leading-tight"
         >
           Changelog & Roadmap
         </h1>
         <p class="text-dark-muted max-w-xl mx-auto text-lg">
-          Entwicklung des AP2 Trackers für FISI.
+          Die Entwicklung des AP2 Trackers für Systemintegratoren.
         </p>
 
         <!-- Navigation Tabs -->
@@ -129,8 +129,8 @@
       </div>
 
       <!-- Tab Content: Updates -->
-      <div id="tab-updates" class="space-y-8 fade-in delay-100">
-        <!-- v1.0 (NEU) -->
+      <div id="tab-updates" class="space-y-12 fade-in delay-100">
+        <!-- v2.0 (AKTUELL) -->
         <div class="relative md:pl-0 group">
           <div
             class="hidden md:block absolute left-[50%] top-0 bottom-0 w-px bg-dark-border -translate-x-1/2 last:bottom-auto"
@@ -138,43 +138,79 @@
 
           <div class="md:flex items-center justify-between gap-8">
             <div
-              class="hidden md:flex absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-dark-bg border-2 border-dark-accent items-center justify-center z-10 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+              class="hidden md:flex absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-dark-bg border-2 border-dark-accent items-center justify-center z-10 shadow-[0_0_20px_rgba(16,185,129,0.5)]"
             >
-              <div class="w-2.5 h-2.5 rounded-full bg-dark-accent animate-pulse"></div>
+              <div class="w-3 h-3 rounded-full bg-dark-accent animate-pulse"></div>
             </div>
 
             <div
-              class="w-full md:w-[45%] bg-dark-card border border-dark-accent/30 rounded-xl p-6 hover:border-dark-accent/50 transition-all duration-300 relative overflow-hidden"
+              class="w-full md:w-[45%] bg-dark-card border border-dark-accent/50 rounded-2xl p-6 hover:border-dark-accent transition-all duration-300 relative overflow-hidden shadow-2xl"
             >
               <div
-                class="absolute top-0 right-0 w-32 h-32 bg-dark-accent/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"
+                class="absolute top-0 right-0 w-32 h-32 bg-dark-accent/20 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"
               ></div>
 
               <div class="flex items-center justify-between mb-3">
                 <span
-                  class="bg-dark-accent/10 text-dark-accent border border-dark-accent/20 px-2 py-0.5 rounded text-xs font-bold"
+                  class="bg-dark-accent text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider shadow-sm"
+                  >v2.0 (Major)</span
+                >
+                <span class="text-dark-muted text-xs font-bold">12. März 2026</span>
+              </div>
+              <h3 class="text-2xl font-black text-white mb-2 tracking-tight italic">The Anki & Engine Overhaul</h3>
+              <p class="text-dark-muted text-sm mb-4 leading-relaxed font-medium">
+                Das bisher größte Update mit Fokus auf das neue Lernsystem und massive Performance-Steigerung.
+              </p>
+              <ul class="space-y-3 mb-4">
+                <li class="flex items-start text-sm text-gray-200">
+                  <i class="fa-solid fa-layer-group text-dark-accent mt-1 mr-3 text-xs"></i>
+                  <span><b>FISI-Lernkarten:</b> Integration eines Lernkartensystems für alle FISI-Themen.</span>
+                </li>
+                <li class="flex items-start text-sm text-gray-200">
+                  <i class="fa-solid fa-brain text-dark-accent mt-1 mr-3 text-xs"></i>
+                  <span><b>Intelligentes Training:</b> Spaced-Repetition System (Strategie-Modus) voll integriert.</span>
+                </li>
+                <li class="flex items-start text-sm text-gray-200">
+                  <i class="fa-solid fa-bolt text-dark-accent mt-1 mr-3 text-xs"></i>
+                  <span><b>Performance Engine:</b> Blitzschnelles Filtern und Suchen ohne UI-Verzögerung.</span>
+                </li>
+                <li class="flex items-start text-sm text-gray-200">
+                  <i class="fa-solid fa-mobile-screen text-dark-accent mt-1 mr-3 text-xs"></i>
+                  <span><b>Mobile Optimization:</b> Besseres Layout für Smartphones und aufgeräumter Header.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full md:w-[45%]"></div>
+          </div>
+        </div>
+
+        <!-- v1.0 -->
+        <div class="relative md:pl-0 group opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500">
+          <div
+            class="hidden md:block absolute left-[50%] top-0 bottom-0 w-px bg-dark-border -translate-x-1/2 last:bottom-auto"
+          ></div>
+
+          <div class="md:flex items-center justify-between gap-8 flex-row-reverse">
+            <div
+              class="hidden md:flex absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-dark-bg border-2 border-dark-border items-center justify-center z-10"
+            >
+              <div class="w-2 h-2 rounded-full bg-dark-muted"></div>
+            </div>
+
+            <div
+              class="w-full md:w-[45%] bg-dark-card border border-dark-border rounded-xl p-6 hover:border-dark-muted transition-all duration-300 relative overflow-hidden"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <span
+                  class="bg-dark-border text-dark-muted px-2 py-0.5 rounded text-xs font-bold"
                   >v1.0</span
                 >
                 <span class="text-dark-muted text-xs">06. März 2026</span>
               </div>
-              <h3 class="text-xl font-bold text-white mb-2">AP2 Launch (Initial Release)</h3>
-              <p class="text-dark-muted text-sm mb-4 leading-relaxed">
-                Startschuss für den AP2 Tracker speziell für Systemintegratoren.
+              <h3 class="text-xl font-bold text-white mb-2 font-mono tracking-tighter uppercase">FISI AP2 Launch</h3>
+              <p class="text-dark-muted text-sm leading-relaxed">
+                Startschuss für den spezialisierten Tracker für Fachinformatiker Systemintegration.
               </p>
-              <ul class="space-y-2 mb-4">
-                <li class="flex items-start text-sm text-gray-300">
-                  <i class="fa-solid fa-check text-dark-accent mt-1 mr-2 text-xs"></i>
-                  <span>Umfassender Themenkatalog (Systeme, Netzwerke, Projekte, WISO)</span>
-                </li>
-                <li class="flex items-start text-sm text-gray-300">
-                  <i class="fa-solid fa-check text-dark-accent mt-1 mr-2 text-xs"></i>
-                  <span>Gewichtung nach Prüfungshäufigkeit (Kritisch bis Mittel)</span>
-                </li>
-                <li class="flex items-start text-sm text-gray-300">
-                  <i class="fa-solid fa-check text-dark-accent mt-1 mr-2 text-xs"></i>
-                  <span>Icons zur besseren Orientierung in den Modulen</span>
-                </li>
-              </ul>
             </div>
             <div class="w-full md:w-[45%]"></div>
           </div>
@@ -190,8 +226,8 @@
               <span class="font-bold text-sm uppercase tracking-wider">Geplant</span>
             </div>
             <div class="bg-dark-card border border-dark-border p-4 rounded-xl shadow-sm">
-              <h4 class="font-bold text-gray-200 mb-1">Prüfungs-Simulator</h4>
-              <p class="text-xs text-dark-muted">Ein Modul, das zufällige Fragen aus verschiedenen Bereichen kombiniert, um eine Prüfungssituation zu simulieren.</p>
+              <h4 class="font-bold text-gray-200 mb-1 italic">FISI Cheat Sheets</h4>
+              <p class="text-xs text-dark-muted leading-relaxed">Zusammenfassungen für Subnetting, Raid-Level und Server-Dienste zum Download.</p>
             </div>
           </div>
 
@@ -202,8 +238,8 @@
             </div>
             <div class="bg-dark-card border border-dark-accent/30 p-4 rounded-xl relative overflow-hidden">
               <div class="absolute top-0 left-0 w-1 h-full bg-dark-accent"></div>
-              <h4 class="font-bold text-white mb-1">Detaillierte Lernzettel</h4>
-              <p class="text-xs text-dark-muted mb-3">Zusammenfassungen für komplexe SQL-Joins, UML-Diagramme und Design Patterns.</p>
+              <h4 class="font-bold text-white mb-1">Prüfungs-Simulator</h4>
+              <p class="text-xs text-dark-muted mb-3 leading-relaxed">Zufällige FISI-Fragenkombinationen zur Simulation der echten Prüfungssituation.</p>
             </div>
           </div>
 
@@ -213,8 +249,8 @@
               <span class="font-bold text-sm uppercase tracking-wider">Erledigt</span>
             </div>
             <div class="bg-dark-card border border-dark-border p-4 rounded-xl">
-              <h4 class="font-bold text-gray-300 mb-1">Grundstruktur AP2</h4>
-              <p class="text-xs text-dark-muted">Konvertierung des Trackers von AP1 auf AP2 FISI.</p>
+              <h4 class="font-bold text-gray-300 mb-1 line-through opacity-50">Content-Vollausbau</h4>
+              <p class="text-xs text-dark-muted">Integration aller Lerninhalte gemäß IHK-Katalog 2024/25.</p>
             </div>
           </div>
         </div>
@@ -231,7 +267,7 @@
           <a href="https://buymeacoffee.com/cwillam" target="_blank" class="hover:text-[#FFDD00] transition flex items-center gap-2 font-bold">
             <i class="fa-solid fa-mug-hot"></i> Support
           </a>
-          <a href="https://ap2-fisi.cwillam.de" class="group flex items-center gap-2 text-dark-muted hover:text-white transition-colors font-bold">
+          <a href="index.html" class="group flex items-center gap-2 text-dark-muted hover:text-white transition-colors font-bold">
             <i class="fa-solid fa-arrow-left"></i> Zurück zum Dashboard
           </a>
         </div>
