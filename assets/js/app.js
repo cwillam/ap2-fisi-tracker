@@ -145,7 +145,14 @@ const app = {
       // Global Stats tracken
       const gStats = app.state.ankiStats[this.currentTopicId];
       gStats.total++;
-      if (isCorrect) gStats.correct++;
+      if (isCorrect) {
+        gStats.correct++;
+        // Any correct answer marks it as "learned" for progress tracking
+        if (!app.state.anki) app.state.anki = {};
+        if (!app.state.anki[this.cards[this.currentIndex].id]) {
+            app.state.anki[this.cards[this.currentIndex].id] = { level: 1, nextReview: 0 };
+        }
+      }
 
       if (this.mode === 'spaced') {
         this.updateCardLevel(this.cards[this.currentIndex].id, isCorrect);
@@ -219,14 +226,16 @@ const app = {
   ],
 
   ranks: [
-    { min: 0, name: 'Hello World', color: '#94a3b8' },
-    { min: 5, name: 'Support Hero', color: '#0ea5e9' },
-    { min: 15, name: 'Network Admin', color: '#38bdf8' },
-    { min: 30, name: 'Security Expert', color: '#0284c7' },
-    { min: 50, name: 'System Architect', color: '#10b981' },
-    { min: 75, name: 'Cloud Master', color: '#f59e0b' },
-    { min: 100, name: 'Infrastructure Legend', color: '#ef4444' },
-    { min: 125, name: 'IT-Gott', color: '#FFDD00' },
+    { min: 0, name: 'Packet Trainee', color: '#94a3b8' },
+    { min: 25, name: 'First Level Hero', color: '#0ea5e9' },
+    { min: 75, name: 'Cable Management Pro', color: '#38bdf8' },
+    { min: 150, name: 'Network Admin', color: '#0284c7' },
+    { min: 250, name: 'Security Architect', color: '#10b981' },
+    { min: 350, name: 'Cloud Specialist', color: '#8b5cf6' },
+    { min: 425, name: 'Server Overlord', color: '#f59e0b' },
+    { min: 475, name: 'Infrastructure Legend', color: '#ef4444' },
+    { min: 500, name: 'Datacenter Master', color: '#ec4899' },
+    { min: 520, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
   ],
 
   // --- INIT ---
@@ -502,7 +511,7 @@ const app = {
           particleCount: 60,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#a855f7', '#10b981'],
+          colors: ['#10b981', '#34d399'],
         });
       }
     }
@@ -528,10 +537,10 @@ const app = {
           card.classList.add('border-dark-accent/30');
           if (typeof confetti === 'function') {
             confetti({
-              particleCount: 40,
-              spread: 60,
-              origin: { y: 0.7 },
-              colors: ['#a855f7', '#10b981'],
+              particleCount: 60,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#10b981', '#34d399'],
             });
           }
         } else card.classList.remove('border-dark-accent/30');
@@ -772,23 +781,44 @@ const app = {
     if (total === 0) return;
 
     const done = all.filter((t) => this.getState(t.id).done).length;
-    const pct = Math.round((done / total) * 100);
+
+    const totalCards = Object.values(window.ANKI_QUESTIONS || {}).flat().length;
+    // Count cards that have a level > 0
+    const doneCards = Object.values(this.state.anki || {}).filter(
+      (v) => v && v.level > 0
+    ).length;
+
+    // Rank Points: Each topic done = 10 pts, Each card done correctly = 1 pt (cap at 350)
+    // Goal: 17 topics * 10 = 170 pts + 350 cards = 520 pts
+    const totalPoints = done * 10 + Math.min(350, doneCards);
+    const maxPoints = 520;
+    
+    // Global Progress (Large Bar & Top Percentage)
+    const globalPct = Math.min(100, Math.round((totalPoints / maxPoints) * 100));
 
     const totalTopEl = document.getElementById('totalPercentTop');
-    if (totalTopEl) totalTopEl.textContent = pct + '%';
+    if (totalTopEl) totalTopEl.textContent = globalPct + '%';
 
     const mainProgress = document.getElementById('mainProgressBar');
-    if (mainProgress) mainProgress.style.width = pct + '%';
+    if (mainProgress) mainProgress.style.width = globalPct + '%';
 
+    // UI Dashboard Labels
     const doneCountEl = document.getElementById('doneCount');
-    if (doneCountEl) doneCountEl.textContent = done;
+    if (doneCountEl) {
+        doneCountEl.textContent = doneCards; 
+        const labelEl = doneCountEl.nextElementSibling;
+        if (labelEl) labelEl.textContent = 'Karten'; 
+    }
+
+    const totalCountEl = document.getElementById('totalCount');
+    if (totalCountEl) totalCountEl.textContent = totalCards;
 
     let currentRank = this.ranks[0];
     let nextRank = null;
     let rankPct = 0;
 
     for (let i = 0; i < this.ranks.length; i++) {
-      if (done >= this.ranks[i].min) {
+      if (totalPoints >= this.ranks[i].min) {
         currentRank = this.ranks[i];
         nextRank = this.ranks[i + 1] || null;
       }
@@ -800,10 +830,11 @@ const app = {
       rankNameEl.style.color = currentRank.color;
     }
 
+    // Rank Progress (Small Bar next to Rank)
     if (nextRank) {
       const range = nextRank.min - currentRank.min;
-      const currentInRank = done - currentRank.min;
-      rankPct = (currentInRank / range) * 100;
+      const currentInRank = totalPoints - currentRank.min;
+      rankPct = Math.min(100, Math.max(0, (currentInRank / range) * 100));
     } else {
       rankPct = 100;
     }
@@ -826,16 +857,9 @@ const app = {
         }
       }
     });
-    const recShort = document.getElementById('recShort');
-    if (recShort) {
-      if (best) {
-        this.recId = best.id;
-        recShort.textContent = `${best.title}`;
-      } else {
-        this.recId = null;
-        recShort.textContent = 'Bereit für die AP2!';
-      }
-    }
+    
+    const recNameEl = document.getElementById('recName');
+    if (recNameEl) recNameEl.textContent = best ? best.title : 'Alles erledigt! 🎉';
   },
 
   // --- RENDER ENGINE v2.0 ---
