@@ -227,15 +227,15 @@ const app = {
 
   ranks: [
     { min: 0, name: 'Packet Trainee', color: '#94a3b8' },
-    { min: 25, name: 'First Level Hero', color: '#0ea5e9' },
-    { min: 75, name: 'Cable Management Pro', color: '#38bdf8' },
+    { min: 30, name: 'First Level Hero', color: '#0ea5e9' },
+    { min: 80, name: 'Cable Management Pro', color: '#38bdf8' },
     { min: 150, name: 'Network Admin', color: '#0284c7' },
     { min: 250, name: 'Security Architect', color: '#10b981' },
     { min: 350, name: 'Cloud Specialist', color: '#8b5cf6' },
-    { min: 425, name: 'Server Overlord', color: '#f59e0b' },
-    { min: 475, name: 'Infrastructure Legend', color: '#ef4444' },
-    { min: 500, name: 'Datacenter Master', color: '#ec4899' },
-    { min: 520, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
+    { min: 450, name: 'Server Overlord', color: '#f59e0b' },
+    { min: 500, name: 'Infrastructure Legend', color: '#ef4444' },
+    { min: 530, name: 'Datacenter Master', color: '#ec4899' },
+    { min: 550, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
   ],
 
   // --- INIT ---
@@ -780,7 +780,18 @@ const app = {
     const total = all.length;
     if (total === 0) return;
 
-    const done = all.filter((t) => this.getState(t.id).done).length;
+    // Subtask count
+    let doneSubtasks = 0;
+    let doneTopics = 0;
+    all.forEach((t) => {
+      const s = this.getState(t.id);
+      if (s.done) {
+        doneTopics++;
+        if (t.sub) doneSubtasks += t.sub.length;
+      } else if (s.subDone) {
+        doneSubtasks += s.subDone.filter(Boolean).length;
+      }
+    });
 
     const totalCards = Object.values(window.ANKI_QUESTIONS || {}).flat().length;
     // Count cards that have a level > 0
@@ -788,10 +799,14 @@ const app = {
       (v) => v && v.level > 0
     ).length;
 
-    // Rank Points: Each topic done = 10 pts, Each card done correctly = 1 pt (cap at 350)
-    // Goal: 17 topics * 10 = 170 pts + 350 cards = 520 pts
-    const totalPoints = done * 10 + Math.min(350, doneCards);
-    const maxPoints = 520;
+    // Rank Points (FISI v2.1): 
+    // - Subtask done: 1pt
+    // - Entire Topic done: 5pts bonus
+    // - Card learned: 1pt (cap at 350)
+    // Goal: ~122 subtasks + (17 * 5) topic bonus + 350 cards = 557 pts. 
+    // We set 550 as the target for 100%.
+    const totalPoints = doneSubtasks + (doneTopics * 5) + Math.min(350, doneCards);
+    const maxPoints = 550;
     
     // Global Progress (Large Bar & Top Percentage)
     const globalPct = Math.min(100, Math.round((totalPoints / maxPoints) * 100));
