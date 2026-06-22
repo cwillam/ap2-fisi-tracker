@@ -22,6 +22,8 @@ const app = {
   searchQuery: '',
   cardMap: {},
   catMap: {},
+  _quotaWarningShown: false,
+  _saveError: null,
 
   // --- ANKI / FLASHCARDS ---
   anki: {
@@ -114,10 +116,11 @@ const app = {
       
       const badge = document.getElementById('ankiModeBadge');
       if (mode === 'spaced') {
-        badge.innerHTML = '<i class="fa-solid fa-brain mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
+        badge.innerHTML = '<i data-lucide="brain" class="w-3.5 h-3.5 mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
       } else {
-        badge.innerHTML = '<i class="fa-solid fa-dumbbell mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
+        badge.innerHTML = '<i data-lucide="dumbbell" class="w-3.5 h-3.5 mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
       }
+      app.refreshIcons();
 
       document.getElementById('ankiModeView').classList.add('hidden');
       document.getElementById('ankiQuestionView').classList.remove('hidden');
@@ -258,7 +261,33 @@ const app = {
 
     try {
       const s = localStorage.getItem('ap2_tracker_state_v1');
-      if (s) this.state = JSON.parse(s);
+      if (s) {
+        try {
+          this.state = JSON.parse(s);
+          console.log('[AP2 FISI] State geladen:', this._getStateSummary());
+        } catch (parseErr) {
+          console.error('[AP2 FISI] Corrupt LocalStorage data:', parseErr);
+          const corruptData = s.substring(0, 100);
+          console.error('[AP2 FISI] Corrupt data preview:', corruptData);
+
+          if (confirm(
+            'Deine gespeicherten Daten sind beschädigt. \n\n' +
+            'Möchtest du einen Neustart machen? (Dabei gehen alte Daten verloren.)\n\n' +
+            'Klicke "Abbrechen" um die Seite im Debug-Modus zu öffnen.'
+          )) {
+            localStorage.removeItem('ap2_tracker_state_v1');
+            location.reload();
+          } else {
+            this.state = {};
+            this.showNotification(
+              'Daten korrupt',
+              'Bitte Export machen und Support kontaktieren.',
+              'error',
+              0
+            );
+          }
+        }
+      }
 
       if (localStorage.getItem('ap2_infobox_dismissed')) {
         const infoBox = document.getElementById('infoBox');
@@ -280,6 +309,9 @@ const app = {
         }, 800);
       }
 
+      // --- UPDATE NOTIFICATION ---
+      this.checkForUpdate();
+
       const quoteEl = document.getElementById('motivationQuote');
       if (quoteEl)
         quoteEl.textContent = this.quotes[Math.floor(Math.random() * this.quotes.length)];
@@ -287,8 +319,54 @@ const app = {
       this.renderActivityGraph();
       this.updateCountdown();
       setInterval(() => this.updateCountdown(), 60000);
+      // Keyboard Shortcuts für Lernkarten (Anki)
+      window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('ankiModal');
+        if (modal && !modal.classList.contains('hidden')) {
+          const modeView = document.getElementById('ankiModeView');
+          const questionView = document.getElementById('ankiQuestionView');
+          const answerView = document.getElementById('ankiAnswerView');
+          const finishView = document.getElementById('ankiFinishView');
+
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            this.anki.close();
+            return;
+          }
+
+          if (modeView && !modeView.classList.contains('hidden')) {
+            if (e.key === '1') {
+              e.preventDefault();
+              this.anki.start('manual');
+            } else if (e.key === '2') {
+              e.preventDefault();
+              this.anki.start('spaced');
+            }
+          } else if (questionView && !questionView.classList.contains('hidden')) {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              this.anki.showAnswer();
+            }
+          } else if (answerView && !answerView.classList.contains('hidden')) {
+            if (e.key === '1' || e.key === 'ArrowLeft') {
+              e.preventDefault();
+              this.anki.next(false);
+            } else if (e.key === '2' || e.key === 'ArrowRight') {
+              e.preventDefault();
+              this.anki.next(true);
+            }
+          } else if (finishView && !finishView.classList.contains('hidden')) {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              this.anki.close();
+            }
+          }
+        }
+      });
+
       this.buildDOM();
       this.applyFilter();
+      this.refreshIcons();
     } catch (err) {
       console.error('Critical Init Error:', err);
     } finally {
@@ -296,12 +374,232 @@ const app = {
     }
   },
 
+  _getStateSummary() {
+    const summary = { keys: Object.keys(this.state).length };
+    if (this.state.activity) summary.activityDays = Object.keys(this.state.activity).length;
+    if (this.state.ankiStats) summary.ankiTopics = Object.keys(this.state.ankiStats).length;
+    return summary;
+  },
+
+  // Lucide Icons nach dynamischen DOM-Updates neu initialisieren
+  refreshIcons() {
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  },
+
+  showNotification(title, message, type = 'info', duration = 5000) {
+    const colors = {
+      info: 'bg-dark-accent',
+      success: 'bg-dark-success',
+      warning: 'bg-dark-warning',
+      error: 'bg-dark-danger'
+    };
+    const icons = {
+      info: 'info',
+      success: 'check-circle-2',
+      warning: 'alert-triangle',
+      error: 'x-circle'
+    };
+
+    const existing = document.getElementById('appNotification');
+    if (existing) existing.remove();
+
+    const notification = document.createElement('div');
+    notification.id = 'appNotification';
+    notification.className = `fixed top-20 right-4 z-[100] ${colors[type]} text-white px-6 py-4 rounded-xl shadow-2xl max-w-sm animate-in fade-in slide-in-from-top-2`;
+    notification.innerHTML = `
+      <div class="flex items-start gap-3">
+        <i data-lucide="${icons[type]}" class="text-lg mt-0.5"></i>
+        <div class="flex-1">
+          <p class="font-bold text-sm">${title}</p>
+          <p class="text-xs opacity-90 mt-1">${message}</p>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" class="opacity-70 hover:opacity-100">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(notification);
+    this.refreshIcons();
+
+    if (duration > 0) {
+      setTimeout(() => notification.remove(), duration);
+    }
+  },
+
+  // --- UPDATE NOTIFICATION ---
+  checkForUpdate() {
+    if (!localStorage.getItem('ap2_fisi_update_never_again_v210')) {
+      const update = {
+        title: '🚀 AP2 FISI Tracker Update v2.1.0',
+        message: 'Wir haben den Tracker auf ressourcenschonende Lucide-Icons umgestellt, das Design modernisiert und Fehler behoben!',
+        icon: 'zap'
+      };
+      
+      this.showUpdateModal(update.title, update.message, update.icon);
+    }
+  },
+
+  showUpdateModal(title, message, iconClass) {
+    const modal = document.createElement('div');
+    modal.id = 'updateNotificationModal';
+    modal.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto';
+    modal.innerHTML = `
+      <div class="bg-dark-card border border-dark-accent/50 rounded-2xl p-5 sm:p-6 md:p-8 max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-300 my-auto">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-dark-accent/20 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
+        
+        <!-- HEADER -->
+        <div class="flex items-center gap-3 sm:gap-4 mb-5 shrink-0">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-dark-accent/20 border-2 border-dark-accent flex items-center justify-center shrink-0">
+            <i data-lucide="${iconClass}" class="text-dark-accent text-xl sm:text-2xl"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h3 class="text-lg sm:text-xl font-bold text-white truncate">Neues Update!</h3>
+            <p class="text-[10px] sm:text-xs text-dark-muted">Verbesserungen für dein Lernen</p>
+          </div>
+        </div>
+        
+        <!-- TITLE & MESSAGE -->
+        <div class="mb-5 shrink-0">
+          <h4 class="font-bold text-white mb-2 text-sm sm:text-base">${title}</h4>
+          <p class="text-xs sm:text-sm text-dark-muted leading-relaxed">${message}</p>
+        </div>
+        
+        <!-- PROBLEME HINWEIS -->
+        <div class="bg-dark-warning/10 border border-dark-warning/30 rounded-xl p-2.5 sm:p-3 mb-5 shrink-0">
+          <p class="text-[10px] sm:text-xs text-dark-warning flex items-start gap-2">
+            <i data-lucide="alert-triangle" class="mt-0.5 shrink-0"></i>
+            <span><b>Probleme?</b> Drücke <kbd class="bg-dark-warning/20 px-1 py-0.5 rounded text-[9px] sm:text-[10px]">Strg</kbd> + <kbd class="bg-dark-warning/20 px-1 py-0.5 rounded text-[9px] sm:text-[10px]">F5</kbd> für Cache-Refresh.</span>
+          </p>
+        </div>
+        
+        <!-- NEU IN DIESER VERSION -->
+        <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-5 mb-5 border border-dark-border shrink-0 overflow-hidden">
+          <p class="text-[10px] sm:text-xs text-dark-muted mb-3 font-bold uppercase flex items-center gap-2">
+            <i data-lucide="sparkles" class="text-dark-accent"></i>
+            Neu in dieser Version:
+          </p>
+          <ul class="space-y-2 text-xs sm:text-sm text-gray-300">
+            <li class="flex items-start gap-2">
+              <i data-lucide="zap" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
+              <span><strong>Lucide-Icons & Header:</strong> Umstellung auf ressourcenschonende Vektorgrafiken, neues Header-Kacheldesign (Emerald-Theme) und Netzwerk-Logo.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="play-circle" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
+              <span><strong>Fokus-Timer:</strong> Play/Pause-Steuerung und Widget-Zentrierung korrigiert.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="bell" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
+              <span><strong>Notification-Dot:</strong> Zentrierte Positionierung des Update-Indikators an der Glocke.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="layers" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
+              <span><strong>Lernkarten-Upgrade (v2.0.2):</strong> Inhalts-Ausbau in Kern-Themen, CLI-Befehle und komplexe Netzwerkprotokolle (vorheriges Update).</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- WERBUNG FÜR ANDERE TRACKER -->
+        <div class="bg-gradient-to-r from-indigo-900/20 to-teal-900/20 border border-indigo-500/20 rounded-xl p-3 sm:p-4 mb-5 shrink-0">
+          <p class="text-[10px] sm:text-xs text-indigo-300 mb-2.5 sm:mb-3 font-bold uppercase flex items-center gap-1.5 sm:gap-2">
+            <i data-lucide="star" class="text-[10px] sm:text-xs"></i>
+            Mehr Tracker
+          </p>
+          <div class="space-y-2">
+            <a href="https://ap2.cwillam.de/" target="_blank" class="group flex items-center gap-3 bg-dark-card/60 hover:bg-indigo-900/25 border border-dark-border/50 hover:border-indigo-500/40 rounded-lg p-2.5 sm:p-3 no-underline">
+              <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                <i data-lucide="code-2" class="text-indigo-400 text-xs group-hover:text-indigo-300 transition-colors"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors truncate">AP2 FIAE</p>
+                <p class="text-[10px] text-dark-muted truncate">Fachinformatiker für Anwendungsentwicklung</p>
+              </div>
+              <i data-lucide="external-link" class="text-dark-muted group-hover:text-indigo-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-xs shrink-0"></i>
+            </a>
+            <a href="https://ap1.cwillam.de/" target="_blank" class="group flex items-center gap-3 bg-dark-card/60 hover:bg-purple-900/25 border border-dark-border/50 hover:border-purple-500/40 rounded-lg p-2.5 sm:p-3 no-underline">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
+                <i data-lucide="graduation-cap" class="text-purple-400 text-xs group-hover:text-purple-300 transition-colors"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs sm:text-sm font-bold text-white group-hover:text-purple-300 transition-colors truncate">AP1 Tracker</p>
+                <p class="text-[10px] text-dark-muted truncate">Alle Fachrichtungen</p>
+              </div>
+              <i data-lucide="external-link" class="text-dark-muted group-hover:text-purple-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-xs shrink-0"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- BUTTONS -->
+        <div class="flex gap-2 sm:gap-3 shrink-0">
+          <button onclick="document.getElementById('updateNotificationModal').remove()" 
+                  class="flex-1 bg-dark-accent hover:bg-dark-accent/90 text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-xs sm:text-sm whitespace-nowrap">
+            ✓ Verstanden
+          </button>
+          <a href="updates.html" target="_blank" 
+             onclick="document.getElementById('updateNotificationModal').remove()"
+             class="flex-1 bg-dark-card hover:bg-dark-border border border-dark-border text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-center text-xs sm:text-sm whitespace-nowrap no-underline flex items-center justify-center gap-2">
+            <span>Änderungen</span>
+            <i data-lucide="external-link" class="text-[10px] sm:text-xs"></i>
+          </a>
+        </div>
+        
+        <!-- NIE WIEDER ANZEIGEN OPTION -->
+        <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-dark-border shrink-0">
+          <label class="flex items-center gap-2 cursor-pointer group">
+            <input type="checkbox" id="neverShowAgain" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-dark-border bg-dark-bg text-dark-accent focus:ring-dark-accent focus:ring-2" onchange="localStorage.setItem('ap2_fisi_update_never_again_v210', this.checked ? 'true' : '')">
+            <span class="text-[10px] sm:text-xs text-dark-muted group-hover:text-white transition-colors">Nicht wieder anzeigen</span>
+          </label>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Schließen bei Klick außerhalb
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+  },
+
   // --- SAVE & STATE ---
-  save() {
+  save(silent = false) {
     try {
-      localStorage.setItem('ap2_tracker_state_v1', JSON.stringify(this.state));
+      const serialized = JSON.stringify(this.state);
+      const size = new Blob([serialized]).size;
+      
+      // Warnung bei >80% Auslastung (ca. 4 MB von 5 MB Limit)
+      if (size > 4 * 1024 * 1024 && !this._quotaWarningShown) {
+        this._quotaWarningShown = true;
+        console.warn('[AP2 FISI] LocalStorage bei 80% - bitte Export machen!');
+        if (!silent) {
+          this.showNotification(
+            'Speicher fast voll',
+            'Bitte mach einen Export, um deine Daten zu sichern.',
+            'warning'
+          );
+        }
+      }
+      
+      localStorage.setItem('ap2_tracker_state_v1', serialized);
+      this._saveError = null;
     } catch (e) {
-      console.error('Storage quota exceeded or error', e);
+      this._saveError = e;
+      console.error('[AP2 FISI] Save failed:', e.name, e.message);
+      
+      if (e.name === 'QuotaExceededError') {
+        if (!silent) {
+          this.showNotification(
+            'Speicher voll!',
+            'Bitte Export machen und alte Daten löschen.',
+            'error',
+            0
+          );
+        }
+      }
     }
     this.updateStats();
   },
@@ -349,7 +647,7 @@ const app = {
     const container = document.getElementById('streakGraph');
     if (!container) return;
     container.innerHTML = '';
-    const days = 40;
+    const days = 80;
     const now = new Date();
 
     for (let i = days; i >= 0; i--) {
@@ -372,8 +670,8 @@ const app = {
 
   // --- TIMER ---
   updateCountdown() {
-    // Ziel: Sommerprüfung 2026 (28. April)
-    const target = new Date('2026-04-28T08:00:00');
+    // Ziel: Herbstprüfung 2026 (25. November)
+    const target = new Date('2026-11-25T08:00:00');
     const now = new Date();
     const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
     const el = document.getElementById('headerCountdown');
@@ -386,7 +684,7 @@ const app = {
       clearInterval(this.timer);
       this.timerRunning = false;
       document.getElementById('pomoBtn').innerHTML =
-        '<i class="fa-solid fa-play text-lg ml-1"></i>';
+        '<i data-lucide="play" class="w-5 h-5 ml-0.5"></i>';
     }
     this.timeLeft = min * 60;
     this.updateTimerDisplay();
@@ -406,14 +704,16 @@ const app = {
     if (this.timerRunning) {
       clearInterval(this.timer);
       this.timerRunning = false;
-      btn.innerHTML = '<i class="fa-solid fa-play text-lg ml-1"></i>';
+      btn.innerHTML = '<i data-lucide="play" class="w-5 h-5 ml-0.5"></i>';
       btn.classList.remove('bg-dark-accent', 'text-white', 'scale-105');
       btn.classList.add('bg-dark-border', 'text-dark-muted');
+      app.refreshIcons();
     } else {
       this.timerRunning = true;
-      btn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
+      btn.innerHTML = '<i data-lucide="pause" class="w-5 h-5"></i>';
       btn.classList.add('bg-dark-accent', 'text-white', 'scale-105');
       btn.classList.remove('bg-dark-border', 'text-dark-muted');
+      app.refreshIcons();
       this.timer = setInterval(() => {
         this.timeLeft--;
         if (this.timeLeft <= 0) {
@@ -421,10 +721,11 @@ const app = {
           this.timerRunning = false;
           this.timeLeft = 1500;
 
-          alert('Pomodoro beendet! Gönn dir eine Pause.');
-          btn.innerHTML = '<i class="fa-solid fa-play text-lg ml-1"></i>';
+          this.showNotification('Pomodoro beendet!', 'Gönn dir eine Pause.', 'info');
+          btn.innerHTML = '<i data-lucide="play" class="w-5 h-5 ml-0.5"></i>';
           btn.classList.remove('bg-dark-accent', 'text-white', 'scale-105');
           btn.classList.add('bg-dark-border', 'text-dark-muted');
+          app.refreshIcons();
         }
         this.updateTimerDisplay();
       }, 1000);
@@ -444,20 +745,160 @@ const app = {
     linkElement.click();
   },
 
+  validateImport(data) {
+    // 1. Typ-Check
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+      return { valid: false, error: 'Ungültiges Format: Erwartet wird ein JSON-Objekt.' };
+    }
+    
+    // 2. Minimale Struktur-Checks (existierende Keys prüfen)
+    const requiredKeys = ['activity'];
+    for (const key of requiredKeys) {
+      if (!(key in data)) {
+        return { valid: false, error: `Fehlendes Feld: "${key}". Datei ist korrupt oder inkompatibel.` };
+      }
+    }
+    
+    // 3. Größen-Check (max 5 MB = LocalStorage Limit)
+    const size = new Blob([JSON.stringify(data)]).size;
+    if (size > 5 * 1024 * 1024) {
+      return { valid: false, error: `Datei zu groß: ${(size / 1024 / 1024).toFixed(2)} MB (Max. 5 MB)` };
+    }
+    
+    // 4. Versions-Erkennung
+    const version = data._version || 'v1';
+    const supportedVersions = ['v1', 'v2'];
+    
+    if (!supportedVersions.includes(version)) {
+      return { 
+        valid: false, 
+        error: `Unbekannte Version: "${version}". Bitte Tracker aktualisieren.`,
+        needsMigration: true
+      };
+    }
+    
+    // 5. Plausibilitäts-Check
+    if (data.activity && typeof data.activity !== 'object') {
+      return { valid: false, error: 'Feld "activity" muss ein Objekt sein.' };
+    }
+    
+    if (data.ankiStats && typeof data.ankiStats !== 'object') {
+      return { valid: false, error: 'Feld "ankiStats" muss ein Objekt sein.' };
+    }
+    
+    return { valid: true, version };
+  },
+
+  migrateState(data) {
+    const currentVersion = data._version || 'v1';
+    let migrated = { ...data };
+    
+    if (!migrated._version) {
+      migrated._version = 'v1';
+    }
+    
+    console.log(`[AP2 FISI] Migration: ${currentVersion} -> ${migrated._version}`);
+    return migrated;
+  },
+
+  getImportStats(state) {
+    const stats = { topics: 0, cards: 0, days: 0 };
+    
+    if (state) {
+      Object.keys(state).forEach(key => {
+        if (/^\d+\.\d+$/.test(key)) {
+          stats.topics++;
+          if (state[key].done) stats.cards++;
+        }
+      });
+    }
+    
+    if (state.ankiStats) {
+      Object.values(state.ankiStats).forEach(s => {
+        stats.cards += (s.correct || 0);
+      });
+    }
+    
+    if (state.activity) {
+      stats.days = Object.keys(state.activity).filter(d => state.activity[d] > 0).length;
+    }
+    
+    return stats;
+  },
+
   importData(input) {
     const file = input.files[0];
     if (!file) return;
+    
+    input.value = '';
+    
+    if (file.size > 10 * 1024 * 1024) {
+      this.showNotification(
+        'Datei zu groß',
+        `Maximale Größe: 10 MB. Deine Datei: ${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        'error'
+      );
+      return;
+    }
+    
     const reader = new FileReader();
+    
+    reader.onerror = () => {
+      console.error('[AP2 FISI] File read error:', reader.error);
+      this.showNotification('Lesefehler', 'Die Datei konnte nicht gelesen werden.', 'error');
+    };
+    
     reader.onload = (e) => {
+      const content = e.target.result;
+      
+      let parsed;
       try {
-        this.state = JSON.parse(e.target.result);
-        this.save();
-        alert('Backup erfolgreich geladen!');
-        location.reload();
+        parsed = JSON.parse(content);
       } catch (err) {
-        alert('Fehler beim Laden der Datei. Format ungültig.');
+        console.error('[AP2 FISI] JSON parse error:', err);
+        this.showNotification(
+          'Ungültiges JSON',
+          'Die Datei ist kein gültiges JSON-Format.',
+          'error'
+        );
+        return;
+      }
+      
+      const validation = this.validateImport(parsed);
+      if (!validation.valid) {
+        console.error('[AP2 FISI] Validation failed:', validation.error);
+        this.showNotification('Import fehlgeschlagen', validation.error, 'error', 0);
+        return;
+      }
+      
+      const migrated = this.migrateState(parsed);
+      
+      const oldState = this.state;
+      this.state = migrated;
+      
+      try {
+        this.save();
+        
+        const stats = this.getImportStats(migrated);
+        this.showNotification(
+          'Import erfolgreich',
+          `Lade Fortschritt: ${stats.topics} Themen, ${stats.cards} Karten${stats.days ? `, ${stats.days} Tage Aktivität` : ''}`,
+          'success'
+        );
+        
+        setTimeout(() => location.reload(), 1500);
+      } catch (err) {
+        console.error('[AP2 FISI] Import save failed:', err);
+        this.state = oldState;
+        this.showNotification(
+          'Speicherfehler',
+          'Import erfolgreich validiert, aber Speicher voll. Bitte erst Export machen.',
+          'error',
+          0
+        );
       }
     };
+    
     reader.readAsText(file);
   },
 
@@ -571,7 +1012,7 @@ const app = {
     });
 
     if (open.length === 0) {
-      alert('Wow! Alles erledigt! Du bist bereit für die AP2.');
+      this.showNotification('Alles erledigt!', 'Wow! Alles erledigt! Du bist bereit für die AP2.', 'success');
       return;
     }
     const randId = open[Math.floor(Math.random() * open.length)];
@@ -896,7 +1337,7 @@ const app = {
 
       const iconContainer = catEl.querySelector('.cat-icon');
       if (iconContainer && cat.icon) {
-        iconContainer.innerHTML = `<i class="${cat.icon}"></i>`;
+        iconContainer.innerHTML = `<i data-lucide="${cat.icon}"></i>`;
       }
 
       const container = catEl.querySelector('.cat-topics');
@@ -949,7 +1390,7 @@ const app = {
           li.innerHTML = `
                   <div class="shrink-0 flex items-center justify-center w-5 h-5 relative">
                       <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${isDone ? 'checked' : ''}>
-                      <i class="fa-solid fa-check text-[10px] text-white absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
+                      <i data-lucide="check" class="text-[10px] text-white absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
                   </div>
                   <span class="transition-colors cursor-pointer pt-0.5 ${isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'}">${sub}</span>
                 `;
@@ -986,6 +1427,7 @@ const app = {
       this.catMap[cat.id] = catEl;
       list.appendChild(catEl);
     });
+    this.refreshIcons();
   },
 
   applyFilter() {
@@ -1036,7 +1478,41 @@ const app = {
             }
         }
       });
-      this.catMap[cat.id].style.display = catVisible ? 'block' : 'none';
+      const catEl = this.catMap[cat.id];
+      if (catEl) {
+        catEl.style.display = catVisible ? 'block' : 'none';
+
+        // Fortschritt berechnen (nur fertige Themen im Verhältnis zu allen Themen dieser Kategorie)
+        const doneTopics = cat.topics.filter((t) => this.getState(t.id).done).length;
+        const totalTopics = cat.topics.length;
+        const pct = totalTopics === 0 ? 0 : Math.round((doneTopics / totalTopics) * 100);
+
+        // SVG Ring steuern
+        const progressRing = catEl.querySelector('.cat-progress-ring');
+        if (progressRing) {
+          progressRing.setAttribute('stroke-dasharray', `${pct} 100`);
+          if (pct === 100) {
+            progressRing.classList.remove('text-dark-accent');
+            progressRing.classList.add('text-dark-success');
+          } else {
+            progressRing.classList.add('text-dark-accent');
+            progressRing.classList.remove('text-dark-success');
+          }
+        }
+
+        // Prozent-Badge steuern
+        const pctEl = catEl.querySelector('.cat-pct');
+        if (pctEl) {
+          pctEl.textContent = `${pct}%`;
+          if (pct === 100) {
+            pctEl.classList.remove('text-dark-accent', 'bg-dark-accent/10', 'border-dark-accent/20');
+            pctEl.classList.add('text-dark-success', 'bg-dark-success/10', 'border-dark-success/20');
+          } else {
+            pctEl.classList.add('text-dark-accent', 'bg-dark-accent/10', 'border-dark-accent/20');
+            pctEl.classList.remove('text-dark-success', 'bg-dark-success/10', 'border-dark-success/20');
+          }
+        }
+      }
     });
 
     const emptyState = document.getElementById('emptyState');

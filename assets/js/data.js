@@ -8,7 +8,7 @@ window.AP2_DATA = [
   {
     id: 'KONZEPTION',
     name: 'Konzeption & Administration',
-    icon: 'fa-solid fa-server',
+    icon: 'server',
     desc: 'Planung, Betrieb und Verwaltung von IT-Systemen',
     topics: [
       {
@@ -80,7 +80,7 @@ window.AP2_DATA = [
   {
     id: 'NETZWERKE',
     name: 'Netzwerktechnik & Infrastruktur',
-    icon: 'fa-solid fa-network-wired',
+    icon: 'network',
     desc: 'Analyse, Entwicklung und Betrieb von Netzwerken',
     topics: [
       {
@@ -133,7 +133,7 @@ window.AP2_DATA = [
   {
     id: 'PROJEKTE',
     name: 'Beraten & Qualitätssicherung',
-    icon: 'fa-solid fa-list-check',
+    icon: 'clipboard-list',
     desc: 'Kundenberatung, Projektmanagement und IT-Sicherheit',
     topics: [
       {
@@ -170,7 +170,7 @@ window.AP2_DATA = [
   {
     id: 'WISO',
     name: 'Wirtschafts- und Sozialkunde',
-    icon: 'fa-solid fa-scale-balanced',
+    icon: 'scale',
     desc: 'Recht, Betriebswirtschaft & Gesellschaft (PB 3)',
     topics: [
       {
