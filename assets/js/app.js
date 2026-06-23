@@ -44,7 +44,7 @@ const app = {
         this.cards = topic.sub.map((text, index) => ({
           id: `${topicId}_${index}`,
           q: text,
-          a: "Hast du diesen Punkt verstanden und kannst ihn erklären?"
+          a: 'Hast du diesen Punkt verstanden und kannst ihn erklären?',
         }));
       } else {
         return;
@@ -52,11 +52,11 @@ const app = {
 
       this.currentTopicId = topicId;
       document.getElementById('ankiTopicTitle').textContent = topic.title;
-      
+
       // Statistiken laden
       if (!app.state.ankiStats) app.state.ankiStats = {};
       const stats = app.state.ankiStats[topicId] || { total: 0, correct: 0, sessions: 0 };
-      
+
       const statsContainer = document.getElementById('ankiTopicStats');
       if (statsContainer) {
         if (stats.total > 0) {
@@ -101,7 +101,7 @@ const app = {
     start(mode) {
       this.mode = mode;
       this.currentIndex = 0;
-      
+
       // Global Stats tracken (Session zählt ab Start)
       if (!app.state.ankiStats) app.state.ankiStats = {};
       if (!app.state.ankiStats[this.currentTopicId]) {
@@ -113,12 +113,14 @@ const app = {
 
       // Karten mischen (alle laden)
       this.cards = [...this.cards].sort(() => Math.random() - 0.5);
-      
+
       const badge = document.getElementById('ankiModeBadge');
       if (mode === 'spaced') {
-        badge.innerHTML = '<i data-lucide="brain" class="w-3.5 h-3.5 mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
+        badge.innerHTML =
+          '<i data-lucide="brain" class="w-3.5 h-3.5 mr-1 text-dark-accent"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-accent">Strategie-Modus</span>';
       } else {
-        badge.innerHTML = '<i data-lucide="dumbbell" class="w-3.5 h-3.5 mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
+        badge.innerHTML =
+          '<i data-lucide="dumbbell" class="w-3.5 h-3.5 mr-1 text-dark-muted"></i> <span class="text-[9px] font-bold uppercase tracking-widest text-dark-muted">Freies Training</span>';
       }
       app.refreshIcons();
 
@@ -130,7 +132,7 @@ const app = {
     showCard() {
       const card = this.cards[this.currentIndex];
       const progress = (this.currentIndex / this.cards.length) * 100;
-      
+
       document.getElementById('ankiProgress').style.width = `${progress}%`;
       document.getElementById('ankiQuestionText').textContent = card.q;
       document.getElementById('ankiAnswerText').textContent = card.a;
@@ -153,7 +155,7 @@ const app = {
         // Any correct answer marks it as "learned" for progress tracking
         if (!app.state.anki) app.state.anki = {};
         if (!app.state.anki[this.cards[this.currentIndex].id]) {
-            app.state.anki[this.cards[this.currentIndex].id] = { level: 1, nextReview: 0 };
+          app.state.anki[this.cards[this.currentIndex].id] = { level: 1, nextReview: 0 };
         }
       }
 
@@ -185,7 +187,7 @@ const app = {
 
       const intervals = [0, 1, 3, 7, 14, 30];
       const daysToAdd = intervals[cardData.level] || 1;
-      
+
       const nextDate = new Date();
       nextDate.setDate(nextDate.getDate() + daysToAdd);
       nextDate.setHours(0, 0, 0, 0);
@@ -196,13 +198,13 @@ const app = {
       document.getElementById('ankiProgress').style.width = '100%';
       document.getElementById('ankiAnswerView').classList.add('hidden');
       document.getElementById('ankiFinishView').classList.remove('hidden');
-      
+
       if (typeof confetti === 'function') {
         confetti({
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#10b981', '#34d399']
+          colors: ['#10b981', '#34d399'],
         });
       }
     },
@@ -212,7 +214,7 @@ const app = {
       modal.classList.add('hidden');
       document.body.style.overflow = '';
       app.updateStats();
-    }
+    },
   },
 
   quotes: [
@@ -270,11 +272,13 @@ const app = {
           const corruptData = s.substring(0, 100);
           console.error('[AP2 FISI] Corrupt data preview:', corruptData);
 
-          if (confirm(
-            'Deine gespeicherten Daten sind beschädigt. \n\n' +
-            'Möchtest du einen Neustart machen? (Dabei gehen alte Daten verloren.)\n\n' +
-            'Klicke "Abbrechen" um die Seite im Debug-Modus zu öffnen.'
-          )) {
+          if (
+            confirm(
+              'Deine gespeicherten Daten sind beschädigt. \n\n' +
+                'Möchtest du einen Neustart machen? (Dabei gehen alte Daten verloren.)\n\n' +
+                'Klicke "Abbrechen" um die Seite im Debug-Modus zu öffnen.'
+            )
+          ) {
             localStorage.removeItem('ap2_tracker_state_v1');
             location.reload();
           } else {
@@ -366,6 +370,7 @@ const app = {
 
       this.buildDOM();
       this.applyFilter();
+      this.updateStats();
       this.refreshIcons();
     } catch (err) {
       console.error('Critical Init Error:', err);
@@ -393,13 +398,13 @@ const app = {
       info: 'bg-dark-accent',
       success: 'bg-dark-success',
       warning: 'bg-dark-warning',
-      error: 'bg-dark-danger'
+      error: 'bg-dark-danger',
     };
     const icons = {
       info: 'info',
       success: 'check-circle-2',
       warning: 'alert-triangle',
-      error: 'x-circle'
+      error: 'x-circle',
     };
 
     const existing = document.getElementById('appNotification');
@@ -434,10 +439,11 @@ const app = {
     if (!localStorage.getItem('ap2_fisi_update_never_again_v210')) {
       const update = {
         title: '🚀 AP2 FISI Tracker Update v2.1.0',
-        message: 'Wir haben den Tracker auf ressourcenschonende Lucide-Icons umgestellt, das Design modernisiert und Fehler behoben!',
-        icon: 'zap'
+        message:
+          'Wir haben den Tracker auf ressourcenschonende Lucide-Icons umgestellt, das Design modernisiert und Fehler behoben!',
+        icon: 'zap',
       };
-      
+
       this.showUpdateModal(update.title, update.message, update.icon);
     }
   },
@@ -445,11 +451,12 @@ const app = {
   showUpdateModal(title, message, iconClass) {
     const modal = document.createElement('div');
     modal.id = 'updateNotificationModal';
-    modal.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto';
+    modal.className =
+      'fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto';
     modal.innerHTML = `
       <div class="bg-dark-card border border-dark-accent/50 rounded-2xl p-5 sm:p-6 md:p-8 max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-300 my-auto">
         <div class="absolute top-0 right-0 w-32 h-32 bg-dark-accent/20 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
-        
+
         <!-- HEADER -->
         <div class="flex items-center gap-3 sm:gap-4 mb-5 shrink-0">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-dark-accent/20 border-2 border-dark-accent flex items-center justify-center shrink-0">
@@ -460,13 +467,13 @@ const app = {
             <p class="text-[10px] sm:text-xs text-dark-muted">Verbesserungen für dein Lernen</p>
           </div>
         </div>
-        
+
         <!-- TITLE & MESSAGE -->
         <div class="mb-5 shrink-0">
           <h4 class="font-bold text-white mb-2 text-sm sm:text-base">${title}</h4>
           <p class="text-xs sm:text-sm text-dark-muted leading-relaxed">${message}</p>
         </div>
-        
+
         <!-- PROBLEME HINWEIS -->
         <div class="bg-dark-warning/10 border border-dark-warning/30 rounded-xl p-2.5 sm:p-3 mb-5 shrink-0">
           <p class="text-[10px] sm:text-xs text-dark-warning flex items-start gap-2">
@@ -474,7 +481,7 @@ const app = {
             <span><b>Probleme?</b> Drücke <kbd class="bg-dark-warning/20 px-1 py-0.5 rounded text-[9px] sm:text-[10px]">Strg</kbd> + <kbd class="bg-dark-warning/20 px-1 py-0.5 rounded text-[9px] sm:text-[10px]">F5</kbd> für Cache-Refresh.</span>
           </p>
         </div>
-        
+
         <!-- NEU IN DIESER VERSION -->
         <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-5 mb-5 border border-dark-border shrink-0 overflow-hidden">
           <p class="text-[10px] sm:text-xs text-dark-muted mb-3 font-bold uppercase flex items-center gap-2">
@@ -500,7 +507,7 @@ const app = {
             </li>
           </ul>
         </div>
-        
+
         <!-- WERBUNG FÜR ANDERE TRACKER -->
         <div class="bg-gradient-to-r from-indigo-900/20 to-teal-900/20 border border-indigo-500/20 rounded-xl p-3 sm:p-4 mb-5 shrink-0">
           <p class="text-[10px] sm:text-xs text-indigo-300 mb-2.5 sm:mb-3 font-bold uppercase flex items-center gap-1.5 sm:gap-2">
@@ -530,21 +537,21 @@ const app = {
             </a>
           </div>
         </div>
-        
+
         <!-- BUTTONS -->
         <div class="flex gap-2 sm:gap-3 shrink-0">
-          <button onclick="document.getElementById('updateNotificationModal').remove()" 
+          <button onclick="document.getElementById('updateNotificationModal').remove()"
                   class="flex-1 bg-dark-accent hover:bg-dark-accent/90 text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-xs sm:text-sm whitespace-nowrap">
             ✓ Verstanden
           </button>
-          <a href="updates.html" target="_blank" 
+          <a href="updates.html" target="_blank"
              onclick="document.getElementById('updateNotificationModal').remove()"
              class="flex-1 bg-dark-card hover:bg-dark-border border border-dark-border text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-center text-xs sm:text-sm whitespace-nowrap no-underline flex items-center justify-center gap-2">
             <span>Änderungen</span>
             <i data-lucide="external-link" class="text-[10px] sm:text-xs"></i>
           </a>
         </div>
-        
+
         <!-- NIE WIEDER ANZEIGEN OPTION -->
         <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-dark-border shrink-0">
           <label class="flex items-center gap-2 cursor-pointer group">
@@ -554,9 +561,9 @@ const app = {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     // Schließen bei Klick außerhalb
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
@@ -570,7 +577,7 @@ const app = {
     try {
       const serialized = JSON.stringify(this.state);
       const size = new Blob([serialized]).size;
-      
+
       // Warnung bei >80% Auslastung (ca. 4 MB von 5 MB Limit)
       if (size > 4 * 1024 * 1024 && !this._quotaWarningShown) {
         this._quotaWarningShown = true;
@@ -583,13 +590,13 @@ const app = {
           );
         }
       }
-      
+
       localStorage.setItem('ap2_tracker_state_v1', serialized);
       this._saveError = null;
     } catch (e) {
       this._saveError = e;
       console.error('[AP2 FISI] Save failed:', e.name, e.message);
-      
+
       if (e.name === 'QuotaExceededError') {
         if (!silent) {
           this.showNotification(
@@ -624,14 +631,14 @@ const app = {
         stars: 0,
         reps: [false, false, false],
         last: null,
-        ankiStats: { total: 0, correct: 0, sessions: 0 }
+        ankiStats: { total: 0, correct: 0, sessions: 0 },
       };
-    
+
     // Fallback falls ankiStats in bestehenden Daten fehlt
     if (!this.state[id].ankiStats) {
       this.state[id].ankiStats = { total: 0, correct: 0, sessions: 0 };
     }
-    
+
     return this.state[id];
   },
 
@@ -750,88 +757,94 @@ const app = {
     if (typeof data !== 'object' || data === null || Array.isArray(data)) {
       return { valid: false, error: 'Ungültiges Format: Erwartet wird ein JSON-Objekt.' };
     }
-    
+
     // 2. Minimale Struktur-Checks (existierende Keys prüfen)
     const requiredKeys = ['activity'];
     for (const key of requiredKeys) {
       if (!(key in data)) {
-        return { valid: false, error: `Fehlendes Feld: "${key}". Datei ist korrupt oder inkompatibel.` };
+        return {
+          valid: false,
+          error: `Fehlendes Feld: "${key}". Datei ist korrupt oder inkompatibel.`,
+        };
       }
     }
-    
+
     // 3. Größen-Check (max 5 MB = LocalStorage Limit)
     const size = new Blob([JSON.stringify(data)]).size;
     if (size > 5 * 1024 * 1024) {
-      return { valid: false, error: `Datei zu groß: ${(size / 1024 / 1024).toFixed(2)} MB (Max. 5 MB)` };
+      return {
+        valid: false,
+        error: `Datei zu groß: ${(size / 1024 / 1024).toFixed(2)} MB (Max. 5 MB)`,
+      };
     }
-    
+
     // 4. Versions-Erkennung
     const version = data._version || 'v1';
     const supportedVersions = ['v1', 'v2'];
-    
+
     if (!supportedVersions.includes(version)) {
-      return { 
-        valid: false, 
+      return {
+        valid: false,
         error: `Unbekannte Version: "${version}". Bitte Tracker aktualisieren.`,
-        needsMigration: true
+        needsMigration: true,
       };
     }
-    
+
     // 5. Plausibilitäts-Check
     if (data.activity && typeof data.activity !== 'object') {
       return { valid: false, error: 'Feld "activity" muss ein Objekt sein.' };
     }
-    
+
     if (data.ankiStats && typeof data.ankiStats !== 'object') {
       return { valid: false, error: 'Feld "ankiStats" muss ein Objekt sein.' };
     }
-    
+
     return { valid: true, version };
   },
 
   migrateState(data) {
     const currentVersion = data._version || 'v1';
     let migrated = { ...data };
-    
+
     if (!migrated._version) {
       migrated._version = 'v1';
     }
-    
+
     console.log(`[AP2 FISI] Migration: ${currentVersion} -> ${migrated._version}`);
     return migrated;
   },
 
   getImportStats(state) {
     const stats = { topics: 0, cards: 0, days: 0 };
-    
+
     if (state) {
-      Object.keys(state).forEach(key => {
+      Object.keys(state).forEach((key) => {
         if (/^\d+\.\d+$/.test(key)) {
           stats.topics++;
           if (state[key].done) stats.cards++;
         }
       });
     }
-    
+
     if (state.ankiStats) {
-      Object.values(state.ankiStats).forEach(s => {
-        stats.cards += (s.correct || 0);
+      Object.values(state.ankiStats).forEach((s) => {
+        stats.cards += s.correct || 0;
       });
     }
-    
+
     if (state.activity) {
-      stats.days = Object.keys(state.activity).filter(d => state.activity[d] > 0).length;
+      stats.days = Object.keys(state.activity).filter((d) => state.activity[d] > 0).length;
     }
-    
+
     return stats;
   },
 
   importData(input) {
     const file = input.files[0];
     if (!file) return;
-    
+
     input.value = '';
-    
+
     if (file.size > 10 * 1024 * 1024) {
       this.showNotification(
         'Datei zu groß',
@@ -840,17 +853,17 @@ const app = {
       );
       return;
     }
-    
+
     const reader = new FileReader();
-    
+
     reader.onerror = () => {
       console.error('[AP2 FISI] File read error:', reader.error);
       this.showNotification('Lesefehler', 'Die Datei konnte nicht gelesen werden.', 'error');
     };
-    
+
     reader.onload = (e) => {
       const content = e.target.result;
-      
+
       let parsed;
       try {
         parsed = JSON.parse(content);
@@ -863,29 +876,29 @@ const app = {
         );
         return;
       }
-      
+
       const validation = this.validateImport(parsed);
       if (!validation.valid) {
         console.error('[AP2 FISI] Validation failed:', validation.error);
         this.showNotification('Import fehlgeschlagen', validation.error, 'error', 0);
         return;
       }
-      
+
       const migrated = this.migrateState(parsed);
-      
+
       const oldState = this.state;
       this.state = migrated;
-      
+
       try {
         this.save();
-        
+
         const stats = this.getImportStats(migrated);
         this.showNotification(
           'Import erfolgreich',
           `Lade Fortschritt: ${stats.topics} Themen, ${stats.cards} Karten${stats.days ? `, ${stats.days} Tage Aktivität` : ''}`,
           'success'
         );
-        
+
         setTimeout(() => location.reload(), 1500);
       } catch (err) {
         console.error('[AP2 FISI] Import save failed:', err);
@@ -898,7 +911,7 @@ const app = {
         );
       }
     };
-    
+
     reader.readAsText(file);
   },
 
@@ -957,6 +970,7 @@ const app = {
       }
     }
     this.updateStats();
+    this.applyFilter();
   },
 
   toggleSub(id, idx, checked, element) {
@@ -1001,6 +1015,7 @@ const app = {
     this.trackActivity();
     this.save();
     this.updateStats();
+    this.applyFilter();
   },
 
   randomTopic() {
@@ -1012,7 +1027,11 @@ const app = {
     });
 
     if (open.length === 0) {
-      this.showNotification('Alles erledigt!', 'Wow! Alles erledigt! Du bist bereit für die AP2.', 'success');
+      this.showNotification(
+        'Alles erledigt!',
+        'Wow! Alles erledigt! Du bist bereit für die AP2.',
+        'success'
+      );
       return;
     }
     const randId = open[Math.floor(Math.random() * open.length)];
@@ -1236,19 +1255,17 @@ const app = {
 
     const totalCards = Object.values(window.ANKI_QUESTIONS || {}).flat().length;
     // Count cards that have a level > 0
-    const doneCards = Object.values(this.state.anki || {}).filter(
-      (v) => v && v.level > 0
-    ).length;
+    const doneCards = Object.values(this.state.anki || {}).filter((v) => v && v.level > 0).length;
 
-    // Rank Points (FISI v2.1): 
+    // Rank Points (FISI v2.1):
     // - Subtask done: 1pt
     // - Entire Topic done: 5pts bonus
     // - Card learned: 1pt (cap at 350)
-    // Goal: ~122 subtasks + (17 * 5) topic bonus + 350 cards = 557 pts. 
+    // Goal: ~122 subtasks + (17 * 5) topic bonus + 350 cards = 557 pts.
     // We set 550 as the target for 100%.
-    const totalPoints = doneSubtasks + (doneTopics * 5) + Math.min(350, doneCards);
+    const totalPoints = doneSubtasks + doneTopics * 5 + Math.min(350, doneCards);
     const maxPoints = 550;
-    
+
     // Global Progress (Large Bar & Top Percentage)
     const globalPct = Math.min(100, Math.round((totalPoints / maxPoints) * 100));
 
@@ -1261,9 +1278,9 @@ const app = {
     // UI Dashboard Labels
     const doneCountEl = document.getElementById('doneCount');
     if (doneCountEl) {
-        doneCountEl.textContent = doneCards; 
-        const labelEl = doneCountEl.nextElementSibling;
-        if (labelEl) labelEl.textContent = 'Karten'; 
+      doneCountEl.textContent = doneCards;
+      const labelEl = doneCountEl.nextElementSibling;
+      if (labelEl) labelEl.textContent = 'Karten';
     }
 
     const totalCountEl = document.getElementById('totalCount');
@@ -1306,16 +1323,51 @@ const app = {
     all.forEach((t) => {
       const s = this.getState(t.id);
       if (!s.done) {
-        const score = t.weight * 10 + Math.random() * 5;
+        // Basis-Score aus Gewichtung (max 50 Punkte bei weight=5)
+        const weightScore = t.weight * 10;
+
+        // Fortschritts-Score: Wie viele SubTasks sind NOCH offen? (max 20 Punkte)
+        const totalSub = t.sub ? t.sub.length : 1;
+        const doneSub = s.subDone ? s.subDone.filter(Boolean).length : s.done ? totalSub : 0;
+        const progressScore = ((totalSub - doneSub) / totalSub) * 20;
+
+        // Wiederholungs-Score: Wie viele Reps sind NOCH offen? (max 15 Punkte)
+        const totalReps = 3;
+        const doneReps = s.reps ? s.reps.filter(Boolean).length : 0;
+        const repScore = ((totalReps - doneReps) / totalReps) * 15;
+
+        // Leichter Zufall für Varianz (max 5 Punkte)
+        const randomScore = Math.random() * 5;
+
+        // Gesamt-Score (max ~90 Punkte)
+        const score = weightScore + progressScore + repScore + randomScore;
+
         if (score > maxScore) {
           maxScore = score;
           best = t;
         }
       }
     });
-    
-    const recNameEl = document.getElementById('recName');
-    if (recNameEl) recNameEl.textContent = best ? best.title : 'Alles erledigt! 🎉';
+
+    const recShort = document.getElementById('recShort');
+    if (recShort) {
+      // FIX: Smart Focus IMMER setzen (mit Fallback)
+      if (best) {
+        this.recId = best.id;
+        recShort.textContent = best.title;
+        recShort.title = best.title;
+        recShort.classList.remove('text-dark-muted');
+        recShort.classList.add('text-white');
+        console.log('[AP2 FISI] 🎯 Smart Focus:', best.title, `(Score: ${maxScore.toFixed(1)})`);
+      } else if (all.length === 0) {
+        this.recId = null;
+        recShort.textContent = 'Lade Daten...';
+      } else {
+        this.recId = null;
+        recShort.textContent = 'Bereit für die AP2!';
+        console.log('[AP2 FISI] ✅ Alle Themen erledigt!');
+      }
+    }
   },
 
   // --- RENDER ENGINE v2.0 ---
@@ -1329,7 +1381,7 @@ const app = {
     AP2_DATA.forEach((cat) => {
       const catNode = document.getElementById('tpl-category').content.cloneNode(true);
       const catEl = catNode.querySelector('.category-block');
-      
+
       catEl.querySelector('.cat-title').textContent = cat.name;
       const descEl = catEl.querySelector('.cat-desc');
       if (descEl) descEl.textContent = cat.desc;
@@ -1354,7 +1406,7 @@ const app = {
         googleLinks.forEach((gl) => {
           gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
         });
-        
+
         const duckduckgoLinks = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
         duckduckgoLinks.forEach((dl) => {
           dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
@@ -1435,12 +1487,12 @@ const app = {
     const activityDates = Object.keys(this.state.activity || {});
     const badge = document.getElementById('streakBadge');
     if (badge) {
-        if (activityDates.length > 0) {
-            badge.classList.remove('hidden');
-            document.getElementById('streakCount').textContent = activityDates.length;
-        } else {
-            badge.classList.add('hidden');
-        }
+      if (activityDates.length > 0) {
+        badge.classList.remove('hidden');
+        document.getElementById('streakCount').textContent = activityDates.length;
+      } else {
+        badge.classList.add('hidden');
+      }
     }
 
     AP2_DATA.forEach((cat) => {
@@ -1448,11 +1500,12 @@ const app = {
       cat.topics.forEach((t) => {
         const s = this.getState(t.id);
         const card = this.cardMap[t.id];
-        
+
         let matchesSearch = true;
         if (this.searchQuery) {
-          matchesSearch = t.title.toLowerCase().includes(this.searchQuery) || 
-                          t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
+          matchesSearch =
+            t.title.toLowerCase().includes(this.searchQuery) ||
+            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
         }
 
         let matchesFilter = true;
@@ -1461,21 +1514,23 @@ const app = {
 
         const visible = matchesSearch && matchesFilter;
         card.style.display = visible ? 'block' : 'none';
-        
+
         if (visible) {
-            catVisible = true;
-            hasVisible = true;
-            
-            // Auto-open if searching in subtasks
-            const subMatch = this.searchQuery && !t.title.toLowerCase().includes(this.searchQuery) && 
-                             t.sub.some(sub => sub.toLowerCase().includes(this.searchQuery));
-            
-            if (subMatch || this.openTopics.has(t.id)) {
-                const body = card.querySelector('.topic-body');
-                if (!body.classList.contains('open')) {
-                    this.toggleAccordion(card.querySelector('.header-area'));
-                }
+          catVisible = true;
+          hasVisible = true;
+
+          // Auto-open if searching in subtasks
+          const subMatch =
+            this.searchQuery &&
+            !t.title.toLowerCase().includes(this.searchQuery) &&
+            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
+
+          if (subMatch || this.openTopics.has(t.id)) {
+            const body = card.querySelector('.topic-body');
+            if (!body.classList.contains('open')) {
+              this.toggleAccordion(card.querySelector('.header-area'));
             }
+          }
         }
       });
       const catEl = this.catMap[cat.id];
@@ -1505,11 +1560,23 @@ const app = {
         if (pctEl) {
           pctEl.textContent = `${pct}%`;
           if (pct === 100) {
-            pctEl.classList.remove('text-dark-accent', 'bg-dark-accent/10', 'border-dark-accent/20');
-            pctEl.classList.add('text-dark-success', 'bg-dark-success/10', 'border-dark-success/20');
+            pctEl.classList.remove(
+              'text-dark-accent',
+              'bg-dark-accent/10',
+              'border-dark-accent/20'
+            );
+            pctEl.classList.add(
+              'text-dark-success',
+              'bg-dark-success/10',
+              'border-dark-success/20'
+            );
           } else {
             pctEl.classList.add('text-dark-accent', 'bg-dark-accent/10', 'border-dark-accent/20');
-            pctEl.classList.remove('text-dark-success', 'bg-dark-success/10', 'border-dark-success/20');
+            pctEl.classList.remove(
+              'text-dark-success',
+              'bg-dark-success/10',
+              'border-dark-success/20'
+            );
           }
         }
       }
