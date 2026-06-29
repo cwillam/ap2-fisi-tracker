@@ -692,6 +692,7 @@ const app = {
       this.timerRunning = false;
       document.getElementById('pomoBtn').innerHTML =
         '<i data-lucide="play" class="w-5 h-5 ml-0.5"></i>';
+      app.refreshIcons();
     }
     this.timeLeft = min * 60;
     this.updateTimerDisplay();
