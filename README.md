@@ -1,4 +1,4 @@
-# AP2 Tracker FISI - Dein Lernbegleiter (v2.2.0 Update)
+# AP2 Tracker FISI - Dein Lernbegleiter
 
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
 
@@ -86,7 +86,14 @@ Datenschutz ist hier kein Werbeslogan, sondern Architektur:
 
 Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
-**Aktuelle Version:** v2.2.1 (23. Juni 2026)
+**Aktuelle Version:** v2.3.0 (12. Juli 2026)
+
+- **PWA-Support:** Vollwertige Progressive Web App mit Service Worker (Offline-Caching) für 100% Offline-Fähigkeit der Lernkarten.
+- **Homescreen-Installation:** Mobil-optimierte PWA-Meta-Tags und `apple-touch-icon` für die Homescreen-Installation auf iOS & Android.
+- **Kaffeekasse-Modal:** Neues Spenden-Modal mit direkten Optionen für PayPal (spendenfrei) und Buy Me a Coffee.
+- **Theme-Konsistenz:** Vereinheitlichung der theme-color Meta-Tags und des PWA-Brandings auf allen Unterseiten.
+
+### v2.2.1 (23. Juni 2026)
 
 - Modul-Fortschrittskreise: Zirkuläre SVG-Fortschrittsanzeigen pro Lernfeld
 - Tastatur-Shortcuts für Lernkarten (Leertaste, Pfeiltasten, Esc)
@@ -105,7 +112,7 @@ Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
 - [ ] **Prüfungs-Simulator:** Zufällige Fragenkombinationen zur Simulation der echten Abschlussprüfung.
 - [ ] **FISI Cheat Sheets:** Download-Bereich für komprimierte Zusammenfassungen (Subnetting, RAID, Server-Dienste).
-- [ ] **PWA Support:** Installation als App auf dem Homescreen.
+- [x] **PWA Support:** Installation als App auf dem Homescreen.
 
 ---
 
