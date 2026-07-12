@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "de.cwillam.ap2_fisi.tracker",
+        "sha256_cert_fingerprints": ["63:B7:AE:A2:84:6D:57:09:B7:A2:71:CC:72:2E:AD:F6:47:5D:04:11:05:6B:ED:E0:24:A7:F8:6A:0E:24:E8:FB"]
+      }
+    }]
