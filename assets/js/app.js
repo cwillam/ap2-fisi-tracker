@@ -428,16 +428,8 @@ const app = {
 
   // --- UPDATE NOTIFICATION ---
   checkForUpdate() {
-    if (!localStorage.getItem('ap2_fisi_update_never_again_v210')) {
-      const update = {
-        title: '🚀 AP2 FISI Tracker Update v2.1.0',
-        message:
-          'Wir haben den Tracker auf ressourcenschonende Lucide-Icons umgestellt, das Design modernisiert und Fehler behoben!',
-        icon: 'zap',
-      };
-
-      this.showUpdateModal(update.title, update.message, update.icon);
-    }
+    // Start-Modals komplett deaktiviert (Updates sind über die Glocke in der Navigationsleiste einsehbar)
+    return;
   },
 
   showUpdateModal(title, message, iconClass) {
