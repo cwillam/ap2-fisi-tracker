@@ -1,0 +1,17 @@
+{
+  "name": "AP2 Tracker FISI",
+  "short_name": "AP2 FISI",
+  "description": "IHK Prüfungstracker für Fachinformatiker Systemintegration (AP2 FISI)",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#10b981",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
