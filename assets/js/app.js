@@ -135,6 +135,8 @@ const app = {
 
       document.getElementById('ankiProgress').style.width = `${progress}%`;
       document.getElementById('ankiQuestionText').textContent = card.q;
+      const ansQElement = document.getElementById('ankiAnswerQuestionText');
+      if (ansQElement) ansQElement.textContent = card.q;
       document.getElementById('ankiAnswerText').textContent = card.a;
 
       document.getElementById('ankiQuestionView').classList.remove('hidden');
