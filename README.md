@@ -88,8 +88,17 @@ Datenschutz ist hier kein Werbeslogan, sondern Architektur:
 
 Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
-**Aktuelle Version:** v2.3.0 (12. Juli 2026)
+**Aktuelle Version:** v2.4.1 (23. Juli 2026)
 
+### v2.4.1 (23. Juli 2026)
+- **Bugfix GitHub-Templates:** Syntaxfehler in `bug.yml` behoben, so dass das Bug-Formular nun reibungslos von GitHub erkannt wird.
+- **Cache-Aktualisierung:** Anhebung von CACHE_NAME auf `v2.4.1` und Asset-Versioning (`?v=2.4.1`) durchgeführt, um automatische Updates beim Nutzer anzustoßen.
+
+### v2.4.0 (23. Juli 2026)
+- **Berufsschul-Portal:** Neue Infoseite (`bildungseinrichtungen.html`) für Schulen und Dozenten bezüglich datenschutzkonformem und freiem Einsatz im Unterricht.
+- **Outreach & Feedback:** Integration direkter Verlinkungen für Fehlerberichte und Feature-Wünsche im Footer sowie Google Forms für Closed-Beta-Anmeldungen.
+
+### v2.3.0 (12. Juli 2026)
 - **PWA-Support:** Vollwertige Progressive Web App mit Service Worker (Offline-Caching) für 100% Offline-Fähigkeit der Lernkarten.
 - **Homescreen-Installation:** Mobil-optimierte PWA-Meta-Tags und `apple-touch-icon` für die Homescreen-Installation auf iOS & Android.
 - **Kaffeekasse-Modal:** Neues Spenden-Modal mit direkten Optionen für PayPal (spendenfrei) und Buy Me a Coffee.
