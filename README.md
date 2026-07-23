@@ -47,7 +47,7 @@ Im Gegensatz zur AP1 liegt hier der Fokus auf tiefergehenden Themen wie Netzwerk
 
 ### Core Features
 
-- **Themen-Fokus:** Basierend auf dem aktuellen IHK-Prüfungskatalog (2024/25) und Analysen vergangener Prüfungen.
+- **Themen-Fokus:** Basierend auf dem aktuellen amtlichen Rahmenlehrplan (2024/25) und Analysen vergangener Prüfungen.
 - **Gewichtung:** Themen sind nach Relevanz markiert (Kritisch, Sehr Hoch, Hoch, Mittel).
 - **Persistent Storage:** Speicherung des Lernfortschritts via `LocalStorage` (bleibt nach Neustart erhalten).
 - **Smart Focus:** Der Tracker empfiehlt dir automatisch das nächste wichtigste Thema.
@@ -118,7 +118,7 @@ Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
 ## Disclaimer
 
-_Alle Lerninhalte wurden nach bestem Wissen und Gewissen auf Basis der aktuellen IHK-Prüfungskataloge zusammengestellt. Ich übernehme jedoch keine Gewähr für die Vollständigkeit oder Richtigkeit der prüfungsrelevanten Themen._
+_Alle Lerninhalte wurden nach bestem Wissen und Gewissen auf Basis der aktuellen amtlichen Rahmenlehrpläne und Prüfungsanforderungen zusammengestellt. Ich übernehme jedoch keine Gewähr für die Vollständigkeit oder Richtigkeit der prüfungsrelevanten Themen._
 
 ---
 
