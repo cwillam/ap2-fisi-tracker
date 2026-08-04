@@ -129,10 +129,12 @@
     <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
       <!-- Intro Section -->
       <div class="text-center mb-8 fade-in">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-dark-accent/10 border border-dark-accent/25 mb-4 shadow-lg shadow-dark-accent/5">
+          <i data-lucide="brain" class="text-dark-accent w-6 h-6"></i>
+        </div>
         <h1
-          class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-dark-accent to-teal-400 bg-clip-text text-transparent mb-3 pb-1 leading-tight flex items-center justify-center gap-3"
+          class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-white to-dark-accent bg-clip-text text-transparent mb-3 pb-1 leading-tight"
         >
-          <i data-lucide="brain" class="text-dark-accent w-8 h-8"></i>
           Glossar &amp; Eselsbrücken (FISI)
         </h1>
         <p class="text-dark-muted max-w-lg mx-auto text-sm md:text-base">
@@ -153,8 +155,32 @@
           />
         </div>
 
-        <!-- Categories horizontal scroll -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 mb-4 text-xs font-bold border-b border-dark-border/40">
+        <!-- Mobile/Tablet Dropdown Category Filter -->
+        <div class="block md:hidden mb-4 relative">
+          <label for="categorySelect" class="block text-xs font-bold text-dark-muted mb-1.5 uppercase tracking-wider">Kategorie filtern</label>
+          <div class="relative">
+            <select
+              id="categorySelect"
+              onchange="glossaryApp.setCategory(this.value)"
+              class="w-full pl-3 pr-10 py-2.5 bg-dark-bg border border-dark-border rounded-xl text-dark-text appearance-none focus:outline-none focus:border-dark-accent/60 transition-all text-sm font-bold focus:ring-1 focus:ring-dark-accent/30"
+            >
+              <option value="all">Alle Kategorien</option>
+              <option value="favorites">⭐ Favoriten</option>
+              <option value="Netzwerke & Routing">Netzwerk &amp; Routing</option>
+              <option value="Dienste & Protokolle">Dienste &amp; Protokolle</option>
+              <option value="Server & Active Directory">Server &amp; AD</option>
+              <option value="Speicher & Ausfallsicherheit">Speicher &amp; USV</option>
+              <option value="Sicherheit & Firewalls">Sicherheit &amp; Firewalls</option>
+              <option value="Cloud & Virtualisierung">Cloud &amp; VM</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-dark-muted">
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Categories wrapped list -->
+        <div class="hidden md:flex flex-wrap items-center gap-2 pb-3 mb-4 text-xs font-bold border-b border-dark-border/40">
           <button onclick="glossaryApp.setCategory('all')" id="cat-all" class="px-3 py-1.5 rounded-lg bg-dark-accent text-white transition-all shrink-0">
             Alle
           </button>
@@ -531,6 +557,526 @@
           category: "Cloud & Virtualisierung",
           definition: "Ein Vertrag zwischen Dienstleister und Kunde, der die Qualitätsstandards (Verfügbarkeit, Reaktionszeit, Behebungszeit) einer Dienstleistung rechtlich garantiert.",
           mnemonic: "Die **Uptime-Garantie**. Steht dort 99,9% Uptime, darf der Server im ganzen Jahr nur knapp 8 Stunden ausfallen."
+        },
+        {
+          id: "dora-dhcp",
+          term: "DHCP DORA-Prozess",
+          long: "Zuweisungsablauf von DHCP-IPs",
+          category: "Dienste & Protokolle",
+          definition: "Vierteiliger Ablauf zur IP-Zuweisung: 1. Discover (Client sucht Server via Broadcast), 2. Offer (Server bietet IP an), 3. Request (Client fordert diese IP an), 4. Acknowledge (Server bestätigt).",
+          mnemonic: "Der DHCP-Schrei: **D**iscover, **O**ffer, **R**equest, **A**cknowledge (D-O-R-A)."
+        },
+        {
+          id: "ad-forest-tree",
+          term: "Active Directory: Gesamtstruktur",
+          long: "Forest, Tree & Domain Hierarchie",
+          category: "Server & Active Directory",
+          definition: "Die logische AD-Hierarchie: Domains enthalten OUs. Trees fassen Domains mit zusammenhängendem Namensraum zusammen. Der Forest (Gesamtstruktur) ist die oberste administrative Sicherheitsgrenze.",
+          mnemonic: "Der AD-Forst: Domains sind die Äste, Trees sind die Bäume, und der Forest ist der gesamte Wald, in dem alles wächst."
+        },
+        {
+          id: "ipsec-modes",
+          term: "IPsec: Tunnel- vs. Transportmodus",
+          long: "Verschlüsselungsmodi bei IPsec-VPNs",
+          category: "Sicherheit & Firewalls",
+          definition: "Transportmodus: Verschlüsselt nur die Nutzdaten (Payload), der IP-Header bleibt sichtbar (für Host-to-Host). Tunnelmodus: Verschlüsselt das gesamte Original-IP-Paket und kapselt es in einen neuen IP-Header (für Site-to-Site VPNs).",
+          mnemonic: "**Transport** = Brief wird in Folie verpackt (Adresse lesbar). **Tunnel** = Der komplette Brief wird in ein neues Kuvert gesteckt (neue Adressen)."
+        },
+        {
+          id: "l2-l3-switches",
+          term: "Layer 2 vs. Layer 3 Switch",
+          long: "Switching auf Sicherungs- vs. Vermittlungsschicht",
+          category: "Netzwerke & Routing",
+          definition: "Layer 2 Switch: Leitet Pakete anhand von MAC-Adressen innerhalb eines IP-Netzes weiter. Layer 3 Switch: Besitzt Routing-Funktionalitäten und leitet Pakete IP-basiert zwischen verschiedenen VLANs/Subnetzen weiter.",
+          mnemonic: "L2 Switch = Postbote in deinem Wohnblock. L3 Switch = Postbote, der Briefe auch an andere Postleitzahlen (Subnetze) vermittelt."
+        },
+        {
+          id: "hypervisor-types",
+          term: "Hypervisor Typ 1 vs. Typ 2",
+          long: "Virtualisierungs-Technologien",
+          category: "Cloud & Virtualisierung",
+          definition: "Typ 1 (Bare-Metal): Läuft direkt auf der physischen Hardware (z.B. VMware ESXi, Proxmox). Typ 2 (Hosted): Läuft als Anwendung auf einem bestehenden Betriebssystem (z.B. VirtualBox).",
+          mnemonic: "**Typ 1** = Haus direkt auf dem Fundament gebaut (schnell & effizient). **Typ 2** = Wohnwagen auf einem LKW parken (langsamer, da OS dazwischen)."
+        },
+        {
+          id: "backup-types",
+          term: "Backup: Voll vs. Inkr. vs. Diff.",
+          long: "Datensicherungsmethoden im Vergleich",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Voll-Backup: Sichert alle Daten. Inkrementell: Sichert nur Änderungen seit der letzten Sicherung (egal welcher Art). Differentiell: Sichert alle Änderungen seit dem letzten Voll-Backup.",
+          mnemonic: "**Inkrementell** = Schreibt eine Kette (braucht alle Kettenglieder zum Restore). **Differentiell** = Schreibt den Unterschied zum Startpunkt (braucht nur Voll-Backup + letztes Diff)."
+        },
+        {
+          id: "host-formula",
+          term: "Subnetz-Hostformel",
+          long: "Berechnung nutzbarer Host-IPs",
+          category: "Netzwerke & Routing",
+          definition: "Formel zur Berechnung der nutzbaren Host-Adressen in einem Subnetz: 2^H - 2, wobei H die Anzahl der Host-Bits ist. Abgezogen werden die Netz-ID und die Broadcast-Adresse.",
+          mnemonic: "Zwei hoch Hostbits minus Zwei. Die Zwei, die wir abziehen, sind **Netzadresse (Straße)** und **Broadcast (Megafon)**."
+        },
+        {
+          id: "ipv6-link-local",
+          term: "IPv6 Link-Local Address",
+          long: "Verbindungslokale IPv6-Adresse (fe80::/10)",
+          category: "Netzwerke & Routing",
+          definition: "Eine automatisch generierte IPv6-Adresse, die nur innerhalb eines physischen Netzwerksegments (Link) gültig ist und nicht über Router hinweg weitergeleitet wird.",
+          mnemonic: "Startet immer mit **fe80::**. Deine private Haus-Sprechanlage: Reicht nur bis zur Haustür (nicht ins öffentliche Internet)."
+        },
+        {
+          id: "dmz-types",
+          term: "DMZ: Single- vs. Dual-Homed",
+          long: "Demilitarisierte Zone Sicherheitskonzepte",
+          category: "Sicherheit & Firewalls",
+          definition: "Single-Homed (Dreibein-Firewall): Eine einzige Firewall trennt Internet, DMZ und LAN. Dual-Homed (Zweistufige Firewall): Die DMZ liegt zwischen einer äußeren und einer inneren Firewall (höhere Sicherheit).",
+          mnemonic: "**Single** = Ein Wächter mit drei Türen.<br>**Dual** = Eine Festung mit zwei hintereinander geschalteten Burgmauern."
+        },
+        {
+          id: "vpn-protocols",
+          term: "VPN: OpenVPN vs. WireGuard",
+          long: "VPN-Tunnelprotokolle im Vergleich",
+          category: "Sicherheit & Firewalls",
+          definition: "OpenVPN: Bewährtes SSL/TLS-basiertes Protokoll, extrem flexibel, aber ressourcenintensiv. WireGuard: Modernes, schlankes Protokoll im Linux-Kernel, extrem schnell und stromsparend.",
+          mnemonic: "OpenVPN = **Schwerer LKW** (kann alles transportieren, braucht viel Sprit). WireGuard = **Sportwagen** (wenig Zeilen Code, extrem wendig und schnell)."
+        },
+        {
+          id: "dns-records-types",
+          term: "DNS-Record-Typen",
+          long: "Ressourceneinträge im Domain Name System",
+          category: "Dienste & Protokolle",
+          definition: "A: Name zu IPv4. AAAA: Name zu IPv6. MX: Mailserver-Eintrag. CNAME: Alias-Name. TXT: Textinformationen (z.B. für SPF/Spamschutz).",
+          mnemonic: "**A** = **A**dresse (IPv4). **AAAA** = Vierfach so groß wie A (IPv6). **MX** = **M**ail **E**xchanger."
+        },
+        {
+          id: "raid5-6",
+          term: "RAID 5 vs. RAID 6",
+          long: "Redundante Festplattenverbünde",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "RAID 5: Verteilt Daten und eine einfache Parität über mindestens 3 Platten (kann 1 Ausfall abfangen). RAID 6: Nutzt doppelte Parität über mindestens 4 Platten (kann 2 Ausfälle abfangen).",
+          mnemonic: "RAID 5 = **Ein** Airbag (eine Platte Reserve). RAID 6 = **Zwei** Airbags (zwei Platten Reserve)."
+        },
+        {
+          id: "raid10",
+          term: "RAID 10 (1+0)",
+          long: "Kombination aus Spiegelung und Striping",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Ein Festplattenverbund aus mindestens 4 Festplatten, bei dem Paare gespiegelt (RAID 1) und diese Spiegelungen dann zusammengeschaltet werden (RAID 0). Vereint Speed und Sicherheit.",
+          mnemonic: "Das Beste aus beiden Welten: **Spiegeln (1) für Sicherheit**, dann **Verteilen (0) für maximale Geschwindigkeit**."
+        },
+        {
+          id: "encryption-types",
+          term: "Symmetrische vs. Asymmetrische Verschlüsselung",
+          long: "Kryptografische Verfahren",
+          category: "Sicherheit & Firewalls",
+          definition: "Symmetrisch: Gleicher Schlüssel für Ver- und Entschlüsselung (z.B. AES). Asymmetrisch: Schlüsselpaar aus öffentlichem (Public Key) und privatem Schlüssel (Private Key) (z.B. RSA).",
+          mnemonic: "**Symmetrisch** = Haustürschlüssel (jeder mit einer Kopie kann rein und raus). **Asymmetrisch** = Briefkasten (jeder wirft Post ein, nur du hast den Schlüssel)."
+        },
+        {
+          id: "vlan-tagging",
+          term: "VLAN Tagging (802.1Q)",
+          long: "Markierung von Ethernet-Frames für VLANs",
+          category: "Netzwerke & Routing",
+          definition: "Der Standard IEEE 802.1Q fügt dem Ethernet-Frame ein 4-Byte-Tag hinzu, das die VLAN-ID (1 bis 4094) enthält, damit Switche den Verkehr auf Trunk-Ports trennen können.",
+          mnemonic: "Der **Gepäckanhänger**: Am Trunk-Port bekommt jedes Datenpaket einen Sticker mit der Abteilungs-ID (VLAN-ID), damit es im Ziel-Switch richtig sortiert wird."
+        },
+        {
+          id: "spanning-tree-protocol",
+          term: "Spanning Tree Protocol (STP)",
+          long: "Protokoll zur Loop-Vermeidung",
+          category: "Netzwerke & Routing",
+          definition: "Ein Netzwerkprotokoll (IEEE 802.1D), das redundante Pfade in Switch-Strukturen erkennt und blockiert, um Broadcast-Stürme und Loops zu verhindern.",
+          mnemonic: "Der **Brückenwächter**: Er schaltet redundante Kabel stumm und aktiviert sie nur, wenn das Hauptkabel ausfällt."
+        },
+        {
+          id: "load-balancing-algos",
+          term: "Load-Balancing-Algorithmen",
+          long: "Lastverteilungsverfahren für Server-Cluster",
+          category: "Dienste & Protokolle",
+          definition: "Round Robin: Reihum-Verteilung. Least Connections: Sendet Traffic an den Server mit den wenigsten aktiven Verbindungen. IP Hash: Zuweisung basierend auf der Client-IP.",
+          mnemonic: "**Round Robin** = Karten austeilen (jeder kriegt nacheinander eine). **Least Connections** = Kasse im Supermarkt (du nimmst die mit der kürzesten Schlange)."
+        },
+        {
+          id: "ids-vs-ips",
+          term: "IDS vs. IPS",
+          long: "Angriffserkennung vs. Angriffsverhinderung",
+          category: "Sicherheit & Firewalls",
+          definition: "IDS (Intrusion Detection System): Analysiert Traffic und schlägt bei Anomalien/Signaturen Alarm. IPS (Intrusion Prevention System): Sitzt aktiv im Datenstrom und blockiert Angriffe sofort selbstständig.",
+          mnemonic: "IDS = **Rauchmelder** (schlägt Alarm, löscht aber nicht). IPS = **Sprinkleranlage** (erkennt das Feuer und löscht es sofort selbst)."
+        },
+        {
+          id: "two-factor-auth",
+          term: "Zwei-Faktor-Authentisierung (2FA)",
+          long: "Mehrstufige Identitätsprüfung",
+          category: "Sicherheit & Firewalls",
+          definition: "Kombination aus zwei unterschiedlichen Faktoren zur Verifizierung: Wissen (Passwort), Besitz (Token, Smartphone) oder Inhärenz (Biometrie, Fingerabdruck).",
+          mnemonic: "Etwas, das du **weißt** (PIN) + Etwas, das du **hast** (Bankkarte). Nur eins davon reicht nicht."
+        },
+        {
+          id: "wsus-update",
+          term: "WSUS",
+          long: "Windows Server Update Services",
+          category: "Server & Active Directory",
+          definition: "Ein Microsoft-Dienst, der es Administratoren ermöglicht, Updates für Windows-Betriebssysteme im Firmennetzwerk zentral zu testen, freizugeben und zu verteilen.",
+          mnemonic: "Die **Update-Schleuse**: Nicht jeder PC lädt einzeln bei Microsoft herunter. Ein Server holt die Updates, der Admin prüft sie und verteilt sie intern."
+        },
+        {
+          id: "syslog-severities",
+          term: "Syslog-Severitätsstufen",
+          long: "Dringlichkeitsstufen nach RFC 5424",
+          category: "Dienste & Protokolle",
+          definition: "Syslog teilt Log-Ereignisse in 8 Dringlichkeitsstufen von 0 (Emergency - System unbrauchbar) über 3 (Error) bis 7 (Debug - Entwickler-Meldungen) ein.",
+          mnemonic: "0 ist die Katastrophe (Emergency), 7 ist das unwichtige Plaudern des Systems (Debug)."
+        },
+        {
+          id: "siem-security",
+          term: "SIEM",
+          long: "Security Information and Event Management",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein Sicherheitsmanagementsystem, das Logdaten aus verschiedenen Quellen (Firewalls, Server, Switche) in Echtzeit sammelt, korreliert und bei Bedrohungen alarmiert.",
+          mnemonic: "Die **Zentrale Sicherheitswarte**: Ein Tool liest alle Protokolle aller Geräte gleichzeitig und schlägt Alarm, wenn z.B. an drei Servern zeitgleich falsche Passwörter eingegeben werden."
+        },
+        {
+          id: "saml-oidc-sso",
+          term: "SAML vs. OIDC (SSO)",
+          long: "Protokolle für Single Sign-On",
+          category: "Sicherheit & Firewalls",
+          definition: "SAML: XML-basiertes Protokoll zur Identitätsübertragung im Enterprise-Bereich. OpenID Connect (OIDC): Modernes, JSON/OAuth 2.0-basiertes SSO-Protokoll für mobile und Webanwendungen.",
+          mnemonic: "SAML = **Klassischer Firmenausweis** (XML-Schwergewicht). OIDC = **Moderner digitaler Ticket-Pass** auf dem Smartphone (JSON-Leichtgewicht)."
+        },
+        {
+          id: "nas-san-differences",
+          term: "NAS vs. SAN",
+          long: "File- vs. Block-Level-Storage",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "NAS (Network Attached Storage): Dateibasierter Zugriff (File-Level via NFS/SMB) über das IP-Netz. SAN (Storage Area Network): Blockbasierter Zugriff (Block-Level via Fibre Channel/iSCSI) über ein dediziertes Hochgeschwindigkeitsnetz.",
+          mnemonic: "NAS = **Gemeinsamer Dateiordner** im Netzwerk (wie Dropbox). SAN = **Externe Festplatte**, die logisch über das Netz direkt im PC eingebaut ist."
+        },
+        {
+          id: "wpa3-security",
+          term: "WPA3",
+          long: "Wi-Fi Protected Access 3",
+          category: "Sicherheit & Firewalls",
+          definition: "Der aktuelle Sicherheitsstandard für WLANs. Ersetzt WPA2 und schützt vor Wörterbuchangriffen durch das SAE-Verfahren (Simultaneous Authentication of Equals) und bietet 192-Bit-Verschlüsselung.",
+          mnemonic: "Schutz vor Bruteforce: Auch wenn dein WLAN-Passwort einfach ist, kann ein Angreifer es unter WPA3 nicht mehr offline erraten, da jeder Anmeldeversuch einzigartig ist."
+        },
+        {
+          id: "sd-wan",
+          term: "SD-WAN",
+          long: "Software-Defined Wide Area Network",
+          category: "Netzwerke & Routing",
+          definition: "Eine softwaregesteuerte Architektur zur Verwaltung von Weitverkehrsnetzen. Sie steuert den Datenverkehr dynamisch über verschiedene Leitungen (MPLS, LTE, Breitband) basierend auf der aktuellen Verbindungsqualität.",
+          mnemonic: "Das intelligente Navi fürs WAN: Erkennt Stau auf der MPLS-Spur und leitet unwichtigen Datenverkehr automatisch über das günstige Internet um."
+        },
+        {
+          id: "qos-networking",
+          term: "Quality of Service (QoS)",
+          long: "Dienstgüte-Regelung in Netzwerken",
+          category: "Netzwerke & Routing",
+          definition: "Techniken zur Priorisierung bestimmter Datenpakete (z.B. VoIP, Video) gegenüber weniger zeitkritischem Datenverkehr (z.B. Downloads), um Latenzen und Paketverluste zu minimieren.",
+          mnemonic: "Die Blaulicht-Spur: VoIP-Sprachpakete dürfen alle anderen Daten überholen, damit die Telefonleitung nicht stottert."
+        },
+        {
+          id: "router-redundancy",
+          term: "VRRP & HSRP",
+          long: "Protokolle für Standard-Gateway-Redundanz",
+          category: "Netzwerke & Routing",
+          definition: "VRRP (offen) und HSRP (Cisco) gruppieren mehrere physische Router zu einem virtuellen Router mit einer virtuellen IP. Fällt der Master-Router aus, übernimmt der Backup-Router nahtlos.",
+          mnemonic: "Zwei Leibwächter teilen sich einen Codenamen (Virtuelle IP). Wird einer getroffen (fällt aus), springt der andere sofort ein, ohne dass der Schutzbefohlene es merkt."
+        },
+        {
+          id: "ipv6-casts",
+          term: "IPv6 Anycast & Multicast",
+          long: "Adressierungsarten in IPv6",
+          category: "Netzwerke & Routing",
+          definition: "Multicast: Sendet Daten von einem Sender an eine Gruppe ausgewählter Empfänger (Ersatz für Broadcast). Anycast: Sendet Daten an den physikalisch am nächsten gelegenen Empfänger einer Gruppe.",
+          mnemonic: "Multicast = Newsletter (nur an Abonnenten). Anycast = Notruf (geht an die Wache, die am schnellsten da ist)."
+        },
+        {
+          id: "netflow-ipfix",
+          term: "NetFlow & IPFIX",
+          long: "Netzwerk-Verkehrsanalyse-Protokolle",
+          category: "Netzwerke & Routing",
+          definition: "Protokolle zum Sammeln und Überwachen von IP-Verkehrsstatistiken. Sie erfassen Metadaten wie Quell-/Ziel-IPs, Ports und Paketanzahl zur Bandbreitenanalyse und Anomalieerkennung.",
+          mnemonic: "Die Verkehrszählung: Es wird nicht der Inhalt der LKWs (Pakete) geöffnet, sondern nur erfasst, wer wohin wie viel transportiert."
+        },
+        {
+          id: "aaa-servers",
+          term: "RADIUS & TACACS+",
+          long: "Authentisierung, Autorisierung und Abrechnung (AAA)",
+          category: "Netzwerke & Routing",
+          definition: "Zentralisierte Protokolle zur Zugriffskontrolle in Netzwerken. Sie regeln, wer sich anmelden darf (Authentication), was er tun darf (Authorization) und protokollieren die Aktionen (Accounting).",
+          mnemonic: "Der Portier: Er prüft deinen Ausweis (Wer?), gibt dir den passenden Schlüssel (Was darfst du?) und schreibt ins Buch, wann du gehst."
+        },
+        {
+          id: "ntp-clock",
+          term: "NTP & PTP",
+          long: "Network Time Protocol & Precision Time Protocol",
+          category: "Dienste & Protokolle",
+          definition: "NTP: Synchronisiert Systemuhren über IP-Netze (Genauigkeit im Millisekundenbereich). PTP (IEEE 1588): Bietet hochpräzise Synchronisation im Mikrosekundenbereich für kritische Echtzeit-Infrastrukturen.",
+          mnemonic: "NTP = Die Kirchturmuhr (reicht für normale Server-Logs). PTP = Die Atomuhr (wichtig für synchrone Messungen im Mobilfunk)."
+        },
+        {
+          id: "mail-protocols",
+          term: "SMTP, IMAP & POP3",
+          long: "E-Mail-Übertragungs- und Abrufprotokolle",
+          category: "Dienste & Protokolle",
+          definition: "SMTP (Port 25): Dient dem Versand von E-Mails zwischen Servern. POP3 (Port 110): Lädt Mails herunter und löscht sie meist vom Server. IMAP (Port 143): Synchronisiert Mails live auf dem Server.",
+          mnemonic: "SMTP = Der Postbote (liefert aus). POP3 = Postfach leeren (alles einpacken, Briefkasten danach leer). IMAP = Glaskasten (du schaust dir die Mails an, sie bleiben aber im Kasten liegen)."
+        },
+        {
+          id: "smtp-security",
+          term: "SMTP Security (SPF, DKIM, DMARC)",
+          long: "E-Mail-Authentifizierungsverfahren gegen Spam",
+          category: "Dienste & Protokolle",
+          definition: "SPF: Definiert im DNS, welche Server Mails für eine Domain senden dürfen. DKIM: Signiert Mails kryptografisch. DMARC: Bestimmt die Richtlinie bei Fehlschlagen von SPF/DKIM.",
+          mnemonic: "SPF = Namensliste der erlaubten Absender. DKIM = Unterschrift des Königs (Siegel). DMARC = Anweisung an den Empfänger bei Fälschung (z.B. direkt in den Schredder)."
+        },
+        {
+          id: "ftp-protocols",
+          term: "FTP, SFTP & FTPS",
+          long: "Dateiübertragungsprotokolle im Vergleich",
+          category: "Dienste & Protokolle",
+          definition: "FTP: Unverschlüsseltes Uralt-Protokoll. FTPS: FTP verschlüsselt über SSL/TLS (nutzt zwei Ports). SFTP: Völlig anderes, SSH-basiertes Protokoll zur sicheren Dateiübertragung über einen einzigen Port (22).",
+          mnemonic: "FTP = Postkarte (jeder liest mit). FTPS = Einschreiben im Umschlag. SFTP = Werttransport im gepanzerten SSH-Wagen."
+        },
+        {
+          id: "security-headers",
+          term: "HTTP Security Headers",
+          long: "Sicherheits-Richtlinien im HTTP-Response",
+          category: "Dienste & Protokolle",
+          definition: "Zusätzliche Header im HTTP-Response (z.B. HSTS, X-Frame-Options, CSP), die dem Browser anweisen, bestimmte Sicherheitsfunktionen zu aktivieren (z.B. HTTPS erzwingen, Clickjacking verhindern).",
+          mnemonic: "Die Hausordnung für den Browser: Der Server teilt dem Browser direkt beim Laden mit, welche Aktionen verboten sind."
+        },
+        {
+          id: "ldap-vs-ad",
+          term: "LDAP vs. Active Directory",
+          long: "Verzeichnisdienste im Vergleich",
+          category: "Server & Active Directory",
+          definition: "LDAP: Ein offenes Anwendungsprotokoll zur Abfrage von Verzeichnisdiensten. Active Directory: Ein proprietärer Microsoft-Verzeichnisdienst, der intern LDAP zur Abfrage nutzt.",
+          mnemonic: "LDAP = Die Abfragesprache (wie SQL). Active Directory = Die eigentliche Datenbank (wie Oracle oder MySQL)."
+        },
+        {
+          id: "ad-trusts",
+          term: "AD Vertrauensstellungen (Trusts)",
+          long: "Active Directory Trust Relationships",
+          category: "Server & Active Directory",
+          definition: "Mechanismus in AD, der es Benutzern aus einer Domäne ermöglicht, auf Ressourcen in einer anderen Domäne zuzugreifen, ohne dort ein separates Konto zu besitzen (transitiv/nicht-transitiv).",
+          mnemonic: "Die Grenzkontroll-Allianz: Land A vertraut den Pässen von Land B. Bürger aus B dürfen einreisen, ohne ein neues Visum zu beantragen."
+        },
+        {
+          id: "dhcp-relay",
+          term: "DHCP Relay Agent",
+          long: "Weiterleitung von DHCP-Broadcasts",
+          category: "Dienste & Protokolle",
+          definition: "Ein Dienst auf einem Router oder Layer-3-Switch, der DHCP-Broadcast-Anfragen (Discover) aus einem lokalen Subnetz in Unicast-Pakete verpackt und an einen DHCP-Server in einem anderen Subnetz weiterleitet.",
+          mnemonic: "Der DHCP-Dolmetscher: Da Router keine Broadcasts weiterleiten, übersetzt der Relay Agent den Hilferuf in einen gezielten Brief (Unicast) an den zentralen DHCP-Server."
+        },
+        {
+          id: "raid50-60",
+          term: "RAID 50 & 60",
+          long: "Verschachtelte RAID-Systeme",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "RAID 50: Verbindet mehrere RAID-5-Verbünde über ein übergeordnetes RAID 0 (Striping). RAID 60: Verbindet mehrere RAID-6-Verbünde über ein RAID 0. Bietet extrem hohe Performance bei hoher Ausfallsicherheit.",
+          mnemonic: "Mehrere kleine RAID-5-Inseln werden für extreme Schreibgeschwindigkeit zusammengeschaltet. Eine Platte pro Insel darf gleichzeitig sterben."
+        },
+        {
+          id: "dedup-compression",
+          term: "Deduplizierung & Komprimierung",
+          long: "Speicherplatz-Optimierungstechniken",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Deduplizierung: Identifiziert identische Datenblöcke auf dem Speichermedium und speichert sie nur einmal ab (Verweise). Komprimierung: Reduziert die Bit-Größe von Dateien durch mathematische Algorithmen.",
+          mnemonic: "Deduplizierung = Gleiches Buch nur einmal ins Regal stellen und Zettel anbringen. Komprimierung = Schriftgröße im Buch verkleinern."
+        },
+        {
+          id: "ha-cluster",
+          term: "HA-Cluster (Active/Active vs. Active/Passive)",
+          long: "Hochverfügbarkeits-Cluster-Modi",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Active/Active: Alle Knoten im Cluster verarbeiten gleichzeitig Anfragen (Lastverteilung). Active/Passive: Nur ein primärer Knoten arbeitet. Der passive Knoten übernimmt erst bei Ausfall (Failover).",
+          mnemonic: "Active/Active = Zwei Arbeiter teilen sich die Arbeit parallel.<br>Active/Passive = Ein Arbeiter schuftet, der Ersatzmann schläft daneben und springt bei Ohnmacht ein."
+        },
+        {
+          id: "disaster-recovery",
+          term: "Disaster Recovery (RTO & RPO)",
+          long: "Notfallwiederherstellungs-Metriken",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "RTO (Recovery Time Objective): Maximal tolerierbare Ausfallzeit bis zur Wiederherstellung. RPO (Recovery Point Objective): Maximal tolerierbarer Datenverlust (Zeitspanne seit dem letzten Backup).",
+          mnemonic: "RTO = Wie lange darf die Reparatur dauern? RPO = Wie viele Stunden Arbeit dürfen beim Datenverlust maximal verloren gehen?"
+        },
+        {
+          id: "iscsi-vs-fc",
+          term: "iSCSI vs. Fibre Channel",
+          long: "SAN-Übertragungskontroll-Protokolle",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "iSCSI: Überträgt SCSI-Befehle kostengünstig über normale Ethernet-Kabel und IP-Netze. Fibre Channel (FC): Benötigt dedizierte Glasfaserkabel, spezielle Switches (HBA) und bietet extrem geringe Latenzen bei hohen Kosten.",
+          mnemonic: "iSCSI = Pakettransport auf der normalen Autobahn (günstig, teilt sich die Spur). FC = Exklusives Schienennetz (sehr schnell, keine Staus, sehr teuer)."
+        },
+        {
+          id: "ngfw-firewall",
+          term: "Next-Generation Firewall (NGFW)",
+          long: "Moderne, tiefenprüfende Firewall",
+          category: "Sicherheit & Firewalls",
+          definition: "Eine Firewall, die über einfache Paketfilterung (Port/IP) hinausgeht. Sie integriert DPI (Deep Packet Inspection), Application Control (erkennt z.B. Skype/Tor-Verkehr) und IPS zur Abwehr moderner Bedrohungen.",
+          mnemonic: "Der Spezial-Grenzkontrolleur: Er prüft nicht nur den Pass (IP), sondern öffnet den Koffer, versteht, worüber geredet wird (DPI) und erkennt gefälschte Ausweise."
+        },
+        {
+          id: "zero-trust",
+          term: "Zero Trust Architecture",
+          long: "Sicherheitsmodell 'Niemals vertrauen, immer überprüfen'",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein Sicherheitsmodell, bei dem keinem Benutzer und keinem Gerät standardmäßig vertraut wird – egal, ob sie sich innerhalb oder außerhalb des eigenen Netzwerks befinden. Jede Verbindung wird authentisiert.",
+          mnemonic: "Der Hochsicherheitstrakt: Selbst wenn du im Gebäude bist, musst du vor jeder einzelnen Bürotür erneut deinen Ausweis scannen."
+        },
+        {
+          id: "soar-security",
+          term: "SIEM vs. SOAR",
+          long: "Sicherheitsüberwachung & automatisierte Reaktion",
+          category: "Sicherheit & Firewalls",
+          definition: "SIEM: Sammelt und analysiert Logdaten zur Bedrohungserkennung. SOAR (Security Orchestration, Automation and Response): Geht weiter und leitet automatisch Gegenmaßnahmen ein (z.B. IP sperren bei Angriff).",
+          mnemonic: "SIEM = Die Alarmanlage (schreit laut). SOAR = Der Wachroboter, der bei Einbruch automatisch alle Türen verriegelt."
+        },
+        {
+          id: "owasp-infra",
+          term: "OWASP Top 10",
+          long: "Die zehn kritischsten Web-Sicherheitsrisiken",
+          category: "Sicherheit & Firewalls",
+          definition: "Eine regelmäßig aktualisierte Liste der kritischsten Sicherheitsrisiken für Webanwendungen (z.B. Broken Access Control, Cryptographic Failures, Injection), herausgegeben vom OWASP-Projekt.",
+          mnemonic: "Die Bibel der IT-Sicherheit: Ein Pflicht-Katalog für Admins und Entwickler, um die Einbruchswege Nummer 1 abzuriegeln."
+        },
+        {
+          id: "ddos-mitigation",
+          term: "DDoS-Mitigation",
+          long: "Abwehr von Distributed Denial of Service Angriffen",
+          category: "Sicherheit & Firewalls",
+          definition: "Verfahren zur Abwehr massiver Überlastungsangriffe. Nutzt Scrubbing-Center, Anycast-Routing und Traffic-Shaping, um schädlichen Datenverkehr herauszufiltern, während legitime Nutzer erreichbar bleiben.",
+          mnemonic: "Das Verkehrs-Sieb: Eine riesige Flutwelle an Anfragen wird auf mehrere Verteilerstationen aufgeteilt und gefiltert, damit der Server nicht ertrinkt."
+        },
+        {
+          id: "bastion-host",
+          term: "Bastion Host",
+          long: "Spezial-Server für sichere Admin-Zugänge",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein extrem gehärteter Server, der als einziger öffentlicher Zugangspunkt für administrative Zugriffe (z.B. SSH/RDP) in ein internes, geschütztes Netzwerk (DMZ/LAN) dient.",
+          mnemonic: "Die Schleusentür: Administratoren dürfen nicht direkt ins LAN. Sie müssen sich erst auf dem Bastion Host einloggen, von wo aus sie geschützt weiterarbeiten."
+        },
+        {
+          id: "social-engineering",
+          term: "Social Engineering",
+          long: "Manipulation von Menschen zur Informationsbeschaffung",
+          category: "Sicherheit & Firewalls",
+          definition: "Zwischenmenschliche Beeinflussung mit dem Ziel, Personen zur Preisgabe vertraulicher Informationen (z.B. Passwörter) oder zur Ausführung bestimmter Aktionen (z.B. Überweisungen) zu bewegen.",
+          mnemonic: "Der Enkeltrick der IT-Sicherheit: Der Angreifer hackt nicht den PC, sondern überlistet den Mitarbeiter am Telefon (Faktor Mensch)."
+        },
+        {
+          id: "tls-handshake",
+          term: "SSL/TLS Handshake",
+          long: "Verbindungsaufbau bei verschlüsselten HTTPs-Verbindungen",
+          category: "Sicherheit & Firewalls",
+          definition: "Der Protokoll-Ablauf beim Aufbau einer HTTPS-Verbindung: Aushandeln der Cipher Suite, Verifizieren des Server-Zertifikats und sicherer Austausch des symmetrischen Sitzungsschlüssels.",
+          mnemonic: "Das kryptografische Kennenlernen: 'Hallo, ich will verschlüsseln, hier mein Ausweis (Zertifikat), lass uns auf diesen Einmalschlüssel einigen'."
+        },
+        {
+          id: "forward-secrecy",
+          term: "Perfect Forward Secrecy (PFS)",
+          long: "Perfekte Folgesicherheit",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein kryptografisches Merkmal von Sitzungsschlüsseln. Stellt sicher, dass ein Angreifer aufgezeichneten Datenverkehr auch dann nicht entschlüsseln kann, wenn er später den privaten Hauptschlüssel (Master Key) erlangt.",
+          mnemonic: "Einmalschlüssel-Garantie: Jede Sitzung nutzt einen völlig neuen Schlüssel. Wird der Generalschlüssel gestohlen, lässt sich kein altes Paket damit öffnen."
+        },
+        {
+          id: "podman-docker",
+          term: "Docker vs. Podman",
+          long: "Container-Laufzeitumgebungen im Vergleich",
+          category: "Cloud & Virtualisierung",
+          definition: "Docker: Nutzt einen zentralen, als root laufenden Hintergrunddienst (Daemon). Podman: Arbeitet daemonless (kein Hintergrunddienst nötig) und erlaubt rootless Container (erhöhte Sicherheit).",
+          mnemonic: "Docker = Zentraler Busfahrer (Daemon verwaltet alles). Podman = Jeder fährt sein eigenes Auto (kein Daemon nötig, sicherer ohne Root-Rechte)."
+        },
+        {
+          id: "k8s-elements",
+          term: "Pods, Services & Deployments",
+          long: "Kubernetes-Kernressourcen",
+          category: "Cloud & Virtualisierung",
+          definition: "Pod: Die kleinste K8s-Einheit (enthält Container). Service: Definiert eine feste IP/DNS für den Zugriff auf Pods. Deployment: Regelt die gewünschte Anzahl (Replikation) und Updates der Pods.",
+          mnemonic: "Pod = Die Kiste. Service = Die Adresse der Kiste für Kunden. Deployment = Der Frachtplan (wie viele Kisten müssen existieren?)."
+        },
+        {
+          id: "ansible-iac",
+          term: "Ansible",
+          long: "Agentenloses Konfigurations-Management",
+          category: "Cloud & Virtualisierung",
+          definition: "Ein Open-Source-Automatisierungswerkzeug zur Konfiguration und Verwaltung von Servern. Nutzt YAML-Playbooks und arbeitet agentenlos über SSH (keine Softwareinstallation auf Clients nötig).",
+          mnemonic: "Der Server-Dirigent: Du schreibst ein Rezept (Playbook) und Ansible führt es per SSH auf 100 Servern gleichzeitig aus, ohne dass dort ein Agent installiert sein muss."
+        },
+        {
+          id: "cloud-services",
+          term: "IaaS, PaaS & SaaS",
+          long: "Cloud-Service-Modelle",
+          category: "Cloud & Virtualisierung",
+          definition: "IaaS: Bereitstellung von Infrastruktur (VMs, Speicher). PaaS: Bereitstellung von Entwicklungsplattformen (Laufzeitumgebung). SaaS: Bereitstellung fertiger Software über das Internet.",
+          mnemonic: "IaaS = Küche mieten. PaaS = Küche inklusive fertig geheiztem Ofen mieten. SaaS = Pizza bestellen und essen."
+        },
+        {
+          id: "hybrid-multi-cloud",
+          term: "Hybrid- vs. Multi-Cloud",
+          long: "Cloud-Infrastruktur-Strategien",
+          category: "Cloud & Virtualisierung",
+          definition: "Hybrid-Cloud: Kombination aus einer privaten Infrastruktur (On-Premises) und einer Public Cloud. Multi-Cloud: Gleichzeitige Nutzung von Services mehrerer Public-Cloud-Provider (z.B. AWS und Azure).",
+          mnemonic: "Hybrid = Eigener Gemüsegarten + Supermarkt.<br>Multi-Cloud = Einkaufen bei Lidl + Einkaufen bei Aldi zur Risikostreuung."
+        },
+        {
+          id: "live-migration",
+          term: "Live-Migration (vMotion)",
+          long: "Unterbrechungsfreie VM-Verschiebung",
+          category: "Cloud & Virtualisierung",
+          definition: "Ein Virtualisierungs-Feature, das es ermöglicht, eine laufende virtuelle Maschine im laufenden Betrieb ohne Ausfallzeit von einem physischen Host-Server auf einen anderen zu verschieben.",
+          mnemonic: "Das fliegende Klassenzimmer: Der gesamte Unterricht (Laufende VM) zieht während des Unterrichts in ein anderes Gebäude um, ohne dass der Lehrer aufhört zu sprechen."
+        },
+        {
+          id: "thin-thick-provisioning",
+          term: "Thin vs. Thick Provisioning",
+          long: "Speicherplatz-Zuweisungsmethoden",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Thick Provisioning: Reserviert den gesamten zugewiesenen Speicherplatz sofort physisch auf dem Datenträger. Thin Provisioning: Zuweisung erfolgt dynamisch, belegt wird physisch nur, was aktuell real geschrieben ist.",
+          mnemonic: "Thick = Geld fest im Umschlag sperren (keiner kann es nutzen). Thin = Dispokredit (wird erst abgebucht, wenn du real einkaufst)."
+        },
+        {
+          id: "itil-processes",
+          term: "ITIL-Core-Prozesse",
+          long: "Information Technology Infrastructure Library",
+          category: "Dienste & Protokolle",
+          definition: "Ein Framework für IT-Service-Management (ITSM). Definiert Best Practices für Prozesse wie Incident Management (Störungsbehebung), Problem Management (Ursachenforschung) und Change Management (Freigabe von Änderungen).",
+          mnemonic: "Das Regelwerk für IT-Abteilungen: Wie meldet man Fehler (Incident), wie verhindert man sie dauerhaft (Problem) und wie spielt man Updates ein (Change)?"
+        },
+        {
+          id: "sla-components",
+          term: "SLA, OLA & UC",
+          long: "Service-Vertragskonzepte im ITSM",
+          category: "Dienste & Protokolle",
+          definition: "SLA: Vereinbarung über Servicequalität zwischen IT und Kunde. OLA (Operating Level Agreement): Vereinbarung zwischen internen IT-Teams. UC (Underpinning Contract): Vertrag mit externen Dienstleistern.",
+          mnemonic: "SLA = Versprechen an den Kunden (z.B. 99% Uptime). OLA = Versprechen der Netzwerk-Jungs an die Server-Jungs. UC = Vertrag mit der Telekom."
+        },
+        {
+          id: "patch-management",
+          term: "Patch-Management",
+          long: "Systematischer Update-Prozess",
+          category: "Server & Active Directory",
+          definition: "Der kontrollierte Prozess der Beschaffung, Prüfung, Freigabe und Installation von Software-Updates (Patches) auf allen Systemen zur Behebung von Fehlern und Sicherheitslücken.",
+          mnemonic: "Das kontrollierte Flicken: Updates werden erst in einer Testumgebung geprüft, bevor sie nachts auf alle Produktivserver ausgerollt werden."
+        },
+        {
+          id: "usv-online",
+          term: "USV: Online (Double Conversion)",
+          long: "Dauerwandler-USV (VFI nach IEC 62040-3)",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Der sicherste USV-Typ für Server. Wandelt Netzspannung permanent in Gleichstrom und wieder in Wechselstrom um. Bietet null Umschaltzeit bei Stromausfall und filtert alle Netzstörungen.",
+          mnemonic: "Die Dauer-Filter-USV: Liefert permanent sauberen Strom aus dem eigenen Wechselrichter, komplett ohne Umschaltverzögerung (0 ms)."
+        },
+        {
+          id: "it-grundschutz",
+          term: "BSI IT-Grundschutz",
+          long: "Sicherheits-Standard des Bundesamtes für Sicherheit in der Informationstechnik",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein systematisches Verfahren zur Identifikation und Absicherung von IT-Infrastrukturen durch vordefinierte Sicherheitsmaßnahmen (Bausteine) für Infrastruktur, Organisation, Personal und Technik.",
+          mnemonic: "Das deutsche Sicherheits-Kochbuch: Enthält exakte Rezepte, wie du Server, Gebäude und Mitarbeiter gegen Angriffe absicherst."
         }
       ];
 
@@ -584,6 +1130,12 @@
 
         setCategory(cat) {
           this.currentCategory = cat;
+          
+          // Sync select element if exists
+          const select = document.getElementById("categorySelect");
+          if (select) {
+            select.value = cat;
+          }
           
           // Update active button state
           const buttons = document.querySelectorAll("[id^='cat-']");

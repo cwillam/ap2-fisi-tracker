@@ -1,4 +1,4 @@
-# AP2 Tracker FISI - Dein Lernbegleiter (v2.4.3 Update)
+# AP2 Tracker FISI - Dein Lernbegleiter (v2.6.0 Update)
 
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
 
@@ -55,6 +55,7 @@ Im Gegensatz zur AP1 liegt hier der Fokus auf tiefergehenden Themen wie Netzwerk
 - **Smart Focus:** Der Tracker empfiehlt dir automatisch das nächste wichtigste Thema.
 - **Focus Timer:** Integrierter Pomodoro-Timer für effektive Lernphasen.
 - **Import/Export:** JSON-basierte Backup-Funktion deiner Daten.
+- **Glossar & Eselsbrücken:** Interaktiver, offline-fähiger Spickzettel für 100 FISI-Fachbegriffe mit Merkhilfen, Kategorie- und Buchstabensuche sowie Merkliste.
 
 ---
 
@@ -88,7 +89,14 @@ Datenschutz ist hier kein Werbeslogan, sondern Architektur:
 
 Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
-**Aktuelle Version:** v2.5.0 (27. Juli 2026)
+**Aktuelle Version:** v2.6.0 (4. August 2026)
+
+### v2.6.0 (4. August 2026)
+
+- **Glossar & Eselsbrücken:** Neue Übersichtsseite (`glossar.html`) mit 100 wichtigen Begriffen und einprägsamen Gedächtnishilfen für die Prüfung.
+- **Kategorie- & Buchstabensuche:** Responsiver Filter mit Dropdown auf Mobilgeräten und Wrapped-Pills auf Desktop zur Vermeidung von Überläufen.
+- **Favoriten-Merkliste:** Nutzer können Begriffe als Favoriten markieren – dank LocalStorage bleibt die Auswahl dauerhaft gespeichert.
+- **Discord-Server:** Promotion-Button zur Integration der neuen Lern-Community.
 
 ### v2.5.0 (27. Juli 2026)
 
