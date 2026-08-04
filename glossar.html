@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="de" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glossar & Eselsbrücken | AP2 Tracker FISI</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="theme-color" content="#10b981" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css?v=2.5.0" />
+
+    <!-- Tailwind Configuration -->
+    <script src="assets/js/tailwind.js?v=2.5.0"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "dark-bg": "#020617",
+              "dark-card": "#0f172a",
+              "dark-border": "#1e293b",
+              "dark-muted": "#64748b",
+              "dark-text": "#f8fafc",
+              "dark-accent": "#10b981",
+              "dark-accent-hover": "#059669",
+              "dark-success": "#34d399",
+              "dark-warning": "#f59e0b",
+              "dark-danger": "#ef4444",
+            },
+            fontFamily: {
+              sans: [
+                "system-ui",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "Segoe UI",
+                "Roboto",
+                "sans-serif",
+              ],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Custom scrollbar for horizontal categories on mobile */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-dark-bg text-dark-text min-h-screen flex flex-col font-sans selection:bg-dark-accent selection:text-white"
+  >
+    <!-- Header -->
+    <header
+      class="w-full border-b border-dark-border bg-dark-bg/80 backdrop-blur-md sticky top-0 z-50"
+    >
+      <div
+        class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between"
+      >
+        <a
+          href="index.html"
+          class="flex items-center gap-3 group hover:opacity-80 transition-opacity"
+        >
+          <div
+            class="w-8 h-8 rounded-lg bg-dark-card border border-dark-border flex items-center justify-center group-hover:border-dark-accent transition-colors"
+          >
+            <i
+              data-lucide="arrow-left"
+              class="text-dark-muted group-hover:text-dark-accent transition-colors w-4 h-4"
+            ></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg tracking-tight leading-none"
+              >AP2 <span class="text-dark-accent">Tracker</span></span
+            >
+            <span class="text-[10px] text-dark-muted font-mono"
+              >Zurück zum Dashboard</span
+            >
+          </div>
+        </a>
+
+        <div class="flex items-center gap-2">
+          <a
+            href="help.html"
+            class="w-8 h-8 rounded-lg bg-dark-card border border-dark-border flex items-center justify-center hover:border-dark-accent transition-colors text-dark-muted hover:text-white"
+            title="Hilfe & FAQ"
+          >
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+          </a>
+          <span
+            class="text-xs font-mono bg-dark-card border border-dark-border px-2 py-1 rounded text-dark-muted"
+            >v2.5.0</span
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+      <!-- Intro Section -->
+      <div class="text-center mb-8 fade-in">
+        <h1
+          class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-dark-accent to-teal-400 bg-clip-text text-transparent mb-3 pb-1 leading-tight flex items-center justify-center gap-3"
+        >
+          <i data-lucide="brain" class="text-dark-accent w-8 h-8"></i>
+          Glossar &amp; Eselsbrücken (FISI)
+        </h1>
+        <p class="text-dark-muted max-w-lg mx-auto text-sm md:text-base">
+          Das schnelle Nachschlagewerk für wichtige IHK-Netzwerkprotokolle, Serverdienste, Speichertechnologien, Firewalls, Cloud und clevere Eselsbrücken zur FISI-Prüfung.
+        </p>
+      </div>
+
+      <!-- Control Panel -->
+      <div class="bg-dark-card border border-dark-border rounded-2xl p-4 md:p-6 mb-6 fade-in shadow-xl">
+        <!-- Search bar -->
+        <div class="relative w-full mb-4">
+          <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-muted w-4 h-4"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Begriff, Protokoll oder Abkürzung suchen (z.B. OSPF, VLAN, RAID)..."
+            class="w-full pl-10 pr-4 py-2.5 bg-dark-bg border border-dark-border rounded-xl text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-dark-accent/60 transition-all text-sm"
+          />
+        </div>
+
+        <!-- Categories horizontal scroll -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 mb-4 text-xs font-bold border-b border-dark-border/40">
+          <button onclick="glossaryApp.setCategory('all')" id="cat-all" class="px-3 py-1.5 rounded-lg bg-dark-accent text-white transition-all shrink-0">
+            Alle
+          </button>
+          <button onclick="glossaryApp.setCategory('favorites')" id="cat-favorites" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0 flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 text-dark-warning fill-dark-warning"></i> Favoriten
+          </button>
+          <button onclick="glossaryApp.setCategory('Netzwerke & Routing')" id="cat-Netzwerke" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Netzwerk &amp; Routing
+          </button>
+          <button onclick="glossaryApp.setCategory('Dienste & Protokolle')" id="cat-Dienste" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Dienste &amp; Protokolle
+          </button>
+          <button onclick="glossaryApp.setCategory('Server & Active Directory')" id="cat-Server" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Server &amp; AD
+          </button>
+          <button onclick="glossaryApp.setCategory('Speicher & Ausfallsicherheit')" id="cat-Speicher" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Speicher &amp; USV
+          </button>
+          <button onclick="glossaryApp.setCategory('Sicherheit & Firewalls')" id="cat-Sicherheit" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Sicherheit &amp; Firewalls
+          </button>
+          <button onclick="glossaryApp.setCategory('Cloud & Virtualisierung')" id="cat-Cloud" class="px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0">
+            Cloud &amp; VM
+          </button>
+        </div>
+
+        <!-- A-Z Alphabet Filter -->
+        <div class="flex flex-wrap items-center justify-center gap-1.5 text-xs font-mono">
+          <button onclick="glossaryApp.setLetter('all')" id="let-all" class="px-2 py-1 rounded bg-dark-bg border border-dark-border text-dark-muted hover:border-dark-accent hover:text-white transition-all font-sans font-bold">
+            A-Z
+          </button>
+          <script>
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            letters.forEach(l => {
+              document.write(`
+                <button onclick="glossaryApp.setLetter('${l}')" id="let-${l}" class="w-6 h-6 flex items-center justify-center rounded bg-dark-bg border border-dark-border text-dark-muted hover:border-dark-accent hover:text-white transition-all">
+                  ${l}
+                </button>
+              `);
+            });
+          </script>
+        </div>
+      </div>
+
+      <!-- Stats counter -->
+      <div class="flex items-center justify-between mb-4 px-2 text-xs font-bold text-dark-muted fade-in">
+        <span id="statsText">Lade Begriffe...</span>
+        <button onclick="glossaryApp.resetFilters()" class="text-dark-accent hover:underline hover:text-dark-accent-hover transition-colors">
+          Filter zurücksetzen
+        </button>
+      </div>
+
+      <!-- Cards Grid -->
+      <div id="termsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 fade-in">
+        <!-- Cards injected dynamically by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden flex flex-col items-center justify-center text-center py-16 bg-dark-card border border-dark-border border-dashed rounded-2xl p-6 fade-in">
+        <i data-lucide="search" class="w-12 h-12 text-dark-muted mb-4"></i>
+        <h3 class="text-lg font-bold mb-1">Keine Einträge gefunden</h3>
+        <p class="text-sm text-dark-muted max-w-sm mb-4">
+          Probier einen anderen Suchbegriff oder setze die Filter zurück.
+        </p>
+        <button onclick="glossaryApp.resetFilters()" class="px-4 py-2 bg-dark-accent hover:bg-dark-accent-hover text-white text-xs font-bold rounded-lg transition-colors">
+          Alle Filter zurücksetzen
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-dark-border bg-dark-bg py-8 mt-12 text-xs text-dark-muted">
+      <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-col items-center sm:items-start gap-1">
+          <div class="flex items-center gap-1.5 font-bold text-dark-text">
+            <span>© 2026 Christoph Willam</span>
+          </div>
+          <span>IHK-Prüfungsvorbereitung (AP2 FISI)</span>
+        </div>
+        <div class="flex items-center gap-4 flex-wrap justify-center font-bold">
+          <a href="https://github.com/cwillam" target="_blank" class="hover:text-white transition flex items-center gap-1.5">
+            <i data-lucide="code-2" class="w-3.5 h-3.5"></i> GitHub
+          </a>
+          <a href="https://discord.gg/5BM5YJadDs" target="_blank" rel="noopener" class="hover:text-[#5865F2] transition flex items-center gap-1.5">
+            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Discord
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Lucide icons -->
+    <script src="assets/js/lucide.min.js?v=2.5.0"></script>
+
+    <!-- Glossary App Logic -->
+    <script>
+      // Database of 35 specific FISI terms for AP2
+      const glossaryData = [
+        {
+          id: "osi-modell",
+          term: "OSI-Modell",
+          long: "Open Systems Interconnection Model",
+          category: "Netzwerke & Routing",
+          definition: "Ein Schichtenmodell zur Strukturierung der Datenkommunikation in 7 aufeinanderfolgenden Schichten (von Bitübertragung auf L1 bis zur Anwendungsschicht auf L7).",
+          mnemonic: "<strong>Alle Deutschen Schüler Trinken Cola Nach Prüfungen</strong><br>(Anwendung, Darstellung, Sitzung, Transport, Vermittlung, Sicherung, Bitübertragung)"
+        },
+        {
+          id: "subnetting-cidr",
+          term: "Subnetzmaske & CIDR",
+          long: "Classless Inter-Domain Routing",
+          category: "Netzwerke & Routing",
+          definition: "Verfahren zur flexibleren Aufteilung von IP-Netzen. Die Netzmaske wird als Suffix (z.B. /24) angegeben und definiert die genaue Trennung zwischen Netzwerk- und Host-Anteil.",
+          mnemonic: "<strong>Subnetting = Netzteilung</strong>: Eine /24-Maske (255.255.255.0) lässt Platz für 256 IPs (abzüglich Netz-ID und Broadcast = 254 nutzbare Hosts)."
+        },
+        {
+          id: "ipv6-adressierung",
+          term: "IPv6-Adressbereiche",
+          long: "Link-Local vs. Global Unicast vs. Unique Local",
+          category: "Netzwerke & Routing",
+          definition: "fe80::/10: Link-Local (nicht-routbar, nur im lokalen Segment). fd00::/7: Unique Local (ULA, vergleichbar mit privaten IPv4-Bereichen). 2000::/3: Global Unicast (GUA, weltweit routbare öffentliche Adressen).",
+          mnemonic: "<strong>fe80::</strong> = Lokale Brücke (Link-Local). <br><strong>fd00::</strong> = Privates Dorf (ULA). <br><strong>2000::</strong> = Die weite Welt (GUA)."
+        },
+        {
+          id: "ospf",
+          term: "OSPF",
+          long: "Open Shortest Path First",
+          category: "Netzwerke & Routing",
+          definition: "Ein dynamisches Link-State-Routing-Protokoll für das Routing innerhalb eines autonomen Systems (Interior Gateway Protocol). Nutzt den Dijkstra-Algorithmus zur Pfadermittlung.",
+          mnemonic: "<strong>OSPF = Link-State</strong>. Teilt den Zustand aller Verbindungen im Netz mit und berechnet dynamisch den mathematisch kürzesten Weg."
+        },
+        {
+          id: "bgp",
+          term: "BGP",
+          long: "Border Gateway Protocol",
+          category: "Netzwerke & Routing",
+          definition: "Das de-facto Standard-Routingprotokoll des Internets. Es verbindet Autonome Systeme (AS) miteinander (Exterior Gateway Protocol) und arbeitet pfadvektor-basiert.",
+          mnemonic: "Der <strong>Lotse des Internets</strong>. Es steuert, über welche Länder oder Provider-Netzwerke (AS) die Daten fließen."
+        },
+        {
+          id: "vlan-tagging",
+          term: "VLAN (802.1Q Tagging)",
+          long: "Virtual Local Area Network Trunking",
+          category: "Netzwerke & Routing",
+          definition: "Ermöglicht das Übertragen mehrerer VLANs über ein einziges physisches Kabel. Pakete werden dabei auf Switch-Trunk-Ports mit einem 802.1Q-Header-Tag (VLAN-ID) versehen.",
+          mnemonic: "<strong>Access Port:</strong> Nur ein VLAN (ohne Tag für Endgeräte).<br><strong>Trunk Port:</strong> Autobahn für viele VLANs mit 'Etikett' (VLAN-ID)."
+        },
+        {
+          id: "spanning-tree",
+          term: "Spanning Tree (STP)",
+          long: "Spanning Tree Protocol (IEEE 802.1D)",
+          category: "Netzwerke & Routing",
+          definition: "Ein Protokoll zur Vermeidung von Schleifen (Loops) in geschalteten Ethernet-Netzwerken. Es deaktiviert redundante Pfade und aktiviert sie automatisch bei Ausfällen.",
+          mnemonic: "<strong>Loop-Schutz:</strong> Verhindert den gefürchteten Broadcast-Sturm, indem redundante Switch-Verbindungen temporär blockiert werden."
+        },
+        {
+          id: "routing-tabelle",
+          term: "Routing-Entscheidung",
+          long: "Ziel-IP, Hop & Metrik",
+          category: "Netzwerke & Routing",
+          definition: "Der Router prüft bei Paketempfang seine Tabelle nach der Longest Prefix Match Regel (spezifischste Route), ermittelt den nächsten Router (Next Hop) und vergleicht bei Redundanz die niedrigste Metrik.",
+          mnemonic: "<strong>Longest Prefix Match</strong>: Die maskierte Route mit der längsten Übereinstimmung (z.B. /28 statt /24) gewinnt immer."
+        },
+        {
+          id: "dns-records",
+          term: "DNS Records",
+          long: "A, AAAA, CNAME, MX & TXT (SPF)",
+          category: "Dienste & Protokolle",
+          definition: "A: Name zu IPv4. AAAA: Name zu IPv6. CNAME: Aliasname für andere Domains. MX: Priorisierter Mailserver. TXT/SPF: Textdaten (wichtig zur E-Mail-Absendersicherung gegen Spam).",
+          mnemonic: "<strong>A</strong> = Einfache IP (v4). <strong>AAAA</strong> = Vierte Potenz von A (v6). <strong>MX</strong> = Mail Exchange."
+        },
+        {
+          id: "dhcpv6-slaac",
+          term: "DHCPv6 & SLAAC",
+          long: "IPv6-Autokonfiguration",
+          category: "Dienste & Protokolle",
+          definition: "SLAAC: Client baut sich IP aus Netzpräfix + EUI-64 (MAC). Stateless DHCPv6: IP wird per SLAAC bezogen, Zusatzinfos (DNS) liefert der DHCP. Stateful DHCPv6: IP und alle Infos kommen komplett vom DHCPv6.",
+          mnemonic: "<strong>SLAAC</strong> = Selbstständig (Autokonfiguration).<br><strong>Stateless DHCPv6</strong> = Gemischt (IP selbst, DNS vom Server).<br><strong>Stateful</strong> = Klassisch (Alles vom Server)."
+        },
+        {
+          id: "ldap",
+          term: "LDAP",
+          long: "Lightweight Directory Access Protocol",
+          category: "Dienste & Protokolle",
+          definition: "Ein Netzwerkprotokoll zur Abfrage und Verwaltung von Verzeichnisdiensten (z.B. Active Directory oder OpenLDAP) in einer hierarchischen Struktur.",
+          mnemonic: "Die **Abfragesprache** für Verzeichnisdatenbanken – liest Benutzer, Gruppen und Rechte aus."
+        },
+        {
+          id: "ssh",
+          term: "SSH (Secure Shell)",
+          long: "Sichere Remote-Verbindung (Port 22)",
+          category: "Dienste & Protokolle",
+          definition: "Ein kryptografisches Netzwerkprotokoll zur sicheren Fernverwaltung von Computern über die Kommandozeile im unsicheren Netzwerk.",
+          mnemonic: "Der verschlüsselte Nachfolger des unsicheren Klartext-Protokolls **Telnet**."
+        },
+        {
+          id: "syslog",
+          term: "Syslog",
+          long: "Standard zur Systemprotokollierung",
+          category: "Dienste & Protokolle",
+          definition: "Ein standardisiertes Protokoll zur Übertragung von Log- und Statusnachrichten von Geräten (Server, Firewalls, Switches) an einen zentralen Sammelserver (Syslog Daemon).",
+          mnemonic: "Das **zentrale Logbuch** der IT-Infrastruktur zur Fehleranalyse und SIEM-Überwachung."
+        },
+        {
+          id: "snmp",
+          term: "SNMP",
+          long: "Simple Network Management Protocol",
+          category: "Dienste & Protokolle",
+          definition: "Ein Protokoll zur Überwachung (Monitoring), Steuerung und Konfiguration von Netzwerkgeräten (Routers, Switches, Drucker, USVs) von einer zentralen Management-Station aus.",
+          mnemonic: "Die **Telemetrie-Fernüberwachung** der IT-Infrastruktur (Port 161/162)."
+        },
+        {
+          id: "nat-pat",
+          term: "NAT / PAT",
+          long: "Network / Port Address Translation",
+          category: "Dienste & Protokolle",
+          definition: "Verbindet private LANs mit dem Internet. PAT (Port Address Translation / Masquerading) übersetzt viele interne, private IPs über eine einzige öffentliche IP, indem Quell-Ports dynamisch manipuliert werden.",
+          mnemonic: "<strong>NAT</strong> = IP zu IP.<br><strong>PAT</strong> = IP + Port zu IP + Port (Erlaubt Tausenden Clients das parallele Surfen über eine IP)."
+        },
+        {
+          id: "active-directory",
+          term: "Active Directory (AD)",
+          long: "Microsofts Verzeichnisdienst",
+          category: "Server & Active Directory",
+          definition: "Der proprietäre Verzeichnisdienst von Microsoft Windows Server. Organisiert Objekte (Benutzer, Gruppen, Computer, Drucker) in Domänen zur zentralen Rechteverwaltung.",
+          mnemonic: "Das **zentrale Firmen-Adressbuch** mit integrierter Authentifizierung (Kerberos) und Autorisierung."
+        },
+        {
+          id: "gpo",
+          term: "GPO (Gruppenrichtlinien)",
+          long: "Group Policy Objects",
+          category: "Server & Active Directory",
+          definition: "Richtlinien im Active Directory zur zentralen Konfiguration von Betriebssystemen, Sicherheitseinstellungen und Benutzerumgebungen für alle verknüpften Domänen-Mitglieder.",
+          mnemonic: "Die **Zentrale Fernsteuerung** für Hunderte Windows-Arbeitsplätze auf Knopfdruck."
+        },
+        {
+          id: "raid",
+          term: "RAID-Stufen",
+          long: "Redundant Array of Independent Disks",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Kombination physischer Platten. RAID 0: Striping (Speed, keine Redundanz). RAID 1: Mirroring (Spiegelung). RAID 5: Parität (n-1 Kapazität). RAID 6: Doppelte Parität (überlebt 2 Ausfälle). RAID 10: Spiegelung über Stripeset.",
+          mnemonic: "<strong>RAID 0</strong> = Null Redundanz. <strong>RAID 1</strong> = Eins-zu-Eins gespiegelt. <strong>RAID 5</strong> = Eine Platte darf sterben. <strong>RAID 6</strong> = Zwei Platten dürfen sterben."
+        },
+        {
+          id: "san-nas",
+          term: "SAN vs. NAS",
+          long: "Speicher-Netzwerkarchitekturen",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "NAS: Dateibasiertes Speichersystem im LAN (Zugriff über SMB/NFS). SAN: Hochgeschwindigkeits-Netzwerk auf Blockebene (Zugriff über Fibre Channel / iSCSI, verhält sich wie lokale Platten).",
+          mnemonic: "<strong>NAS</strong> = Dateiebene (wie eine freigegebene Ordnerstruktur).<br><strong>SAN</strong> = Blockebene (rohe Festplatten über ein eigenes Netzwerk)."
+        },
+        {
+          id: "backup-3-2-1",
+          term: "3-2-1 Backup-Regel",
+          long: "Standard-Datensicherungskonzept",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Ein bewährtes Konzept zur Datensicherung: Erstelle mindestens 3 Kopien der Daten, speichere sie auf 2 unterschiedlichen Medientypen (z.B. NAS & Band) und lagere mindestens 1 Kopie extern (außer Haus/Cloud).",
+          mnemonic: "<strong>3 Kopien - 2 Medien - 1 Extern</strong>."
+        },
+        {
+          id: "usv-typen",
+          term: "USV-Klassifizierungen",
+          long: "Off-Line vs. Line-Interactive vs. Online (Doppelwandler)",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Offline (Klasse 3, VFD): Nur Schutz bei Netzausfall (Umschaltzeit). Line-Interactive (Klasse 2, VI): Filtert Spannungsschwankungen. Online-Doppelwandler (Klasse 1, VFI): Filtert alles permanent, 0ms Umschaltzeit.",
+          mnemonic: "<strong>Offline</strong> = Schläft, bis der Strom weg ist. <br><strong>Online (VFI)</strong> = Wandelt Strom permanent um (absoluter Schutz für Serverräume)."
+        },
+        {
+          id: "stundenverrechnungssatz",
+          term: "Stundenverrechnungssatz",
+          long: "Kalkulation des Verrechnungssatzes",
+          category: "Speicher & Ausfallsicherheit",
+          definition: "Kalkulierter Stundensatz für IT-Dienstleistungen. Berechnet sich aus: (Personalkosten + Gemeinkosten + Wagnisse) + Gewinnaufschlag.",
+          mnemonic: "<strong>Formel</strong>: (Lohnkosten + Gemeinkosten) + Gewinn & Wagnisse."
+        },
+        {
+          id: "dmz",
+          term: "Demilitarisierte Zone (DMZ)",
+          long: "Isoliertes Sicherheitsnetzwerk",
+          category: "Sicherheit & Firewalls",
+          definition: "Ein vom restlichen LAN durch Firewalls isoliertes Netzwerk, in dem öffentlich erreichbare Server (z.B. Webserver) stehen. Verhindert bei Kompromittierung den Zugriff ins interne LAN.",
+          mnemonic: "Der **Sicherheits-Pufferbereich** vor den Toren der eigenen Burg (dem internen Netz)."
+        },
+        {
+          id: "firewall-typen",
+          term: "Firewall-Technologien",
+          long: "Packet Filter vs. Stateful Inspection vs. Next-Gen",
+          category: "Sicherheit & Firewalls",
+          definition: "Packet Filter: Prüft nur Quell/Ziel-IP und Port (L3/4). Stateful Inspection: Verfolgt den Verbindungsstatus. Next-Gen Firewall (NGFW): Führt Application Control und Inhaltsanalyse (L7) durch.",
+          mnemonic: "<strong>Stateful</strong> = Schaut, ob die Tür für eine bestehende Konversation offen steht. <br><strong>Next-Gen</strong> = Macht Kofferinspektion auf Schicht 7 (Deep Packet Inspection)."
+        },
+        {
+          id: "ids-ips",
+          term: "IDS vs. IPS",
+          long: "Intrusion Detection vs. Prevention System",
+          category: "Sicherheit & Firewalls",
+          definition: "IDS: Erkennt Angriffe und protokolliert/meldet diese passiv. IPS: Sitzt im Datenstrom, erkennt Angriffe und blockiert diese aktiv und sofort (z. B. durch Sperrung einer IP).",
+          mnemonic: "<strong>IDS</strong> = Die Alarmanlage (macht Krach, stoppt den Einbrecher aber nicht).<br><strong>IPS</strong> = Der Türsteher (packt den Einbrecher und wirft ihn raus)."
+        },
+        {
+          id: "proxy-server",
+          term: "Proxy-Server",
+          long: "Forward vs. Reverse Proxy",
+          category: "Sicherheit & Firewalls",
+          definition: "Forward Proxy: Steht vor den Clients, leitet Anfragen ins Web weiter (zur Filterung/Cache). Reverse Proxy: Steht vor den Servern, nimmt Anfragen aus dem Web entgegen (Lastverteilung/SSL-Offloading).",
+          mnemonic: "<strong>Forward Proxy</strong> = Stellvertreter für die Benutzer (raus ins Netz).<br><strong>Reverse Proxy</strong> = Schutzschild für die Server (rein ins Netz)."
+        },
+        {
+          id: "ipsec",
+          term: "IPsec",
+          long: "Internet Protocol Security",
+          category: "Sicherheit & Firewalls",
+          definition: "Eine Protokoll-Suite zur sicheren Datenübertragung auf Schicht 3 (Verschlüsselung & Authentifizierung). Besteht aus AH (Integrität/Authentizität) und ESP (Verschlüsselung).",
+          mnemonic: "Das Standard-Protokoll für **Site-to-Site VPN-Tunnel** (Kopplung zweier Firmenstandorte)."
+        },
+        {
+          id: "symmetric-asymmetric",
+          term: "Symmetrische vs. Asymmetrische Kryptografie",
+          long: "Verschlüsselungsarten",
+          category: "Sicherheit & Firewalls",
+          definition: "Symmetrisch: Gleicher Schlüssel für Ver- und Entschlüsselung (schnell, z.B. AES). Asymmetrisch: Schlüsselpaar aus öffentlichem Schlüssel (Public Key) und privatem Schlüssel (Private Key).",
+          mnemonic: "<strong>Symmetrisch</strong> = Hausschlüssel (jeder mit einer Kopie kann rein und abschließen).<br><strong>Asymmetrisch</strong> = Offenes Vorhängeschloss für alle, nur du hast den Schlüssel."
+        },
+        {
+          id: "dsgvo-toms",
+          term: "DSGVO & TOMs",
+          long: "Technische und Organisatorische Maßnahmen",
+          category: "Sicherheit & Firewalls",
+          definition: "Konkrete Maßnahmen nach § 32 DSGVO zur Sicherung von Daten: Vertraulichkeit (Verschlüsselung), Integrität (Prüfsummen), Verfügbarkeit (Backups) und Belastbarkeit der Systeme.",
+          mnemonic: "<strong>T-O-M:</strong> Zutrittskontrolle (Pförtner), Zugangskontrolle (Passwörter), Zugriffskontrolle (Dateirechte)."
+        },
+        {
+          id: "ssl-tls",
+          term: "SSL / TLS Handshake",
+          long: "Verbindungsaufbau im Web",
+          category: "Sicherheit & Firewalls",
+          definition: "Prozess zum Aufbau einer HTTPS-Verbindung. 1. Schlüsselaustausch und Zertifikatsprüfung (Asymmetrisch). 2. Aushandlung eines temporären Sitzungsschlüssels (Symmetrisch für die Nutzdaten).",
+          mnemonic: "Erst wird asymmetrisch der **Sitzungsschlüssel ausgetauscht**, danach wird die eigentliche Verbindung extrem schnell **symmetrisch verschlüsselt**."
+        },
+        {
+          id: "cloud-modelle",
+          term: "Cloud-Service-Modelle",
+          long: "IaaS vs. PaaS vs. SaaS",
+          category: "Cloud & Virtualisierung",
+          definition: "Infrastructure as a Service (Leere VMs/Speicher). Platform as a Service (Laufzeitumgebung für Code, z.B. Heroku). Software as a Service (Fertige Anwendung, z.B. Office 365).",
+          mnemonic: "<strong>IaaS</strong> = Du mietest die nackte Küche.<br><strong>PaaS</strong> = Die Küche ist eingerichtet, du musst nur kochen.<br><strong>SaaS</strong> = Fertiges Gericht geliefert (Pizza)."
+        },
+        {
+          id: "virtualisierung-hypervisor",
+          term: "Hypervisor Typ 1 & 2",
+          long: "Virtualisierungsschichten",
+          category: "Cloud & Virtualisierung",
+          definition: "Typ 1 (Bare-Metal): Läuft direkt auf der physischen Hardware (z.B. ESXi, Hyper-V). Typ 2 (Hosted): Läuft als Anwendung auf einem Betriebssystem (z.B. VirtualBox).",
+          mnemonic: "<strong>Typ 1</strong> = Höchste Performance (im Rechenzentrum).<br><strong>Typ 2</strong> = Zum Testen auf dem Desktop."
+        },
+        {
+          id: "kubernetes",
+          term: "Kubernetes (K8s)",
+          long: "Container-Orchestrierungssystem",
+          category: "Cloud & Virtualisierung",
+          definition: "Ein Open-Source-System zur Automatisierung der Bereitstellung, Skalierung und Verwaltung von containerisierten Anwendungen (Docker-Containern) über Server-Cluster hinweg.",
+          mnemonic: "Der **Dirigent für dein Container-Orchester**. Er sorgt dafür, dass immer genug Instanzen laufen und verteilt die Last."
+        },
+        {
+          id: "vpn-protokolle",
+          term: "OpenVPN vs. WireGuard",
+          long: "VPN-Tunneling-Technologien",
+          category: "Cloud & Virtualisierung",
+          definition: "OpenVPN: Älterer Standard, hochgradig konfigurierbar, aber komplex. WireGuard: Moderner, extrem schlanker VPN-Tunnel, der direkt im Linux-Kernel läuft und sehr schnell aufbaut.",
+          mnemonic: "<strong>OpenVPN</strong> = Schwerer LKW (zuverlässig, aber träge).<br><strong>WireGuard</strong> = Wendiges Motorrad (schlank, rasend schnell)."
+        },
+        {
+          id: "sla",
+          term: "SLA",
+          long: "Service Level Agreement",
+          category: "Cloud & Virtualisierung",
+          definition: "Ein Vertrag zwischen Dienstleister und Kunde, der die Qualitätsstandards (Verfügbarkeit, Reaktionszeit, Behebungszeit) einer Dienstleistung rechtlich garantiert.",
+          mnemonic: "Die **Uptime-Garantie**. Steht dort 99,9% Uptime, darf der Server im ganzen Jahr nur knapp 8 Stunden ausfallen."
+        }
+      ];
+
+      // Glossary Application state and logic
+      class GlossaryApp {
+        constructor(data) {
+          this.data = data;
+          this.currentCategory = "all";
+          this.currentLetter = "all";
+          this.favorites = this.loadFavorites();
+          
+          this.initElements();
+          this.initEvents();
+          this.render();
+        }
+
+        initElements() {
+          this.container = document.getElementById("termsContainer");
+          this.searchInput = document.getElementById("searchInput");
+          this.emptyState = document.getElementById("emptyState");
+          this.statsText = document.getElementById("statsText");
+        }
+
+        initEvents() {
+          this.searchInput.addEventListener("input", () => this.render());
+        }
+
+        loadFavorites() {
+          try {
+            const favs = localStorage.getItem("ap2_fisi_glossary_favorites");
+            return favs ? JSON.parse(favs) : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        saveFavorites() {
+          localStorage.setItem("ap2_fisi_glossary_favorites", JSON.stringify(this.favorites));
+        }
+
+        toggleFavorite(id) {
+          const index = this.favorites.indexOf(id);
+          if (index === -1) {
+            this.favorites.push(id);
+          } else {
+            this.favorites.splice(index, 1);
+          }
+          this.saveFavorites();
+          this.render();
+        }
+
+        setCategory(cat) {
+          this.currentCategory = cat;
+          
+          // Update active button state
+          const buttons = document.querySelectorAll("[id^='cat-']");
+          buttons.forEach(btn => {
+            if (btn.id === `cat-${cat === 'favorites' ? 'favorites' : cat.replace(" & ", "").replace("-", "")}`) {
+              btn.className = "px-3 py-1.5 rounded-lg bg-dark-accent text-white transition-all shrink-0";
+            } else {
+              if (btn.id === 'cat-favorites') {
+                btn.className = "px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0 flex items-center gap-1";
+              } else {
+                btn.className = "px-3 py-1.5 rounded-lg bg-dark-bg border border-dark-border text-dark-muted hover:text-white transition-all shrink-0";
+              }
+            }
+          });
+
+          this.render();
+        }
+
+        setLetter(letter) {
+          this.currentLetter = letter;
+
+          // Update active button state
+          const buttons = document.querySelectorAll("[id^='let-']");
+          buttons.forEach(btn => {
+            if (btn.id === `let-${letter}`) {
+              btn.className = btn.id === 'let-all' 
+                ? "px-2 py-1 rounded bg-dark-accent border border-dark-accent text-white transition-all font-sans font-bold"
+                : "w-6 h-6 flex items-center justify-center rounded bg-dark-accent border border-dark-accent text-white transition-all";
+            } else {
+              btn.className = btn.id === 'let-all'
+                ? "px-2 py-1 rounded bg-dark-bg border border-dark-border text-dark-muted hover:border-dark-accent hover:text-white transition-all font-sans font-bold"
+                : "w-6 h-6 flex items-center justify-center rounded bg-dark-bg border border-dark-border text-dark-muted hover:border-dark-accent hover:text-white transition-all";
+            }
+          });
+
+          this.render();
+        }
+
+        resetFilters() {
+          this.searchInput.value = "";
+          this.setCategory("all");
+          this.setLetter("all");
+        }
+
+        getCategoryStyles(category) {
+          switch (category) {
+            case "Netzwerke & Routing":
+              return "bg-blue-500/10 text-blue-400 border border-blue-500/20";
+            case "Dienste & Protokolle":
+              return "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20";
+            case "Server & Active Directory":
+              return "bg-purple-500/10 text-purple-400 border border-purple-500/20";
+            case "Speicher & Ausfallsicherheit":
+              return "bg-amber-500/10 text-amber-400 border border-amber-500/20";
+            case "Sicherheit & Firewalls":
+              return "bg-red-500/10 text-red-400 border border-red-500/20";
+            case "Cloud & Virtualisierung":
+              return "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+            default:
+              return "bg-dark-muted/10 text-dark-muted border border-dark-border";
+          }
+        }
+
+        render() {
+          const searchQuery = this.searchInput.value.toLowerCase().trim();
+          
+          // Filter data
+          const filtered = this.data.filter(item => {
+            // Category filter
+            if (this.currentCategory === "favorites") {
+              if (!this.favorites.includes(item.id)) return false;
+            } else if (this.currentCategory !== "all" && item.category !== this.currentCategory) {
+              return false;
+            }
+
+            // Letter filter (first letter of term)
+            if (this.currentLetter !== "all" && item.term.charAt(0).toUpperCase() !== this.currentLetter) {
+              return false;
+            }
+
+            // Search query filter
+            if (searchQuery) {
+              const inTerm = item.term.toLowerCase().includes(searchQuery);
+              const inLong = item.long.toLowerCase().includes(searchQuery);
+              const inDef = item.definition.toLowerCase().includes(searchQuery);
+              return inTerm || inLong || inDef;
+            }
+
+            return true;
+          });
+
+          // Sort alphabetically
+          filtered.sort((a, b) => a.term.localeCompare(b.term));
+
+          // Render stats
+          this.statsText.textContent = `${filtered.length} von ${this.data.length} Begriffen angezeigt`;
+
+          // Handle empty state
+          if (filtered.length === 0) {
+            this.container.innerHTML = "";
+            this.emptyState.classList.remove("hidden");
+            return;
+          } else {
+            this.emptyState.classList.add("hidden");
+          }
+
+          // Build HTML cards
+          this.container.innerHTML = filtered.map(item => {
+            const isFav = this.favorites.includes(item.id);
+            const catClass = this.getCategoryStyles(item.category);
+            
+            return `
+              <div class="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-dark-accent/40 transition-all flex flex-col justify-between shadow-md">
+                <div>
+                  <div class="flex items-start justify-between gap-4 mb-2">
+                    <div class="flex flex-col">
+                      <h2 class="text-xl font-bold text-white tracking-tight">${item.term}</h2>
+                      <span class="text-xs text-dark-muted font-mono leading-tight mt-0.5">${item.long}</span>
+                    </div>
+                    <button 
+                      onclick="glossaryApp.toggleFavorite('${item.id}')" 
+                      class="text-dark-muted hover:text-dark-warning transition-colors"
+                      title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}"
+                    >
+                      <i data-lucide="star" class="w-4 h-4 ${isFav ? 'text-dark-warning fill-dark-warning' : ''}"></i>
+                    </button>
+                  </div>
+                  
+                  <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${catClass} mb-3.5">
+                    ${item.category}
+                  </span>
+
+                  <p class="text-slate-300 text-sm leading-relaxed">${item.definition}</p>
+                </div>
+
+                <!-- Mnemonic Box -->
+                ${item.mnemonic ? `
+                  <div class="mt-4 p-3 bg-dark-bg/60 border border-dark-warning/10 rounded-lg flex items-start gap-2.5">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-dark-warning shrink-0 mt-0.5"></i>
+                    <div class="text-xs text-slate-400 leading-normal font-sans">
+                      <span class="font-bold text-dark-warning">Eselsbrücke:</span><br>
+                      ${item.mnemonic}
+                    </div>
+                  </div>
+                ` : ""}
+              </div>
+            `;
+          }).join("");
+
+          // Re-create icons via Lucide
+          if (window.lucide) {
+            lucide.createIcons();
+          }
+        }
+      }
+
+      // Initialize the App
+      const glossaryApp = new GlossaryApp(glossaryData);
+    </script>
+  </body>
+</html>
