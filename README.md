@@ -1,6 +1,6 @@
-# AP2 Tracker FISI - Dein Lernbegleiter (v2.6.0 Update)
+# AP2 Tracker FISI - Dein Lernbegleiter (v2.7.0 Update)
 
-[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de) [![Version](https://img.shields.io/badge/Version-v2.7.0-blue?style=for-the-badge)](https://ap2-fisi.cwillam.de)
 
 > 🐛 [**Bug melden**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=bug.yml) · 💡 [**Feature wünschen**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=feature.yml)
 
@@ -22,6 +22,13 @@ Das Projekt ist einsatzbereit gehostet:
 Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturierte und detaillierte Übersicht über die komplexen Lerninhalte der Abschlussprüfung Teil 2 zu geben.
 
 Im Gegensatz zur AP1 liegt hier der Fokus auf tiefergehenden Themen wie Netzwerktechnik, Routing/Switching, Firewalls, Cloud-Modellen, Server-Diensten, RAID-Infrastrukturen und IT-Sicherheit.
+
+### Highlights v2.7.0 (Play Store Release & Vorbereitung)
+
+- **Google Play Store Release Ready:** 14-tägige geschlossene Testphase mit Testern erfolgreich abgeschlossen, Vorbereitung des weltweiten Rollouts und Android 16 (API-Level 36) Konformität.
+- **Einklappbare Banner mit Persistenz:** Community- und Schul-Hinweise lassen sich platzsparend einklappen (Zustand wird im `localStorage` gespeichert).
+- **Discord-Lerncommunity:** Direkte Integration unserer Community für AP1 & AP2 Lerngruppen, Prüfungsaustausch und Release-Ankündigungen.
+- **Service Worker & Cache-Busting:** Bereinigtes Caching (`v2.7.0`) für nahtlose Updates ohne manuellen Hard Refresh.
 
 ### Highlights v2.2.0 (Fortschrittskreise & Shortcuts)
 
@@ -89,7 +96,14 @@ Datenschutz ist hier kein Werbeslogan, sondern Architektur:
 
 Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
-**Aktuelle Version:** v2.6.0 (4. August 2026)
+**Aktuelle Version:** v2.7.0 (27. August 2026)
+
+### v2.7.0 (27. August 2026)
+
+- **Google Play Store Release:** 14-Tage-Testphase mit Testern erfolgreich abgeschlossen, Vorbereitung auf weltweiten Rollout und Android 16 (API-Level 36).
+- **Interaktive Banner:** Info- und Schulbereiche sind nun einklappbar mit Status-Speicherung (`localStorage`).
+- **Community-Integration:** Direkte Anbindung an den Discord-Lernkanal für AP1 & AP2 Lerngruppen.
+- **Wartung & Cache:** Cache-Busting auf Version v2.7.0 aktualisiert.
 
 ### v2.6.0 (4. August 2026)
 
@@ -151,9 +165,11 @@ Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
 
 ## Roadmap
 
+- [ ] **Google Play Store Release:** Öffentlicher Store-Rollout für Android-Geräte (Android 16 / API-Level 36).
+- [x] **Closed-Beta-Test:** 14-Tage-Testphase im Google Play Store erfolgreich abgeschlossen.
 - [ ] **Prüfungs-Simulator:** Zufällige Fragenkombinationen zur Simulation der echten Abschlussprüfung.
-- [ ] **FISI Cheat Sheets:** Download-Bereich für komprimierte Zusammenfassungen (Subnetting, RAID, Server-Dienste).
-- [x] **PWA Support:** Installation als App auf dem Homescreen.
+- [ ] **Detaillierte Lernzettel:** Download-Bereich für komprimierte Zusammenfassungen (Cheat Sheets).
+- [x] **PWA Support:** Installation als App auf dem Homescreen und Offline-Caching.
 
 ---
 
