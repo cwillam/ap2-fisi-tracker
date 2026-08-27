@@ -1,0 +1,28 @@
+# AP2 Tracker FISI – IHK Prüfungsvorbereitung für Systemintegratoren
+
+> Ein interaktiver, lokaler Fortschritts-Tracker speziell für Fachinformatiker Systemintegration (FISI) zur Vorbereitung auf die IHK-Abschlussprüfung Teil 2 (AP2). 100 % kostenlos, werbefrei, ohne Registrierung und vollständig offline-fähig.
+
+## Kernfunktionen
+
+- **FISI-Spezifische Lernfelder:** Netzwerktechnik, Routing & Switching, VLANs, Firewalls, Server-Dienste (DNS, DHCP, Active Directory), Cloud-Infrastrukturen, RAID-Systeme, Backup-Strategien und IT-Sicherheit.
+- **Lernkarten-System (Anki 2.0):** Über 700 FISI-spezifische Karteikarten mit Spaced Repetition und Tastatur-Shortcuts.
+- **SQL-Labor (`/sql.html`):** Admin-fokussiertes SQL-Training (DDL, DML, Rechteverwaltung via GRANT/REVOKE).
+- **Subnetz-Trainer (`/subnet.html`):** Intensives Training für IPv4/IPv6-Subnetting, Host-Berechnung und CIDR.
+- **Glossar & Eselsbrücken (`/glossar.html`):** 100 FISI-Kernbegriffe mit Merkhilfen und Favoritenliste.
+- **Datenschutz & Offline-First:** 100 % clientseitige Datenspeicherung (`localStorage`), PWA-Support und Android-App im Google Play Store.
+
+## Relevante Seiten
+
+- [Startseite & Checkliste](https://ap2-fisi.cwillam.de/)
+- [SQL-Labor](https://ap2-fisi.cwillam.de/sql.html)
+- [Subnetz- & IP-Trainer](https://ap2-fisi.cwillam.de/subnet.html)
+- [Glossar & Eselsbrücken](https://ap2-fisi.cwillam.de/glossar.html)
+- [Updates & Roadmap](https://ap2-fisi.cwillam.de/updates.html)
+- [Hilfe & FAQ](https://ap2-fisi.cwillam.de/help.html)
+- [Für Schulen & Bildungseinrichtungen](https://ap2-fisi.cwillam.de/bildungseinrichtungen.html)
+- [Datenschutzerklärung](https://ap2-fisi.cwillam.de/datenschutz.html)
+
+## Community & Open Source
+
+- **Discord-Community:** https://discord.gg/5BM5YJadDs (Lerngruppen, Fragen & Austausch)
+- **GitHub-Repository:** https://github.com/cwillam/ap2-fisi-tracker (AGPL-3.0 Lizenz)
