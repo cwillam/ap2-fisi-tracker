@@ -22,6 +22,10 @@ const app = {
   searchQuery: '',
   cardMap: {},
   catMap: {},
+  searchOpenedTopics: new Set(),
+  _statsRAF: null,
+  _searchTimer: null,
+  _streakCells: null,
   _quotaWarningShown: false,
   _saveError: null,
   _mobileMenuTimeout: null,
@@ -69,23 +73,16 @@ const app = {
 
     open(topicId) {
       // Debug-Log für Fehlersuche (Browser-Kompatibilität)
-      console.log("[AP2-FISI] 🎴 Opening Anki for topic:", topicId);
+      console.log("[AP2] 🎴 Opening Anki for topic:", topicId);
+      console.log(
+        "[AP2] 📚 Cards available:",
+        window.ANKI_QUESTIONS?.[topicId]?.length || 0,
+      );
 
-      const topic = app.findTopic(topicId);
-      if (!topic) return;
-
-      // Priorität: Echte Lernkarten aus questions.js, sonst Fallback auf sub-Tasks
       const allQuestions = window.ANKI_QUESTIONS || {};
-      if (allQuestions[topicId]) {
-        this.cards = allQuestions[topicId];
-      } else if (topic.sub && topic.sub.length > 0) {
-        this.cards = topic.sub.map((text, index) => ({
-          id: `${topicId}_${index}`,
-          q: text,
-          a: "Hast du diesen Punkt verstanden und kannst ihn erklären?",
-        }));
-      } else {
-        console.warn("[AP2-FISI] ⚠️ No cards found for topic:", topicId);
+      this.cards = allQuestions[topicId] || [];
+      if (this.cards.length === 0) {
+        console.warn("[AP2] ⚠️ No cards found for topic:", topicId);
         app.showNotification(
           "Keine Lernkarten",
           `Für Topic ${topicId} sind noch keine Karten verfügbar.`,
@@ -94,10 +91,12 @@ const app = {
         return;
       }
 
-      console.log("[AP2-FISI] 📚 Cards available:", this.cards.length);
-
       this.currentTopicId = topicId;
-      document.getElementById("ankiTopicTitle").textContent = topic.title;
+
+      const topic = app.findTopic(topicId);
+      document.getElementById("ankiTopicTitle").textContent = topic
+        ? topic.title
+        : "Lernkarten";
 
       const rBtn = document.getElementById("ankiHeaderReportBtn");
       if (rBtn) {
@@ -189,7 +188,7 @@ const app = {
       document.getElementById("ankiQuestionView").classList.add("hidden");
       document.getElementById("ankiAnswerView").classList.add("hidden");
       document.getElementById("ankiFinishView").classList.add("hidden");
-      document.getElementById("ankiModeBadge").innerHTML = "";
+      document.getElementById("ankiModeBadge").classList.add("hidden");
       document.getElementById("ankiProgress").style.width = "0%";
 
       const modal = document.getElementById("ankiModal");
@@ -378,6 +377,7 @@ const app = {
         this.showFinish();
       }
       app.save();
+      app.trackActivity();
     },
 
     updateCardLevel(cardId, confidence = 0) {
@@ -402,7 +402,7 @@ const app = {
         cardData.level = 1; // Reset bei Nicht gewusst
       }
 
-      // Intervalle in Tagen: 0, 1, 2, 4, 7, 14
+      // Intervalle in Tagen: 0, 1, 2, 4, 7, 14 (kürzer als vorher [0, 1, 3, 7, 14, 30])
       const intervals = [0, 1, 2, 4, 7, 14];
       const daysToAdd = intervals[cardData.level] || 1;
 
@@ -440,7 +440,7 @@ const app = {
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ["#10b981", "#34d399"],
+          colors: ["#8b5cf6", "#10b981"],
         });
       }
     },
@@ -450,7 +450,6 @@ const app = {
       const modal = document.getElementById("ankiModal");
       modal.classList.add("hidden");
       document.body.style.overflow = "";
-      app.updateStats();
     },
 
     openReportModal() {
@@ -645,7 +644,7 @@ const app = {
     '„Uptime ist durch nichts zu ersetzen.“',
     '„Never touch a running system.“',
     '„Ein Admin schläft nicht, er puffert.“',
-    '„In Theorie gibt es keinen Unterschied zwischen Theorie und Praxis. In der Praxis schon.“',
+    '„In der Theorie gibt es keinen Unterschied zwischen Theorie und Praxis. In der Praxis schon.“',
     '„Drei Dinge sind sicher: Der Tod, die Steuer und dass das Backup genau dann nicht funktioniert, wenn man es braucht.“',
     '„IT ist 10% Technik und 90% Google.“',
     '„Wer misst, misst Mist.“',
@@ -654,20 +653,20 @@ const app = {
 
   ranks: [
     { min: 0, name: 'Packet Trainee', color: '#94a3b8' },
-    { min: 30, name: 'First Level Hero', color: '#0ea5e9' },
-    { min: 80, name: 'Cable Management Pro', color: '#38bdf8' },
-    { min: 150, name: 'Network Admin', color: '#0284c7' },
-    { min: 250, name: 'Security Architect', color: '#10b981' },
-    { min: 350, name: 'Cloud Specialist', color: '#8b5cf6' },
-    { min: 450, name: 'Server Overlord', color: '#f59e0b' },
-    { min: 500, name: 'Infrastructure Legend', color: '#ef4444' },
-    { min: 530, name: 'Datacenter Master', color: '#ec4899' },
-    { min: 550, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
+    { min: 80, name: 'First Level Hero', color: '#0ea5e9' },
+    { min: 200, name: 'Cable Management Pro', color: '#38bdf8' },
+    { min: 400, name: 'Network Admin', color: '#0284c7' },
+    { min: 700, name: 'Security Architect', color: '#10b981' },
+    { min: 1000, name: 'Cloud Specialist', color: '#8b5cf6' },
+    { min: 1250, name: 'Server Overlord', color: '#f59e0b' },
+    { min: 1450, name: 'Infrastructure Legend', color: '#ef4444' },
+    { min: 1580, name: 'Datacenter Master', color: '#ec4899' },
+    { min: 1650, name: 'IT-Gott (FISI Edition)', color: '#FFDD00' },
   ],
 
   // --- INIT ---
   init() {
-    const msgs = ['Lade AP2-Datenbank...', 'Initialisiere Netzwerke...', 'Berechne Lernpfad...'];
+    const msgs = ['Lade AP2-Datenbank...', 'Initialisiere Module...', 'Berechne Lernpfad...'];
     let msgIdx = 0;
     const loadInt = setInterval(() => {
       const el = document.getElementById('loadingText');
@@ -688,11 +687,12 @@ const app = {
       if (s) {
         try {
           this.state = JSON.parse(s);
-          console.log('[AP2 FISI] State geladen:', this._getStateSummary());
+          console.log('[AP2] State geladen:', this._getStateSummary());
         } catch (parseErr) {
-          console.error('[AP2 FISI] Corrupt LocalStorage data:', parseErr);
+          console.error('[AP2] Corrupt LocalStorage data:', parseErr);
+          // Bei korrupten Daten: User warnen und neu starten
           const corruptData = s.substring(0, 100);
-          console.error('[AP2 FISI] Corrupt data preview:', corruptData);
+          console.error('[AP2] Corrupt data preview:', corruptData);
 
           if (
             confirm(
@@ -704,6 +704,7 @@ const app = {
             localStorage.removeItem('ap2_tracker_state_v1');
             location.reload();
           } else {
+            // Debug-Modus: leeren State verwenden
             this.state = {};
             this.showNotification(
               'Daten korrupt',
@@ -715,22 +716,20 @@ const app = {
         }
       }
 
-      ['schoolBox', 'infoBox'].forEach((boxId) => {
-        const storagePrefix = 'ap2_fisi_';
-        if (localStorage.getItem(storagePrefix + boxId + '_dismissed') === 'true') {
-          const el = document.getElementById(boxId);
-          if (el) el.remove();
-        } else if (localStorage.getItem(storagePrefix + boxId + '_collapsed') === 'true') {
-          const content = document.getElementById(boxId + 'Content');
-          const chevron = document.getElementById(boxId + 'Chevron');
-          if (content) content.classList.add('hidden');
-          if (chevron) chevron.classList.add('rotate-180');
-        }
-      });
+      // Bereinige evtl. altes dismissed-Flag für infoBox
+      localStorage.removeItem("ap2_infoBox_dismissed");
 
-      if (localStorage.getItem('ap2_release_banner_dismissed_v2')) {
-        const banner = document.getElementById('releaseBanner');
-        if (banner) banner.classList.add('hidden');
+      if (localStorage.getItem("ap2_schoolBox_dismissed") === "true") {
+        const el = document.getElementById("schoolBox");
+        if (el) el.remove();
+      }
+
+      // infoBox: Kann nur ein-/ausgeklappt werden, standardmäßig ausgeklappt
+      if (localStorage.getItem("ap2_infoBox_collapsed") === "true") {
+        const content = document.getElementById("infoBoxContent");
+        const chevron = document.getElementById("infoBoxChevron");
+        if (content) content.classList.add("hidden");
+        if (chevron) chevron.classList.add("rotate-180");
       }
 
       // Willkommens-Modal beim Start deaktiviert
@@ -818,12 +817,23 @@ const app = {
       this.refreshIcons();
       this.setupPwaInstall();
     } catch (err) {
-      console.error('Critical Init Error:', err);
+      console.error('[AP2] Critical Init Error:', err);
+      // Fallback: Leeren State verwenden und weitermachen
+      this.state = {};
+      this.showNotification(
+        'Initialisierungsfehler',
+        'Bitte Seite neu laden. Wenn das Problem bleibt: Support kontaktieren.',
+        'error',
+        0
+      );
     } finally {
       setTimeout(hideLoader, 600);
     }
   },
 
+  /**
+   * Gibt eine Zusammenfassung des States für Debug-Zwecke zurück
+   */
   _getStateSummary() {
     const summary = { keys: Object.keys(this.state).length };
     if (this.state.activity) summary.activityDays = Object.keys(this.state.activity).length;
@@ -836,6 +846,45 @@ const app = {
     if (window.lucide && typeof lucide.createIcons === 'function') {
       lucide.createIcons();
     }
+  },
+
+  // --- SAVE & STATE ---
+  save(silent = false) {
+    try {
+      const serialized = JSON.stringify(this.state);
+      const size = new Blob([serialized]).size;
+
+      // Warnung bei >80% Auslastung (ca. 4 MB von 5 MB Limit)
+      if (size > 4 * 1024 * 1024 && !this._quotaWarningShown) {
+        this._quotaWarningShown = true;
+        console.warn('[AP2] LocalStorage bei 80% - bitte Export machen!');
+        if (!silent) {
+          this.showNotification(
+            'Speicher fast voll',
+            'Bitte mach einen Export, um deine Daten zu sichern.',
+            'warning'
+          );
+        }
+      }
+
+      localStorage.setItem('ap2_tracker_state_v1', serialized);
+      this._saveError = null;
+    } catch (e) {
+      this._saveError = e;
+      console.error('[AP2] Save failed:', e.name, e.message);
+
+      if (e.name === 'QuotaExceededError') {
+        if (!silent) {
+          this.showNotification(
+            'Speicher voll!',
+            'Bitte Export machen und alte Daten löschen.',
+            'error',
+            0 // Kein Auto-Close
+          );
+        }
+      }
+    }
+    this.scheduleStatsUpdate();
   },
 
   showNotification(title, message, type = 'info', duration = 5000) {
@@ -934,13 +983,13 @@ const app = {
     modal.className =
       'fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto';
     modal.innerHTML = `
-      <div class="bg-dark-card border border-dark-accent/50 rounded-2xl p-5 sm:p-6 md:p-8 max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-300 my-auto">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-dark-accent/20 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
+      <div class="bg-dark-card border border-dark-success/50 rounded-2xl p-5 sm:p-6 md:p-8 max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in duration-300 my-auto">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-dark-success/20 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none"></div>
 
         <!-- HEADER -->
         <div class="flex items-center gap-3 sm:gap-4 mb-5 shrink-0">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-dark-accent/20 border-2 border-dark-accent flex items-center justify-center shrink-0">
-            <i data-lucide="${iconClass}" class="text-dark-accent text-xl sm:text-2xl"></i>
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-dark-success/20 border-2 border-dark-success flex items-center justify-center shrink-0">
+            <i data-lucide="${iconClass}" class="text-dark-success text-xl sm:text-2xl"></i>
           </div>
           <div class="min-w-0 flex-1">
             <h3 class="text-lg sm:text-xl font-bold text-white truncate">Neues Update!</h3>
@@ -965,13 +1014,13 @@ const app = {
         <!-- NEU IN DIESER VERSION -->
         <div class="bg-dark-bg/50 rounded-xl p-4 sm:p-5 mb-5 border border-dark-border shrink-0 overflow-hidden">
           <p class="text-[10px] sm:text-xs text-dark-muted mb-3 font-bold uppercase flex items-center gap-2">
-            <i data-lucide="sparkles" class="text-dark-accent"></i>
+            <i data-lucide="layers" class="text-dark-accent"></i>
             Neu in dieser Version:
           </p>
           <ul class="space-y-2 text-xs sm:text-sm text-gray-300">
             <li class="flex items-start gap-2">
               <i data-lucide="zap" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
-              <span><strong>Lucide-Icons & Header:</strong> Umstellung auf ressourcenschonende Vektorgrafiken, neues Header-Kacheldesign (Emerald-Theme) und Netzwerk-Logo.</span>
+              <span><strong>Lucide-Icons & Header:</strong> Umstellung auf ressourcenschonende Vektorgrafiken, neues Header-Kacheldesign (Violet-Theme) und Code-Logo.</span>
             </li>
             <li class="flex items-start gap-2">
               <i data-lucide="play-circle" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
@@ -983,25 +1032,25 @@ const app = {
             </li>
             <li class="flex items-start gap-2">
               <i data-lucide="layers" class="text-dark-accent mt-0.5 text-[10px] sm:text-xs shrink-0"></i>
-              <span><strong>Lernkarten-Upgrade (v2.0.2):</strong> Inhalts-Ausbau in Kern-Themen, CLI-Befehle und komplexe Netzwerkprotokolle (vorheriges Update).</span>
+              <span><strong>Lernkarten-Upgrade (v2.0.2):</strong> 67 neue Karten, SQL-Beispiele, Pseudocode & verkleinerte Antwortaufdeckung (vorheriges Update).</span>
             </li>
           </ul>
         </div>
 
         <!-- WERBUNG FÜR ANDERE TRACKER -->
-        <div class="bg-gradient-to-r from-indigo-900/20 to-teal-900/20 border border-indigo-500/20 rounded-xl p-3 sm:p-4 mb-5 shrink-0">
+        <div class="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 border border-indigo-500/20 rounded-xl p-3 sm:p-4 mb-5 shrink-0">
           <p class="text-[10px] sm:text-xs text-indigo-300 mb-2.5 sm:mb-3 font-bold uppercase flex items-center gap-1.5 sm:gap-2">
-            <i data-lucide="star" class="text-[10px] sm:text-xs"></i>
+            <i data-lucide="compass" class="text-[10px] sm:text-xs"></i>
             Mehr Tracker
           </p>
           <div class="space-y-2">
-            <a href="https://ap2.cwillam.de/" target="_blank" class="group flex items-center gap-3 bg-dark-card/60 hover:bg-indigo-900/25 border border-dark-border/50 hover:border-indigo-500/40 rounded-lg p-2.5 sm:p-3 no-underline">
+            <a href="https://ap2-fisi.cwillam.de/" target="_blank" class="group flex items-center gap-3 bg-dark-card/60 hover:bg-indigo-900/25 border border-dark-border/50 hover:border-indigo-500/40 rounded-lg p-2.5 sm:p-3 no-underline">
               <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
-                <i data-lucide="code-2" class="text-indigo-400 text-xs group-hover:text-indigo-300 transition-colors"></i>
+                <i data-lucide="server" class="text-indigo-400 text-xs group-hover:text-indigo-300 transition-colors"></i>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors truncate">AP2 FIAE</p>
-                <p class="text-[10px] text-dark-muted truncate">Fachinformatiker für Anwendungsentwicklung</p>
+                <p class="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition-colors truncate">AP2 FISI</p>
+                <p class="text-[10px] text-dark-muted truncate">Fachinformatiker für Systemintegration</p>
               </div>
               <i data-lucide="external-link" class="text-dark-muted group-hover:text-indigo-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-xs shrink-0"></i>
             </a>
@@ -1021,7 +1070,7 @@ const app = {
         <!-- BUTTONS -->
         <div class="flex gap-2 sm:gap-3 shrink-0">
           <button onclick="document.getElementById('updateNotificationModal').remove()"
-                  class="flex-1 bg-dark-accent hover:bg-dark-accent/90 text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-xs sm:text-sm whitespace-nowrap">
+                  class="flex-1 bg-dark-success hover:bg-dark-success/90 text-white font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all text-xs sm:text-sm whitespace-nowrap">
             ✓ Verstanden
           </button>
           <a href="updates.html" target="_blank"
@@ -1035,7 +1084,7 @@ const app = {
         <!-- NIE WIEDER ANZEIGEN OPTION -->
         <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-dark-border shrink-0">
           <label class="flex items-center gap-2 cursor-pointer group">
-            <input type="checkbox" id="neverShowAgain" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-dark-border bg-dark-bg text-dark-accent focus:ring-dark-accent focus:ring-2" onchange="localStorage.setItem('ap2_fisi_update_never_again_v210', this.checked ? 'true' : '')">
+            <input type="checkbox" id="neverShowAgain" class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-dark-border bg-dark-bg text-dark-accent focus:ring-dark-accent focus:ring-2" onchange="localStorage.setItem('ap2_update_never_again_v210', this.checked ? 'true' : '')">
             <span class="text-[10px] sm:text-xs text-dark-muted group-hover:text-white transition-colors">Nicht wieder anzeigen</span>
           </label>
         </div>
@@ -1052,68 +1101,28 @@ const app = {
     });
   },
 
-  // --- SAVE & STATE ---
-  save(silent = false) {
-    try {
-      const serialized = JSON.stringify(this.state);
-      const size = new Blob([serialized]).size;
-
-      // Warnung bei >80% Auslastung (ca. 4 MB von 5 MB Limit)
-      if (size > 4 * 1024 * 1024 && !this._quotaWarningShown) {
-        this._quotaWarningShown = true;
-        console.warn('[AP2 FISI] LocalStorage bei 80% - bitte Export machen!');
-        if (!silent) {
-          this.showNotification(
-            'Speicher fast voll',
-            'Bitte mach einen Export, um deine Daten zu sichern.',
-            'warning'
-          );
-        }
-      }
-
-      localStorage.setItem('ap2_tracker_state_v1', serialized);
-      this._saveError = null;
-    } catch (e) {
-      this._saveError = e;
-      console.error('[AP2 FISI] Save failed:', e.name, e.message);
-
-      if (e.name === 'QuotaExceededError') {
-        if (!silent) {
-          this.showNotification(
-            'Speicher voll!',
-            'Bitte Export machen und alte Daten löschen.',
-            'error',
-            0
-          );
-        }
-      }
-    }
-    this.updateStats();
-  },
-
   toggleBox(boxId) {
     const content = document.getElementById(boxId + 'Content');
     const chevron = document.getElementById(boxId + 'Chevron');
     if (!content) return;
     const isHidden = content.classList.toggle('hidden');
     if (chevron) chevron.classList.toggle('rotate-180', isHidden);
-    localStorage.setItem('ap2_fisi_' + boxId + '_collapsed', isHidden ? 'true' : 'false');
+    localStorage.setItem('ap2_' + boxId + '_collapsed', isHidden ? 'true' : 'false');
   },
 
   dismissBox(boxId) {
+    if (boxId === "infoBox") return;
     const el = document.getElementById(boxId);
     if (el) el.remove();
-    localStorage.setItem('ap2_fisi_' + boxId + '_dismissed', 'true');
+    localStorage.setItem("ap2_" + boxId + "_dismissed", "true");
   },
 
   hideInfoBox() {
-    this.dismissBox('infoBox');
-  },
-
-  hideReleaseBanner() {
-    const el = document.getElementById('releaseBanner');
-    if (el) el.classList.add('hidden');
-    localStorage.setItem('ap2_release_banner_dismissed_v2', 'true');
+    // infoBox wird nur eingeklappt, nicht mehr gelöscht
+    const content = document.getElementById("infoBoxContent");
+    if (content && !content.classList.contains("hidden")) {
+      this.toggleBox("infoBox");
+    }
   },
 
   getState(id) {
@@ -1124,14 +1133,7 @@ const app = {
         stars: 0,
         reps: [false, false, false],
         last: null,
-        ankiStats: { total: 0, correct: 0, sessions: 0 },
       };
-
-    // Fallback falls ankiStats in bestehenden Daten fehlt
-    if (!this.state[id].ankiStats) {
-      this.state[id].ankiStats = { total: 0, correct: 0, sessions: 0 };
-    }
-
     return this.state[id];
   },
 
@@ -1146,9 +1148,20 @@ const app = {
   renderActivityGraph() {
     const container = document.getElementById('streakGraph');
     if (!container) return;
-    container.innerHTML = '';
+
     const days = 80;
     const now = new Date();
+
+    if (!this._streakCells) {
+      this._streakCells = [];
+      container.innerHTML = '';
+      for (let i = days; i >= 0; i--) {
+        const el = document.createElement('div');
+        el.className = 'w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-sm bg-dark-border streak-cell cursor-default';
+        container.appendChild(el);
+        this._streakCells.push(el);
+      }
+    }
 
     for (let i = days; i >= 0; i--) {
       const d = new Date();
@@ -1161,10 +1174,12 @@ const app = {
       if (count > 4) colorClass = 'bg-dark-accent/70';
       if (count > 8) colorClass = 'bg-dark-accent';
 
-      const el = document.createElement('div');
-      el.className = `w-3 h-3 sm:w-4 sm:h-4 rounded-sm ${colorClass} streak-cell cursor-default`;
-      el.title = `${dateStr}: ${count} Aktionen`;
-      container.appendChild(el);
+      const cellIdx = days - i;
+      const el = this._streakCells[cellIdx];
+      if (el) {
+        el.className = `w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-sm ${colorClass} streak-cell cursor-default`;
+        el.title = `${dateStr}: ${count} Aktionen`;
+      }
     }
   },
 
@@ -1197,7 +1212,7 @@ const app = {
       .padStart(2, '0');
     const s = (this.timeLeft % 60).toString().padStart(2, '0');
     document.getElementById('pomoTimer').textContent = `${m}:${s}`;
-    document.title = this.timerRunning ? `${m}:${s} - Focus` : 'AP2 Tracker FISI';
+    document.title = this.timerRunning ? `${m}:${s} - Focus` : 'AP2 Tracker';
   },
 
   togglePomodoro() {
@@ -1222,7 +1237,7 @@ const app = {
           this.timerRunning = false;
           this.timeLeft = 1500;
 
-          this.showNotification('Pomodoro beendet!', 'Gönn dir eine Pause.', 'info');
+          app.showNotification('Pomodoro beendet!', 'Gönn dir eine Pause.', 'info');
           btn.innerHTML = '<i data-lucide="play" class="w-5 h-5 ml-0.5"></i>';
           btn.classList.remove('bg-dark-accent', 'text-white', 'scale-105');
           btn.classList.add('bg-dark-border', 'text-dark-muted');
@@ -1244,8 +1259,14 @@ const app = {
       'ap2_fisi_backup_' + new Date().toISOString().slice(0, 10) + '.json'
     );
     linkElement.click();
+    this.showNotification('Export erfolgreich', 'Deine Daten wurden heruntergeladen.', 'success');
   },
 
+  /**
+   * Validiert die Struktur eines importierten State-Objekts
+   * @param {any} data - Das zu validierende Datenobjekt
+   * @returns {{valid: boolean, error?: string, needsMigration?: boolean}}
+   */
   validateImport(data) {
     // 1. Typ-Check
     if (typeof data !== 'object' || data === null || Array.isArray(data)) {
@@ -1253,7 +1274,7 @@ const app = {
     }
 
     // 2. Minimale Struktur-Checks (existierende Keys prüfen)
-    const requiredKeys = ['activity'];
+    const requiredKeys = ['activity']; // activity ist immer vorhanden nach erstem Use
     for (const key of requiredKeys) {
       if (!(key in data)) {
         return {
@@ -1272,7 +1293,7 @@ const app = {
       };
     }
 
-    // 4. Versions-Erkennung
+    // 4. Versions-Erkennung für zukünftige Migrationen
     const version = data._version || 'v1';
     const supportedVersions = ['v1', 'v2'];
 
@@ -1284,7 +1305,7 @@ const app = {
       };
     }
 
-    // 5. Plausibilitäts-Check
+    // 5. Plausibilitäts-Check für bekannte Felder
     if (data.activity && typeof data.activity !== 'object') {
       return { valid: false, error: 'Feld "activity" muss ein Objekt sein.' };
     }
@@ -1296,49 +1317,38 @@ const app = {
     return { valid: true, version };
   },
 
+  /**
+   * Führt Migrationen zwischen verschiedenen State-Versionen durch
+   * @param {object} data - Das zu migrierende Datenobjekt
+   * @returns {object} Das migrierte Datenobjekt
+   */
   migrateState(data) {
     const currentVersion = data._version || 'v1';
     let migrated = { ...data };
 
+    // Beispiel für zukünftige Migrationen:
+    // if (currentVersion === 'v1') {
+    //   migrated = { ...migrated, newField: defaultValue };
+    //   migrated._version = 'v2';
+    // }
+
+    // Immer aktuelle Version setzen, falls noch nicht vorhanden
     if (!migrated._version) {
       migrated._version = 'v1';
     }
 
-    console.log(`[AP2 FISI] Migration: ${currentVersion} -> ${migrated._version}`);
+    console.log(`[AP2] Migration: ${currentVersion} -> ${migrated._version}`);
     return migrated;
-  },
-
-  getImportStats(state) {
-    const stats = { topics: 0, cards: 0, days: 0 };
-
-    if (state) {
-      Object.keys(state).forEach((key) => {
-        if (/^\d+\.\d+$/.test(key)) {
-          stats.topics++;
-          if (state[key].done) stats.cards++;
-        }
-      });
-    }
-
-    if (state.ankiStats) {
-      Object.values(state.ankiStats).forEach((s) => {
-        stats.cards += s.correct || 0;
-      });
-    }
-
-    if (state.activity) {
-      stats.days = Object.keys(state.activity).filter((d) => state.activity[d] > 0).length;
-    }
-
-    return stats;
   },
 
   importData(input) {
     const file = input.files[0];
     if (!file) return;
 
+    // Reset input damit gleiche Datei erneut gewählt werden kann
     input.value = '';
 
+    // Größen-Check vor dem Lesen (max 10 MB Raw-Datei)
     if (file.size > 10 * 1024 * 1024) {
       this.showNotification(
         'Datei zu groß',
@@ -1351,18 +1361,19 @@ const app = {
     const reader = new FileReader();
 
     reader.onerror = () => {
-      console.error('[AP2 FISI] File read error:', reader.error);
+      console.error('[AP2] File read error:', reader.error);
       this.showNotification('Lesefehler', 'Die Datei konnte nicht gelesen werden.', 'error');
     };
 
     reader.onload = (e) => {
       const content = e.target.result;
 
+      // 1. JSON parsen
       let parsed;
       try {
         parsed = JSON.parse(content);
       } catch (err) {
-        console.error('[AP2 FISI] JSON parse error:', err);
+        console.error('[AP2] JSON parse error:', err);
         this.showNotification(
           'Ungültiges JSON',
           'Die Datei ist kein gültiges JSON-Format.',
@@ -1371,21 +1382,25 @@ const app = {
         return;
       }
 
+      // 2. Struktur validieren
       const validation = this.validateImport(parsed);
       if (!validation.valid) {
-        console.error('[AP2 FISI] Validation failed:', validation.error);
+        console.error('[AP2] Validation failed:', validation.error);
         this.showNotification('Import fehlgeschlagen', validation.error, 'error', 0);
         return;
       }
 
+      // 3. Migration durchführen (falls nötig)
       const migrated = this.migrateState(parsed);
 
+      // 4. State ersetzen und speichern
       const oldState = this.state;
       this.state = migrated;
 
       try {
         this.save();
 
+        // 5. Erfolg melden
         const stats = this.getImportStats(migrated);
         this.showNotification(
           'Import erfolgreich',
@@ -1393,9 +1408,11 @@ const app = {
           'success'
         );
 
+        // 6. Reload nach kurzer Verzögerung
         setTimeout(() => location.reload(), 1500);
       } catch (err) {
-        console.error('[AP2 FISI] Import save failed:', err);
+        console.error('[AP2] Import save failed:', err);
+        // Rollback bei Save-Fehler
         this.state = oldState;
         this.showNotification(
           'Speicherfehler',
@@ -1409,22 +1426,57 @@ const app = {
     reader.readAsText(file);
   },
 
+  /**
+   * Extrahiert Statistik-Infos aus importiertem State für User-Feedback
+   */
+  getImportStats(state) {
+    const stats = { topics: 0, cards: 0, days: 0 };
+
+    // Gezählte Topics
+    if (state) {
+      Object.keys(state).forEach((key) => {
+        if (/^\d+\.\d+$/.test(key)) {
+          // Topic-ID Pattern (z.B. "1.1", "2.3")
+          stats.topics++;
+          if (state[key].done) stats.cards++;
+        }
+      });
+    }
+
+    // Anki-Karten
+    if (state.ankiStats) {
+      Object.values(state.ankiStats).forEach((s) => {
+        stats.cards += s.correct || 0;
+      });
+    }
+
+    // Aktivitätstage
+    if (state.activity) {
+      stats.days = Object.keys(state.activity).filter((d) => state.activity[d] > 0).length;
+    }
+
+    return stats;
+  },
+
   resetData() {
     if (confirm('Wirklich ALLE Daten unwiderruflich löschen?')) {
       localStorage.removeItem('ap2_tracker_state_v1');
       localStorage.removeItem('ap2_infobox_dismissed');
-      localStorage.removeItem('ap2_fisi_schoolBox_dismissed');
-      localStorage.removeItem('ap2_fisi_schoolBox_collapsed');
-      localStorage.removeItem('ap2_fisi_infoBox_dismissed');
-      localStorage.removeItem('ap2_fisi_infoBox_collapsed');
+      localStorage.removeItem('ap2_schoolBox_dismissed');
+      localStorage.removeItem('ap2_schoolBox_collapsed');
+      localStorage.removeItem('ap2_infoBox_dismissed');
+      localStorage.removeItem('ap2_infoBox_collapsed');
       location.reload();
     }
   },
 
   // --- INTERACTION ---
   search() {
-    this.searchQuery = document.getElementById('searchInput').value.toLowerCase();
-    this.applyFilter();
+    clearTimeout(this._searchTimer);
+    this._searchTimer = setTimeout(() => {
+      this.searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      this.applyFilter();
+    }, 200);
   },
 
   toggleTopic(id, checked, element) {
@@ -1456,6 +1508,9 @@ const app = {
 
     this.trackActivity();
     this.save();
+    // FIX: updateStats synchron aufrufen damit Smart Focus sofort aktualisiert wird
+    this.updateStats();
+    this.applyFilter();
 
     if (checked) {
       if (typeof confetti === 'function') {
@@ -1463,12 +1518,10 @@ const app = {
           particleCount: 60,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#10b981', '#34d399'],
+          colors: ['#a855f7', '#10b981'],
         });
       }
     }
-    this.updateStats();
-    this.applyFilter();
   },
 
   toggleSub(id, idx, checked, element) {
@@ -1490,10 +1543,10 @@ const app = {
           card.classList.add('border-dark-accent/30');
           if (typeof confetti === 'function') {
             confetti({
-              particleCount: 60,
-              spread: 70,
-              origin: { y: 0.6 },
-              colors: ['#10b981', '#34d399'],
+              particleCount: 40,
+              spread: 60,
+              origin: { y: 0.7 },
+              colors: ['#a855f7', '#10b981'],
             });
           }
         } else card.classList.remove('border-dark-accent/30');
@@ -1512,6 +1565,7 @@ const app = {
     s.last = Date.now();
     this.trackActivity();
     this.save();
+    // FIX: updateStats synchron aufrufen damit Smart Focus sofort aktualisiert wird
     this.updateStats();
     this.applyFilter();
   },
@@ -1525,11 +1579,7 @@ const app = {
     });
 
     if (open.length === 0) {
-      this.showNotification(
-        'Alles erledigt!',
-        'Wow! Alles erledigt! Du bist bereit für die AP2.',
-        'success'
-      );
+      alert('Wow! Alles erledigt! Du bist bereit für die AP2.');
       return;
     }
     const randId = open[Math.floor(Math.random() * open.length)];
@@ -1639,21 +1689,54 @@ const app = {
     }, 100);
   },
 
+  startSmartFocus() {
+    if (this.recId && window.ANKI_QUESTIONS && window.ANKI_QUESTIONS[this.recId]) {
+      this.anki.open(this.recId);
+    } else if (this.recId) {
+      this.scrollToRec();
+    } else {
+      this.randomTopic();
+    }
+  },
+
+  startRandomTopic() {
+    this.randomTopic();
+    if (this.recId && window.ANKI_QUESTIONS && window.ANKI_QUESTIONS[this.recId]) {
+      this.anki.open(this.recId);
+    }
+  },
+
   resetCategory(catId) {
     if (!confirm('Wirklich den Fortschritt dieser Kategorie zurücksetzen?')) return;
     const cat = AP2_DATA.find((c) => c.id === catId);
-    if (cat) {
-      cat.topics.forEach((t) => {
-        if (this.state[t.id]) {
-          this.state[t.id].done = false;
-          this.state[t.id].subDone = [];
-          this.state[t.id].reps = [false, false, false];
-        }
+    if (!cat) return;
+
+    cat.topics.forEach((t) => {
+      if (this.state[t.id]) {
+        this.state[t.id].done = false;
+        this.state[t.id].subDone = [];
+        this.state[t.id].reps = [false, false, false];
+      }
+
+      const card = this.cardMap[t.id];
+      if (!card) return;
+
+      const mainCheck = card.querySelector('.topic-check');
+      if (mainCheck) mainCheck.checked = false;
+      card.classList.remove('border-dark-accent/30');
+
+      card.querySelectorAll('.subtask-list input').forEach((cb) => (cb.checked = false));
+      card.querySelectorAll('.subtask-list span').forEach((span) => {
+        span.classList.remove('line-through', 'opacity-50');
+        span.classList.add('group-hover/item:text-white');
       });
-      this.save();
-      this.buildDOM();
-      this.applyFilter();
-    }
+
+      card.querySelectorAll('.rep-check').forEach((cb) => (cb.checked = false));
+      this.updateRepHeader(card, [false, false, false]);
+    });
+
+    this.save();
+    this.applyFilter();
   },
 
   // --- LEGAL / MODALS ---
@@ -1706,7 +1789,7 @@ const app = {
 
                   <h2 class="text-lg font-bold text-white mt-4">3. Lokale Speicherung (LocalStorage)</h2>
                   <p>Diese Anwendung speichert Ihren Lernfortschritt (Status der Checkboxen, Timer-Einstellungen) ausschließlich lokal in Ihrem Browser ("LocalStorage").</p>
-                  <p><strong>Rechtsgrundlage:</strong> Die Speicherung ist für die Funktion der Website (Lern-Tracker) <strong>unbedingt erforderlich</strong> (gemäß § 25 Abs. 2 Nr. 2 TTDSG). Ohne diese Speicherung kann der Dienst "Fortschrittskontrolle" nicht erbracht werden. Es findet <strong>kein Tracking</strong>, keine Analyse und keine Weitergabe an Dritte statt. Die Daten verlassen Ihr Endgerät nicht.</p>
+                  <p><strong>Rechtsgrundlage:</strong> Die Speicherung ist für die Funktion der Website (Lern-Tracker) <strong>unbedingt erforderlich</strong> (gemäß § 25 Abs. 2 Nr. 2 TDDDG). Ohne diese Speicherung kann der Dienst "Fortschrittskontrolle" nicht erbracht werden. Es findet <strong>kein Tracking</strong>, keine Analyse und keine Weitergabe an Dritte statt. Die Daten verlassen Ihr Endgerät nicht.</p>
 
                   <h2 class="text-lg font-bold text-white mt-4">4. Externe Dienste</h2>
                   <p>Diese Website arbeitet <strong>autark</strong>. Es werden keine externen CDNs (Content Delivery Networks), keine Google Fonts und keine externen Analysetools (wie Google Analytics) eingesetzt. Alle Skripte und Ressourcen werden vom eigenen Server geladen.</p>
@@ -1748,140 +1831,137 @@ const app = {
 
   // --- RENDER ---
   updateStats() {
-    const all = AP2_DATA.flatMap((c) => c.topics || []);
-    const total = all.length;
-    if (total === 0) return;
+    try {
+      const allTopics = AP2_DATA.flatMap((c) => c.topics || []);
 
-    // Subtask count
-    let doneSubtasks = 0;
-    let doneTopics = 0;
-    all.forEach((t) => {
-      const s = this.getState(t.id);
-      if (s.done) {
-        doneTopics++;
-        if (t.sub) doneSubtasks += t.sub.length;
-      } else if (s.subDone) {
-        doneSubtasks += s.subDone.filter(Boolean).length;
-      }
-    });
+      // Punkte-Logik: 10 Punkte pro Unterthema (Sub-Task)
+      let doneSubTasks = 0;
+      let totalSubTasks = 0;
+      allTopics.forEach((t) => {
+        const s = this.getState(t.id);
+        if (s.subDone) {
+          doneSubTasks += s.subDone.filter(Boolean).length;
+        } else if (s.done) {
+          // Fallback falls subDone nicht existiert aber Thema erledigt ist
+          doneSubTasks += t.sub ? t.sub.length : 1;
+        }
+        totalSubTasks += t.sub ? t.sub.length : 1;
+      });
+      const topicPoints = doneSubTasks * 10;
 
-    const totalCards = Object.values(window.ANKI_QUESTIONS || {}).flat().length;
-    // Count cards that have a level > 0
-    const doneCards = Object.values(this.state.anki || {}).filter((v) => v && v.level > 0).length;
+      // Anki-Punkte: 1 Punkt pro gelernte Karte (level >= 1)
+      const learnedCards = this.state.anki
+        ? Object.values(this.state.anki).filter((c) => c.level >= 1).length
+        : 0;
+      const cardPoints = learnedCards;
 
-    // Rank Points (FISI v2.1):
-    // - Subtask done: 1pt
-    // - Entire Topic done: 5pts bonus
-    // - Card learned: 1pt (cap at 350)
-    // Goal: ~122 subtasks + (17 * 5) topic bonus + 350 cards = 557 pts.
-    // We set 550 as the target for 100%.
-    const totalPoints = doneSubtasks + doneTopics * 5 + Math.min(350, doneCards);
-    const maxPoints = 550;
+      // Max Points dynamisch berechnen
+      const allAnkiCards = window.ANKI_QUESTIONS
+        ? Object.values(window.ANKI_QUESTIONS).flat().length
+        : 0;
+      const maxPoints = totalSubTasks * 10 + allAnkiCards || 1; // Guard gegen Division by 0
 
-    // Global Progress (Large Bar & Top Percentage)
-    const globalPct = Math.min(100, Math.round((totalPoints / maxPoints) * 100));
+      const currentPoints = topicPoints + cardPoints;
+      const totalPct = Math.min(100, Math.round((currentPoints / maxPoints) * 100));
 
-    const totalTopEl = document.getElementById('totalPercentTop');
-    if (totalTopEl) totalTopEl.textContent = globalPct + '%';
+      const totalTopEl = document.getElementById('totalPercentTop');
+      if (totalTopEl) totalTopEl.textContent = totalPct + '%';
 
-    const mainProgress = document.getElementById('mainProgressBar');
-    if (mainProgress) mainProgress.style.width = globalPct + '%';
+      const mainProgress = document.getElementById('mainProgressBar');
+      if (mainProgress) mainProgress.style.width = totalPct + '%';
 
-    // UI Dashboard Labels
-    const doneCountEl = document.getElementById('doneCount');
-    if (doneCountEl) {
-      doneCountEl.textContent = doneCards;
-      const labelEl = doneCountEl.nextElementSibling;
-      if (labelEl) labelEl.textContent = 'Karten';
-    }
+      const doneCountEl = document.getElementById('doneCount');
+      if (doneCountEl) doneCountEl.textContent = learnedCards; // Zeigt nun Karten-Anzahl
 
-    const totalCountEl = document.getElementById('totalCount');
-    if (totalCountEl) totalCountEl.textContent = totalCards;
+      let currentRank = this.ranks[0];
+      let nextRank = null;
+      let rankPct = 0;
 
-    let currentRank = this.ranks[0];
-    let nextRank = null;
-    let rankPct = 0;
-
-    for (let i = 0; i < this.ranks.length; i++) {
-      if (totalPoints >= this.ranks[i].min) {
-        currentRank = this.ranks[i];
-        nextRank = this.ranks[i + 1] || null;
-      }
-    }
-
-    const rankNameEl = document.getElementById('levelName');
-    if (rankNameEl) {
-      rankNameEl.textContent = currentRank.name;
-      rankNameEl.style.color = currentRank.color;
-    }
-
-    // Rank Progress (Small Bar next to Rank)
-    if (nextRank) {
-      const range = nextRank.min - currentRank.min;
-      const currentInRank = totalPoints - currentRank.min;
-      rankPct = Math.min(100, Math.max(0, (currentInRank / range) * 100));
-    } else {
-      rankPct = 100;
-    }
-
-    const rankBar = document.getElementById('levelProgress');
-    if (rankBar) {
-      rankBar.style.width = rankPct + '%';
-      rankBar.style.backgroundColor = currentRank.color;
-    }
-
-    let best = null,
-      maxScore = -1;
-    all.forEach((t) => {
-      const s = this.getState(t.id);
-      if (!s.done) {
-        // Basis-Score aus Gewichtung (max 50 Punkte bei weight=5)
-        const weightScore = t.weight * 10;
-
-        // Fortschritts-Score: Wie viele SubTasks sind NOCH offen? (max 20 Punkte)
-        const totalSub = t.sub ? t.sub.length : 1;
-        const doneSub = s.subDone ? s.subDone.filter(Boolean).length : s.done ? totalSub : 0;
-        const progressScore = ((totalSub - doneSub) / totalSub) * 20;
-
-        // Wiederholungs-Score: Wie viele Reps sind NOCH offen? (max 15 Punkte)
-        const totalReps = 3;
-        const doneReps = s.reps ? s.reps.filter(Boolean).length : 0;
-        const repScore = ((totalReps - doneReps) / totalReps) * 15;
-
-        // Leichter Zufall für Varianz (max 5 Punkte)
-        const randomScore = Math.random() * 5;
-
-        // Gesamt-Score (max ~90 Punkte)
-        const score = weightScore + progressScore + repScore + randomScore;
-
-        if (score > maxScore) {
-          maxScore = score;
-          best = t;
+      for (let i = 0; i < this.ranks.length; i++) {
+        if (currentPoints >= this.ranks[i].min) {
+          currentRank = this.ranks[i];
+          nextRank = this.ranks[i + 1] || null;
         }
       }
-    });
 
-    const recShort = document.getElementById('recShort');
-    if (recShort) {
-      // FIX: Smart Focus IMMER setzen (mit Fallback)
-      if (best) {
-        this.recId = best.id;
-        recShort.textContent = best.title;
-        recShort.title = best.title;
-        recShort.classList.remove('text-dark-muted');
-        recShort.classList.add('text-white');
-        console.log('[AP2 FISI] 🎯 Smart Focus:', best.title, `(Score: ${maxScore.toFixed(1)})`);
-      } else if (all.length === 0) {
-        this.recId = null;
-        recShort.textContent = 'Lade Daten...';
-      } else {
-        this.recId = null;
-        recShort.textContent = 'Bereit für die AP2!';
-        console.log('[AP2 FISI] ✅ Alle Themen erledigt!');
+      const rankNameEl = document.getElementById('levelName');
+      if (rankNameEl) {
+        rankNameEl.textContent = currentRank.name;
+        rankNameEl.style.color = currentRank.color;
       }
-    }
 
-    try {
+      if (nextRank) {
+        const range = nextRank.min - currentRank.min;
+        const currentInRank = currentPoints - currentRank.min;
+        rankPct = Math.min(100, (currentInRank / range) * 100);
+      } else {
+        rankPct = 100;
+      }
+
+      const rankBar = document.getElementById('levelProgress');
+      if (rankBar) {
+        rankBar.style.width = rankPct + '%';
+        rankBar.style.backgroundColor = currentRank.color;
+      }
+
+      let best = null,
+        maxScore = -1;
+
+      // Smart Focus: Berechnet das nächste beste Thema basierend auf:
+      // 1. Gewichtung (weight) - höhere Priorität = wichtiger
+      // 2. Fortschritt (subDone) - weniger erledigt = dringender
+      // 3. Wiederholungen (reps) - weniger wiederholt = dringender
+      // 4. Leichter Zufall (für Varianz bei gleichen Scores)
+
+      allTopics.forEach((t) => {
+        const s = this.getState(t.id);
+        if (!s.done) {
+          // Basis-Score aus Gewichtung (max 50 Punkte bei weight=5)
+          const weightScore = t.weight * 10;
+
+          // Fortschritts-Score: Wie viele SubTasks sind NOCH offen? (max 20 Punkte)
+          const totalSub = t.sub ? t.sub.length : 1;
+          const doneSub = s.subDone ? s.subDone.filter(Boolean).length : s.done ? totalSub : 0;
+          const progressScore = ((totalSub - doneSub) / totalSub) * 20;
+
+          // Wiederholungs-Score: Wie viele Reps sind NOCH offen? (max 15 Punkte)
+          const totalReps = 3;
+          const doneReps = s.reps ? s.reps.filter(Boolean).length : 0;
+          const repScore = ((totalReps - doneReps) / totalReps) * 15;
+
+          // Leichter Zufall für Varianz (max 5 Punkte)
+          const randomScore = Math.random() * 5;
+
+          // Gesamt-Score
+          const score = weightScore + progressScore + repScore + randomScore;
+
+          if (score > maxScore) {
+            maxScore = score;
+            best = t;
+          }
+        }
+      });
+
+      // FIX: Smart Focus IMMER setzen (auch wenn noch keine Topics geladen sind)
+      const recShort = document.getElementById('recShort');
+      if (recShort) {
+        if (best) {
+          this.recId = best.id;
+          recShort.textContent = best.title;
+          recShort.title = best.title; // Tooltip für lange Titel
+          recShort.classList.remove('text-dark-muted');
+          recShort.classList.add('text-white');
+          console.log('[AP2] 🎯 Smart Focus:', best.title, `(Score: ${maxScore.toFixed(1)})`);
+        } else if (allTopics.length === 0) {
+          this.recId = null;
+          recShort.textContent = 'Lade Daten...';
+        } else {
+          this.recId = null;
+          recShort.textContent = 'Bereit für die AP2!';
+          console.log('[AP2] ✅ Alle Themen erledigt!');
+        }
+      }
+
       // Globale Karteikarten-Statistiken berechnen
       let learnedCardsGlobal = 0;
       let knownCards = 0;
@@ -1971,11 +2051,120 @@ const app = {
         if (weakestEl) weakestEl.textContent = "—";
       }
     } catch (err) {
-      console.error('[AP2 FISI] updateStats Fehler:', err);
+      console.error('[AP2] updateStats Fehler:', err);
+      const recShort = document.getElementById('recShort');
+      if (recShort) recShort.textContent = '—';
     }
   },
 
-  // --- RENDER ENGINE v2.0 ---
+  scheduleStatsUpdate() {
+    if (this._statsRAF) return;
+    this._statsRAF = requestAnimationFrame(() => {
+      this._statsRAF = null;
+      this.updateStats();
+    });
+  },
+
+  applyFilter() {
+    let hasVisible = false;
+
+    AP2_DATA.forEach((cat) => {
+      let visibleInCat = 0;
+
+      cat.topics.forEach((t) => {
+        const card = this.cardMap[t.id];
+        if (!card) return;
+
+        const s = this.getState(t.id);
+        let matchesSearch = true;
+        let subMatch = false;
+        if (this.searchQuery) {
+          subMatch = t.sub && t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
+          matchesSearch = t.title.toLowerCase().includes(this.searchQuery) || subMatch;
+        }
+
+        let matchesFilter = true;
+        if (this.filter === 'open' && s.done) matchesFilter = false;
+        if (this.filter === 'high' && t.weight < 4) matchesFilter = false;
+
+        if (matchesSearch && matchesFilter) {
+          card.classList.remove('hidden');
+          visibleInCat++;
+
+          if (subMatch) {
+            const body = card.querySelector('.topic-body');
+            if (!body.classList.contains('open') && !this.openTopics.has(t.id)) {
+              this.toggleAccordion(card.querySelector('.header-area'));
+              this.searchOpenedTopics.add(t.id);
+            }
+          }
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      const catEl = this.catMap[cat.id];
+      if (catEl) {
+        if (visibleInCat === 0) {
+          catEl.classList.add('hidden');
+        } else {
+          catEl.classList.remove('hidden');
+          hasVisible = true;
+        }
+
+        // Fortschritt berechnen (nur fertige Themen im Verhältnis zu allen Themen dieser Kategorie)
+        const doneTopics = cat.topics.filter((t) => this.getState(t.id).done).length;
+        const totalTopics = cat.topics.length;
+        const pct = totalTopics === 0 ? 0 : Math.round((doneTopics / totalTopics) * 100);
+
+        // SVG Ring steuern
+        const progressRing = catEl.querySelector('.cat-progress-ring');
+        if (progressRing) {
+          progressRing.setAttribute('stroke-dasharray', `0 100`);
+          // Force reflow damit Browser den Wert neu anwendet
+          void progressRing.getBoundingClientRect();
+          progressRing.setAttribute('stroke-dasharray', `${pct} 100`);
+          if (pct === 100) {
+            progressRing.classList.remove('text-dark-accent');
+            progressRing.classList.add('text-dark-success');
+          } else {
+            progressRing.classList.add('text-dark-accent');
+            progressRing.classList.remove('text-dark-success');
+          }
+        }
+
+        // Prozent-Badge steuern
+        const pctEl = catEl.querySelector('.cat-pct');
+        if (pctEl) {
+          pctEl.textContent = `${pct}%`;
+          if (pct === 100) {
+            pctEl.className = 'cat-pct font-mono text-xs font-bold px-2 py-0.5 rounded border border-dark-success/30 bg-dark-success/10 text-dark-success';
+          } else if (pct > 0) {
+            pctEl.className = 'cat-pct font-mono text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400';
+          } else {
+            pctEl.className = 'cat-pct font-mono text-xs font-semibold px-2 py-0.5 rounded border border-dark-border bg-dark-card text-dark-muted';
+          }
+        }
+      }
+    });
+
+    if (!this.searchQuery) {
+      this.searchOpenedTopics.forEach((id) => {
+        const card = this.cardMap[id];
+        if (card) {
+          const body = card.querySelector('.topic-body');
+          if (body.classList.contains('open')) {
+            this.toggleAccordion(card.querySelector('.header-area'));
+          }
+        }
+      });
+      this.searchOpenedTopics.clear();
+    }
+
+    const emptyState = document.getElementById('emptyState');
+    if (emptyState) emptyState.classList.toggle('hidden', hasVisible);
+  },
+
   buildDOM() {
     const list = document.getElementById('contentList');
     if (!list) return;
@@ -1983,38 +2172,142 @@ const app = {
     this.cardMap = {};
     this.catMap = {};
 
+    const activityDates = Object.keys(this.state.activity || {});
+    if (activityDates.length > 0) {
+      const badge = document.getElementById('streakBadge');
+      if (badge) badge.classList.remove('hidden');
+      const streakCount = document.getElementById('streakCount');
+      if (streakCount) streakCount.textContent = activityDates.length;
+    }
+
     AP2_DATA.forEach((cat) => {
+      const visibleTopics = cat.topics;
+
       const catNode = document.getElementById('tpl-category').content.cloneNode(true);
-      const catEl = catNode.querySelector('.category-block');
-
-      catEl.querySelector('.cat-title').textContent = cat.name;
-      const descEl = catEl.querySelector('.cat-desc');
+      catNode.querySelector('.cat-title').textContent = cat.name;
+      const descEl = catNode.querySelector('.cat-desc');
       if (descEl) descEl.textContent = cat.desc;
-      catEl.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
+      catNode.querySelector('.cat-reset').onclick = () => this.resetCategory(cat.id);
 
-      const iconContainer = catEl.querySelector('.cat-icon');
+      // Icon setzen
+      const iconContainer = catNode.querySelector('.cat-icon');
       if (iconContainer && cat.icon) {
         iconContainer.innerHTML = `<i data-lucide="${cat.icon}"></i>`;
       }
 
-      const container = catEl.querySelector('.cat-topics');
+      // Fortschritt berechnen (nur fertige Themen im Verhältnis zu allen Themen dieser Kategorie)
+      const doneTopics = cat.topics.filter((t) => this.getState(t.id).done).length;
+      const totalTopics = cat.topics.length;
+      const pct = totalTopics === 0 ? 0 : Math.round((doneTopics / totalTopics) * 100);
 
-      cat.topics.forEach((t) => {
+      // SVG Ring steuern
+      const progressRing = catNode.querySelector('.cat-progress-ring');
+      if (progressRing) {
+        progressRing.setAttribute('stroke-dasharray', `${pct} 100`);
+        if (pct === 100) {
+          progressRing.classList.remove('text-dark-accent');
+          progressRing.classList.add('text-dark-success');
+        } else {
+          progressRing.classList.add('text-dark-accent');
+          progressRing.classList.remove('text-dark-success');
+        }
+      }
+
+      // Prozent-Badge steuern
+      const pctEl = catNode.querySelector('.cat-pct');
+      if (pctEl) {
+        pctEl.textContent = `${pct}%`;
+        if (pct === 100) {
+          pctEl.className = 'cat-pct font-mono text-xs font-bold px-2 py-0.5 rounded border border-dark-success/30 bg-dark-success/10 text-dark-success';
+        } else if (pct > 0) {
+          pctEl.className = 'cat-pct font-mono text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400';
+        } else {
+          pctEl.className = 'cat-pct font-mono text-xs font-semibold px-2 py-0.5 rounded border border-dark-border bg-dark-card text-dark-muted';
+        }
+      }
+
+      const container = catNode.querySelector('.cat-topics');
+
+      visibleTopics.forEach((t) => {
         const s = this.getState(t.id);
         const node = document.getElementById('tpl-topic').content.cloneNode(true);
         const card = node.querySelector('.topic-card');
         card.dataset.id = t.id;
+        this.cardMap[t.id] = card;
+
+        if (this.openTopics.has(t.id)) {
+          node.querySelector('.topic-body').classList.add('open');
+          const icon = node.querySelector('.accordion-icon');
+          icon.style.transform = 'rotate(180deg)';
+          icon.classList.add('bg-dark-accent', 'text-white');
+          icon.classList.remove('bg-dark-bg/50', 'text-dark-muted');
+        }
 
         node.querySelector('.topic-title').textContent = t.title;
 
+        const repIndicator = node.querySelector('.rep-indicator');
+        const repCount = s.reps.filter(Boolean).length;
+        if (repCount > 0) {
+          repIndicator.textContent = repCount + 'x Wiederholt';
+          repIndicator.classList.remove('hidden');
+          if (repCount === 3)
+            repIndicator.classList.add(
+              'bg-dark-success/20',
+              'text-dark-success',
+              'border-dark-success/30'
+            );
+        }
+
+        // ANKI Button Logik
+        const ankiBtn = node.querySelector('.anki-btn');
+        const ankiBadge = node.querySelector('.anki-badge');
+        const hasQuestions = window.ANKI_QUESTIONS && window.ANKI_QUESTIONS[t.id];
+
+        if (ankiBtn && hasQuestions) {
+          ankiBtn.classList.remove('hidden');
+          ankiBtn.classList.add('flex');
+
+          const hasSessions =
+            this.state.ankiStats &&
+            this.state.ankiStats[t.id] &&
+            this.state.ankiStats[t.id].sessions > 0;
+
+          if (ankiBadge) {
+            if (!hasSessions) {
+              ankiBadge.classList.remove('hidden');
+              ankiBadge.textContent = 'NEU';
+              ankiBadge.className = 'anki-badge absolute -top-1.5 -right-1.5 font-mono text-[8px] font-bold px-1 rounded bg-emerald-950/90 border border-emerald-500/40 text-emerald-400 shadow-sm';
+              ankiBadge.title = 'Lernkarten verfügbar';
+            } else {
+              ankiBadge.classList.add('hidden');
+            }
+          }
+
+          // FIX: addEventListener mit capture:true für Firefox-Kompatibilität
+          // Verhindert dass Parent-Element (Accordion) den Klick abfängt
+          ankiBtn.addEventListener(
+            'click',
+            (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('[AP2] 🎴 Anki Button clicked for topic:', t.id);
+              this.anki.open(t.id);
+            },
+            { once: false, capture: true }
+          );
+        }
+
         const googleLinks = node.querySelectorAll('.google-link, .google-link-mobile');
         googleLinks.forEach((gl) => {
-          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
+          gl.href = `https://www.google.com/search?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
+            t.title
+          )}`;
         });
-
-        const duckduckgoLinks = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
-        duckduckgoLinks.forEach((dl) => {
-          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(t.title)}`;
+        const duckduckgoLink = node.querySelectorAll('.duckduckgo-link, .duckduckgo-link-mobile');
+        duckduckgoLink.forEach((dl) => {
+          dl.href = `https://www.duckduckgo.com/?q=Fachinformatiker+AP2+FISI+${encodeURIComponent(
+            t.title
+          )}`;
         });
 
         const wb = node.querySelector('.weight-badge');
@@ -2046,10 +2339,14 @@ const app = {
           li.className = 'flex items-start gap-3 text-xs text-dark-muted group/item transition-all';
           li.innerHTML = `
                   <div class="shrink-0 flex items-center justify-center w-5 h-5 relative">
-                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${isDone ? 'checked' : ''}>
+                      <input type="checkbox" class="peer appearance-none w-4 h-4 rounded border border-dark-border bg-dark-bg checked:bg-dark-accent checked:border-dark-accent cursor-pointer transition-colors" ${
+                        isDone ? 'checked' : ''
+                      }>
                       <i data-lucide="check" class="text-[10px] text-white absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity"></i>
                   </div>
-                  <span class="transition-colors cursor-pointer pt-0.5 ${isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'}">${sub}</span>
+                  <span class="transition-colors cursor-pointer pt-0.5 ${
+                    isDone ? 'line-through opacity-50' : 'group-hover/item:text-white'
+                  }">${sub}</span>
                 `;
           const subCb = li.querySelector('input');
           subCb.onclick = (e) => e.stopPropagation();
@@ -2067,129 +2364,15 @@ const app = {
           r.onchange = (e) => this.setRep(t.id, i, e.target);
         });
 
-        // ANKI Button Logik
-        const ankiBtn = node.querySelector('.anki-btn');
-        if (ankiBtn) {
-          ankiBtn.onclick = (e) => {
-            e.stopPropagation();
-            this.anki.open(t.id);
-          };
-        }
-
         container.appendChild(node);
-        this.cardMap[t.id] = card;
-        this.updateRepHeader(card, s.reps);
       });
-
+      const catEl = catNode.querySelector('.category-block');
       this.catMap[cat.id] = catEl;
-      list.appendChild(catEl);
+      list.appendChild(catNode);
     });
+
+    this.scheduleStatsUpdate();
     this.refreshIcons();
-  },
-
-  applyFilter() {
-    let hasVisible = false;
-    const activityDates = Object.keys(this.state.activity || {});
-    const badge = document.getElementById('streakBadge');
-    if (badge) {
-      if (activityDates.length > 0) {
-        badge.classList.remove('hidden');
-        document.getElementById('streakCount').textContent = activityDates.length;
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
-
-    AP2_DATA.forEach((cat) => {
-      let catVisible = false;
-      cat.topics.forEach((t) => {
-        const s = this.getState(t.id);
-        const card = this.cardMap[t.id];
-
-        let matchesSearch = true;
-        if (this.searchQuery) {
-          matchesSearch =
-            t.title.toLowerCase().includes(this.searchQuery) ||
-            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
-        }
-
-        let matchesFilter = true;
-        if (this.filter === 'open' && s.done) matchesFilter = false;
-        if (this.filter === 'high' && t.weight < 4) matchesFilter = false;
-
-        const visible = matchesSearch && matchesFilter;
-        card.style.display = visible ? 'block' : 'none';
-
-        if (visible) {
-          catVisible = true;
-          hasVisible = true;
-
-          // Auto-open if searching in subtasks
-          const subMatch =
-            this.searchQuery &&
-            !t.title.toLowerCase().includes(this.searchQuery) &&
-            t.sub.some((sub) => sub.toLowerCase().includes(this.searchQuery));
-
-          if (subMatch || this.openTopics.has(t.id)) {
-            const body = card.querySelector('.topic-body');
-            if (!body.classList.contains('open')) {
-              this.toggleAccordion(card.querySelector('.header-area'));
-            }
-          }
-        }
-      });
-      const catEl = this.catMap[cat.id];
-      if (catEl) {
-        catEl.style.display = catVisible ? 'block' : 'none';
-
-        // Fortschritt berechnen (nur fertige Themen im Verhältnis zu allen Themen dieser Kategorie)
-        const doneTopics = cat.topics.filter((t) => this.getState(t.id).done).length;
-        const totalTopics = cat.topics.length;
-        const pct = totalTopics === 0 ? 0 : Math.round((doneTopics / totalTopics) * 100);
-
-        // SVG Ring steuern
-        const progressRing = catEl.querySelector('.cat-progress-ring');
-        if (progressRing) {
-          progressRing.setAttribute('stroke-dasharray', `${pct} 100`);
-          if (pct === 100) {
-            progressRing.classList.remove('text-dark-accent');
-            progressRing.classList.add('text-dark-success');
-          } else {
-            progressRing.classList.add('text-dark-accent');
-            progressRing.classList.remove('text-dark-success');
-          }
-        }
-
-        // Prozent-Badge steuern
-        const pctEl = catEl.querySelector('.cat-pct');
-        if (pctEl) {
-          pctEl.textContent = `${pct}%`;
-          if (pct === 100) {
-            pctEl.classList.remove(
-              'text-dark-accent',
-              'bg-dark-accent/10',
-              'border-dark-accent/20'
-            );
-            pctEl.classList.add(
-              'text-dark-success',
-              'bg-dark-success/10',
-              'border-dark-success/20'
-            );
-          } else {
-            pctEl.classList.add('text-dark-accent', 'bg-dark-accent/10', 'border-dark-accent/20');
-            pctEl.classList.remove(
-              'text-dark-success',
-              'bg-dark-success/10',
-              'border-dark-success/20'
-            );
-          }
-        }
-      }
-    });
-
-    const emptyState = document.getElementById('emptyState');
-    if (emptyState) emptyState.classList.toggle('hidden', hasVisible);
-    this.updateStats();
   },
 };
 

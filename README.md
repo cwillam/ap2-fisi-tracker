@@ -1,6 +1,6 @@
-# AP2 Tracker FISI - Dein Lernbegleiter (v2.7.2 Update)
+# AP2 Tracker FISI - Dein Lernbegleiter (v3.0.0 Update)
 
-[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de) [![Version](https://img.shields.io/badge/Version-v2.7.2-blue?style=for-the-badge)](https://ap2-fisi.cwillam.de)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de) [![Version](https://img.shields.io/badge/Version-v3.0.0-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
 
 > 🐛 [**Bug melden**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=bug.yml) · 💡 [**Feature wünschen**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=feature.yml)
 
@@ -19,187 +19,104 @@ Das Projekt ist einsatzbereit gehostet:
 
 ## Über das Projekt
 
-Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturierte und detaillierte Übersicht über die komplexen Lerninhalte der Abschlussprüfung Teil 2 zu geben.
+Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturierte und praxisnahe Vorbereitung auf die komplexen Lernfelder der IHK-Abschlussprüfung Teil 2 zu bieten.
 
-Im Gegensatz zur AP1 liegt hier der Fokus auf tiefergehenden Themen wie Netzwerktechnik, Routing/Switching, Firewalls, Cloud-Modellen, Server-Diensten, RAID-Infrastrukturen und IT-Sicherheit.
+Im Fokus stehen die Kerngebiete der Systemintegration: Netzwerktechnik, Routing & Switching, Firewalls & VPN, Active Directory, Serverdienste (DNS/DHCP), Virtualisierung & Cloud, Storage- und Backup-Konzepte sowie IT-Sicherheit.
 
-### Highlights v2.7.2 (In-App Feedback-System & Qualitätssicherung)
+---
 
+### Highlights v3.0.0 (Großes Redesign & Skript-Labor)
+
+- **Neues Skript- & Automatisierungs-Labor (`skripte.html`):** Interaktiver Terminal-Simulator für **Bash & PowerShell** mit prüfungsrelevanten Aufgaben (Backup-Automatisierung, Active Directory & LDAP, System-Monitoring, Incident Response, Log-Analyse) inklusive Syntax-Highlighting und 1-Klick-Code-Kopieren.
+- **Obsidian-Zinc Designsystem:** Konsequentes Ultra-Dark Interface (`#09090b`) mit FISI-Emerald-Akzenten (`#10b981`), Tailwind 3 Engine, optimierten Kontrasten und lokalen Inter-Fonts ohne fremde CDN-Abhängigkeiten.
 - **In-App Karten-Feedback:** Fehler, veraltete Prüfungsnormen oder Unklarheiten direkt auf jeder Lernkarte mit 1 Klick an die Redaktion melden.
-- **Automatischer Kontext:** Übermittlung von Karten-ID, Modul, Fragetext und Antwortauszug ohne manuelles Copy-Paste.
-- **100% DSGVO- & Offline-Safe:** Anonyme Übertragung ohne Cookies, Tracker oder Mailprogramm-Zwang.
-- **Service Worker & Cache-Busting:** Caching auf `v2.7.2` aktualisiert für sofortige automatische Updates.
+- **840 FISI-Lernkarten:** Vollständiger Content-Ausbau für GA1, GA2 und WiSo nach aktuellem IHK-Rahmenlehrplan mit Anki Spaced Repetition, Schwachstellen-Modus und Tastatur-Shortcuts (1–4, Space, Esc).
+- **Subnetz-Trainer & VLSM:** Interaktiver IPv4/IPv6-Trainer mit Bit-Visualisierung, Netzklassen, Host-Berechnung, Broadcast und Prefix-Ermittlung.
+- **SQL-Labor & Glossar:** Admin-orientiertes SQL-Training (DDL, DML, GRANT/REVOKE) und 100 FISI-Fachbegriffe mit Eselsbrücken und Favoriten-Merkliste.
+- **100% DSGVO- & Offline-Safe:** Standalone-fähige PWA mit Service-Worker-Cache (`v3.0.0`), neuem Impressum (§ 5 DDG) und aktualisierter Datenschutzerklärung (DSGVO / § 25 TDDDG).
 
-### Highlights v2.7.0 (Play Store Release & Vorbereitung)
-
-- **Google Play Store Release Ready:** 14-tägige geschlossene Testphase mit Testern erfolgreich abgeschlossen, Vorbereitung des weltweiten Rollouts und Android 16 (API-Level 36) Konformität.
-- **Einklappbare Banner mit Persistenz:** Community- und Schul-Hinweise lassen sich platzsparend einklappen (Zustand wird im `localStorage` gespeichert).
-- **Discord-Lerncommunity:** Direkte Integration unserer Community für AP1 & AP2 Lerngruppen, Prüfungsaustausch und Release-Ankündigungen.
-
-### Highlights v2.2.0 (Fortschrittskreise & Shortcuts)
-
-- **Modul-Fortschrittskreise:** Zirkuläre SVG-Verlaufsringe visualisieren den Lernfortschritt pro Modul und leuchten grün bei 100%.
-- **Tastatur-Shortcuts:** Lernkarten-Steuerung über Leertaste, Eingabe, Pfeiltasten und Esc (ausführliche Erklärung in der Hilfe).
-- **Aktivitäts-Graph:** Erhöhung des Aktivitätszeitfensters von 40 auf 80 Tage für einen besseren Lernüberblick.
-- **Hilfe-System:** Integration einer ausführlichen Hilfeseite (`help.html`) mit praktischen Tipps zu Caching, Backups und Fehlerberichten.
-
-### Highlights v2.1.0 (Lucide Icon Migration & UI-Upgrade)
-
-- **Modernes Lucide-Header-Design:** Komplette Umstellung von FontAwesome auf ressourcenschonende, lokale Lucide-Vektorsymbole mit reaktionsschnellem Kachellayout (Emerald-Theme) und neuem Netzwerk-Logo.
-- **Fehlerbehebungen:** Play/Pause-Steuerung des Fokus-Timers & Widget-Zentrierung korrigiert, und der Update-Notification-Dot an der Glocke wurde präzise positioniert.
-
-### Highlights v2.0.2 (Content Update)
-
-- **Massiver Lernkarten-Ausbau:** Inhaltliches Update des Lernkarten-Systems für Systemintegratoren (Subnetting, Routing, Firewalls, RAID, Backups).
-- **Beispiele hinzugefügt:** Netzwerkpläne, CLI-Befehle (Cisco, Linux) und SQL-Anweisungen, aufgeteilte Listenfragen sowie Rechtschreibkorrekturen.
-
-### Highlights v2.0 (The Content Overhaul)
-
-- **Massiver Content-Ausbau:** Über **850 FISI-spezifische Lernkarten** (Anki-Style) für alle Lernbereiche integriert.
-- **Strategie-Modus:** Intelligentes Training mittels **Spaced Repetition** – lerne Themen basierend auf deinem Wissenstand in gewohnten Intervallen.
-- **Performance Engine:** Komplett neues Rendering-System (Map-basiert) für blitzschnelle Filterung und Suche ohne UI-Verzögerung.
-- **Mobile First:** Optimiertes Design für Smartphones mit fixierter Suche, verbesserten Touch-Bereichen und intuitiverer Navigation.
+---
 
 ### Core Features
 
-- **Themen-Fokus:** Basierend auf dem aktuellen amtlichen Rahmenlehrplan (2024/25) und Analysen vergangener Prüfungen.
-- **Gewichtung:** Themen sind nach Relevanz markiert (Kritisch, Sehr Hoch, Hoch, Mittel).
-- **Persistent Storage:** Speicherung des Lernfortschritts via `LocalStorage` (bleibt nach Neustart erhalten).
-- **Smart Focus:** Der Tracker empfiehlt dir automatisch das nächste wichtigste Thema.
-- **Focus Timer:** Integrierter Pomodoro-Timer für effektive Lernphasen.
-- **Import/Export:** JSON-basierte Backup-Funktion deiner Daten.
-- **Glossar & Eselsbrücken:** Interaktiver, offline-fähiger Spickzettel für 100 FISI-Fachbegriffe mit Merkhilfen, Kategorie- und Buchstabensuche sowie Merkliste.
+- **Themen-Fokus:** Basierend auf dem aktuellen amtlichen Rahmenlehrplan und Analysen vergangener IHK-Prüfungen.
+- **Gewichtung:** Themen sind nach Prüfungsrelevanz markiert (Kritisch, Sehr Hoch, Hoch, Mittel).
+- **Persistent Storage:** Speicherung des Lernfortschritts via `localStorage` (bleibt nach Neustart erhalten).
+- **Smart Focus:** Der Tracker empfiehlt automatisch das nächste priorisierte Lernfeld.
+- **Focus Timer:** Integrierter Pomodoro-Timer für konzentrierte Lernintervalle.
+- **Import/Export:** JSON-basierte Backup-Funktion der eigenen Lerndaten.
+- **Glossar & Eselsbrücken:** Interaktiver Spickzettel für 100 FISI-Fachbegriffe mit Merkhilfen, Kategorie- und Buchstabensuche sowie Merkliste.
 
 ---
 
-## Tech Stack & Workflow
+## Tech Stack & Architektur
 
-Dieses Projekt setzt auf maximale Performance durch "Vanilla Web Technologies".
+Dieses Projekt setzt auf maximale Ausführungsgeschwindigkeit, Barrierefreiheit und vollständige Unabhängigkeit durch "Vanilla Web Technologies".
 
-| Bereich                 | Technologie                                                                     |
-| :---------------------- | :------------------------------------------------------------------------------ |
-| **Frontend**            | HTML5, Vanilla JavaScript (ES6+)                                                |
-| **Styling**             | Tailwind CSS (Lokal eingebunden)                                                |
-| **Icons**               | Lucide Icons (Lokal eingebunden)                                                |
-| **Animation**           | Canvas Confetti                                                                 |
-| **IDE**                 | VS Code                                                                         |
-| **AI Pair Programming** | **Gemini + Perplexity + MiniMaxM3 API** (AI Pair Programming Unterstützung)    |
-
----
-
-## Privacy by Design
-
-Datenschutz ist hier kein Werbeslogan, sondern Architektur:
-
-1. **Keine Cookies:** Es werden keine Tracking-Cookies gesetzt.
-2. **Keine externen Requests:** Alle Bibliotheken liegen lokal auf dem Server. Es fließen keine Daten an externe CDNs.
-3. **Local Data:** Alle User-Eingaben bleiben ausschließlich auf dem Endgerät des Nutzers.
-4. **Storage-Security:** Proaktive Überwachung verhindert Datenverlust bei vollem Speicher.
+| Bereich | Technologie |
+| :--- | :--- |
+| **Markup & Struktur** | Semantic HTML5, WAI-ARIA Barrierefreiheit |
+| **Styling & Design** | Tailwind CSS (lokale Engine v3), CSS Custom Properties, Dark Mode (`#09090b`) |
+| **Logik & Interaktion** | Vanilla JavaScript (ES6+), kein schweres Framework-Overhead |
+| **Icons & Assets** | Lucide Icons (lokal eingebunden als Vektorgrafiken) |
+| **Typografie** | Inter (woff2 lokal gehostet, Zero-CDN) |
+| **Offline & PWA** | Service Worker mit Stale-While-Revalidate Caching (`v3.0.0`), Web App Manifest |
+| **Datenschutz & Speicher** | 100 % Client-Side via `localStorage`, keine Tracking-Cookies |
 
 ---
 
-## Updates & Changelog
+## Lokale Entwicklung & Ausführung
 
-Alle Änderungen sind im Detail im [Changelog](updates.html) dokumentiert.
+Keine `node_modules`, keine Build-Schritte nötig. Das Projekt läuft direkt in jedem modernen Browser:
 
-**Aktuelle Version:** v2.7.2 (17. September 2026)
+```bash
+# Repository klonen
+git clone https://github.com/cwillam/ap2-fisi-tracker.git
+cd ap2-fisi-tracker
 
-### v2.7.2 (17. September 2026)
+# Lokalen Webserver starten (z. B. mit Python)
+python3 -m http.server 8080
 
-- **In-App Feedback-System:** 1-Klick-Meldesystem direkt auf jeder Lernkarte zur Meldung von Fehlern, veralteten Prüfungsnormen oder Unklarheiten.
-- **Kontext-Übertragung:** Automatische Erfassung von Karten-ID, Modul, Frage, Antwort und Lernmodus.
-- **100% DSGVO-konform:** Kein Tracking, keine externen Bibliotheken, vollkommen anonym nutzbar.
-- **Service Worker & Cache:** Cache auf `v2.7.2` gebumpt.
-
-### v2.7.0 (27. August 2026)
-
-- **Google Play Store Release:** 14-Tage-Testphase mit Testern erfolgreich abgeschlossen, Vorbereitung auf weltweiten Rollout und Android 16 (API-Level 36).
-- **Interaktive Banner:** Info- und Schulbereiche sind nun einklappbar mit Status-Speicherung (`localStorage`).
-- **Community-Integration:** Direkte Anbindung an den Discord-Lernkanal für AP1 & AP2 Lerngruppen.
-- **Wartung & Cache:** Cache-Busting auf Version v2.7.0 aktualisiert.
-
-### v2.6.0 (4. August 2026)
-
-- **Glossar & Eselsbrücken:** Neue Übersichtsseite (`glossar.html`) mit 100 wichtigen Begriffen und einprägsamen Gedächtnishilfen für die Prüfung.
-- **Kategorie- & Buchstabensuche:** Responsiver Filter mit Dropdown auf Mobilgeräten und Wrapped-Pills auf Desktop zur Vermeidung von Überläufen.
-- **Favoriten-Merkliste:** Nutzer können Begriffe als Favoriten markieren – dank LocalStorage bleibt die Auswahl dauerhaft gespeichert.
-- **Discord-Server:** Promotion-Button zur Integration der neuen Lern-Community.
-
-### v2.5.0 (27. Juli 2026)
-
-- **SQL-Labor (Admin-Fokus):** Neue Übungs-Seite (`sql.html`) mit 10 Aufgaben über vier Stufen: SELECT-Basics, DDL (CREATE/ALTER), DML (INSERT/UPDATE/DELETE) und Rechteverwaltung (GRANT/REVOKE).
-- **Mock-SQL-Engine:** Leichtgewichtiger JS-Parser statt WASM mit Schema-Explorer, Rechte-Matrix und Live-Auswertung – komplett offline.
-- **Gamification:** XP- und Streak-System mit kontextuellen Hints und Lösungsweg.
-- **Service Worker & Caching:** Caching von `sql.html` und `sql.js` im Service Worker (`sw.js`) sowie Versionsbumping auf `v2.5.0`.
-
-### v2.4.3 (27. Juli 2026)
-
-- **Subnetz- & IP-Trainer:** Interaktiver offline-fähiger Trainer für IPv4-Subnetzberechnung, IPv6-Adresskompression und variable Subnetzmaskierung (VLSM) mit detaillierten Schritt-für-Schritt-Lösungswegen.
-- **Responsives Hamburger-Menü:** Integriertes Hamburger-Menü und Drawer für Smartphones, um die Offline-Navigation zu verbessern.
-
-### v2.4.2 (26. Juli 2026)
-
-- **Lernkarten-Upgrade (Anki-Style):** Ersetzt die einfache Richtig/Falsch-Abfrage durch eine detaillierte 4-Stufen-Bewertung (*Sofort gewusst*, *Nachgedacht*, *Geraten*, *Nicht gewusst*) zur hochpräzisen Intervallberechnung.
-- **Zustands-Dashboard:** Direktes persistent visualisiertes Deck-Zustandspanel (Neu, Sofort, Wissen, Geraten, Falsch) direkt in der Lern-Zentrale.
-- **Schwachstellen-Modus:** Ein neuer Filter ermöglicht das gezielte Wiederholen von falsch beantworteten oder geratenen Karten.
-- **Mobile Platzoptimierung:** Durch Anpassung der Spacings und Header-Icon-Größen auf Mobilgeräten bleibt die gesamte Lern-Zentrale ohne Scrollen bedienbar.
-
-### v2.4.1 (23. Juli 2026)
-
-- **Bugfix GitHub-Templates:** Syntaxfehler in `bug.yml` behoben, so dass das Bug-Formular nun reibungslos von GitHub erkannt wird.
-- **Cache-Aktualisierung:** Anhebung von CACHE_NAME auf `v2.4.1` und Asset-Versioning (`?v=2.4.1`) durchgeführt, um automatische Updates beim Nutzer anzustoßen.
-
-### v2.4.0 (23. Juli 2026)
-
-- **Berufsschul-Portal:** Neue Infoseite (`bildungseinrichtungen.html`) für Schulen und Dozenten bezüglich datenschutzkonformem und freiem Einsatz im Unterricht.
-- **Outreach & Feedback:** Integration direkter Verlinkungen für Fehlerberichte und Feature-Wünsche im Footer sowie Google Forms für Closed-Beta-Anmeldungen.
-
-### v2.3.0 (12. Juli 2026)
-
-- **PWA-Support:** Vollwertige Progressive Web App mit Service Worker (Offline-Caching) für 100% Offline-Fähigkeit der Lernkarten.
-- **Homescreen-Installation:** Mobil-optimierte PWA-Meta-Tags und `apple-touch-icon` für die Homescreen-Installation auf iOS & Android.
-- **Kaffeekasse-Modal:** Neues Spenden-Modal mit direkten Optionen für PayPal (spendenfrei) und Buy Me a Coffee.
-- **Theme-Konsistenz:** Vereinheitlichung der theme-color Meta-Tags und des PWA-Brandings auf allen Unterseiten.
-
-### v2.2.1 (23. Juni 2026)
-
-- Modul-Fortschrittskreise: Zirkuläre SVG-Fortschrittsanzeigen pro Lernfeld
-- Tastatur-Shortcuts für Lernkarten (Leertaste, Pfeiltasten, Esc)
-- Erhöhung des Aktivitätsverlaufs von 40 auf 80 Tage
-- Hilfe-System (help.html) mit Fehlerberichts-Links und FAQ
-
-### v2.1.0 (23. Juni 2026)
-
-- Lucide-Icons & Header-Redesign im Emerald-Theme mit Netzwerk-Logo
-- Fokus-Timer Play/Pause & Widget-Zentrierung korrigiert
-- Notification-Dot Glocken-Ausrichtung optimiert
+# Im Browser öffnen: http://localhost:8080
+```
 
 ---
 
-## Roadmap
+## Projekt-Struktur
 
-- [ ] **Google Play Store Release:** Öffentlicher Store-Rollout für Android-Geräte (Android 16 / API-Level 36).
-- [x] **Closed-Beta-Test:** 14-Tage-Testphase im Google Play Store erfolgreich abgeschlossen.
-- [ ] **Prüfungs-Simulator:** Zufällige Fragenkombinationen zur Simulation der echten Abschlussprüfung.
-- [ ] **Detaillierte Lernzettel:** Download-Bereich für komprimierte Zusammenfassungen (Cheat Sheets).
-- [x] **PWA Support:** Installation als App auf dem Homescreen und Offline-Caching.
+```text
+├── index.html                  # Haupt-Dashboard & Themen-Checklisten
+├── skripte.html                # Skript-Labor für Bash & PowerShell
+├── subnet.html                 # Subnetz- & VLSM-Trainer
+├── sql.html                    # Admin-orientiertes SQL-Labor
+├── glossar.html                # 100 FISI-Fachbegriffe & Eselsbrücken
+├── updates.html                # Changelog & Roadmap
+├── help.html                   # Handbuch, FAQ & Shortcuts
+├── bildungseinrichtungen.html  # Infos für Schulen & Bildungsträger
+├── datenschutz.html            # Datenschutzerklärung (DSGVO / § 25 TDDDG)
+├── impressum.html              # Anbieterkennzeichnung (§ 5 DDG)
+├── manifest.json               # PWA-Konfiguration
+├── sw.js                       # Service Worker (Offline-Cache v3.0.0)
+├── sitemap.xml                 # XML-Sitemap
+├── robots.txt                  # Suchmaschinen-Steuerung
+├── llms.txt                    # KI-Crawler Dokumentation
+├── api/
+│   └── report.php              # DSGVO-konformes Feedback-Relay
+└── assets/
+    ├── css/style.css           # Styling & Keycaps
+    ├── fonts/                  # Lokale WOFF2-Schriftarten (Inter)
+    └── js/                     # Anwendungslogik & Kartendatenbank
+```
 
 ---
 
-## Disclaimer
+## Community & Mitwirken
 
-*Alle Lerninhalte wurden nach bestem Wissen und Gewissen auf Basis der aktuellen amtlichen Rahmenlehrpläne und Prüfungsanforderungen zusammengestellt. Ich übernehme jedoch keine Gewähr für die Vollständigkeit oder Richtigkeit der prüfungsrelevanten Themen.*
-
----
-
-## Support
-
-Gefällt dir das Projekt? Unterstütze meine Arbeit gerne mit einem Kaffee!
-
-<a href="https://www.buymeacoffee.com/cwillam" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+- **Discord-Community:** [Discord Server beitreten](https://discord.gg/5BM5YJadDs) – Lerngruppen, Fragen & Prüfungsaustausch.
+- **Feedback & Fehler:** Über das Flaggensymbol auf jeder Lernkarte oder via GitHub Issues.
 
 ---
 
 ## Lizenz
 
-Dieses Projekt ist unter der **GNU Affero General Public License v3.0 (AGPLv3)** lizenziert.
+Dieses Projekt steht unter der **GNU Affero General Public License v3.0 (AGPL-3.0)**. Siehe [LICENSE](LICENSE) für Details.

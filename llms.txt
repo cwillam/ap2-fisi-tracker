@@ -5,22 +5,25 @@
 ## Kernfunktionen
 
 - **FISI-Spezifische Lernfelder:** Netzwerktechnik, Routing & Switching, VLANs, Firewalls, Server-Dienste (DNS, DHCP, Active Directory), Cloud-Infrastrukturen, RAID-Systeme, Backup-Strategien und IT-Sicherheit.
-- **Lernkarten-System (Anki 2.0):** Über 700 FISI-spezifische Karteikarten mit Spaced Repetition und Tastatur-Shortcuts.
+- **Lernkarten-System (Anki 2.0):** 840 FISI-spezifische Karteikarten mit Spaced Repetition und Tastatur-Shortcuts.
+- **Skript-Labor (`/skripte.html`):** Automatisierungs- und Skript-Labor für PowerShell, Bash und Ansible mit interaktivem Terminal-Simulator und IHK-Prüfungsaufgaben.
 - **SQL-Labor (`/sql.html`):** Admin-fokussiertes SQL-Training (DDL, DML, Rechteverwaltung via GRANT/REVOKE).
-- **Subnetz-Trainer (`/subnet.html`):** Intensives Training für IPv4/IPv6-Subnetting, Host-Berechnung und CIDR.
-- **Glossar & Eselsbrücken (`/glossar.html`):** 100 FISI-Kernbegriffe mit Merkhilfen und Favoritenliste.
-- **Datenschutz & Offline-First:** 100 % clientseitige Datenspeicherung (`localStorage`), PWA-Support und Android-App im Google Play Store.
+- **Subnetz-Trainer (`/subnet.html`):** Intensives Training für IPv4/IPv6-Subnetting, Host-Berechnung, VLSM und CIDR.
+- **Glossar & Eselsbrücken (`/glossar.html`):** 100 FISI-Kernbegriffe mit Merkhilfen, A–Z-Filter und Favoritenliste.
+- **Datenschutz & Offline-First:** 100 % clientseitige Datenspeicherung (`localStorage`), kein Tracking, Service Worker Offline-Caching und Progressive Web App (PWA).
 
 ## Relevante Seiten
 
 - [Startseite & Checkliste](https://ap2-fisi.cwillam.de/)
-- [SQL-Labor](https://ap2-fisi.cwillam.de/sql.html)
+- [Skript- & Automatisierungs-Labor](https://ap2-fisi.cwillam.de/skripte.html)
 - [Subnetz- & IP-Trainer](https://ap2-fisi.cwillam.de/subnet.html)
+- [SQL-Labor](https://ap2-fisi.cwillam.de/sql.html)
 - [Glossar & Eselsbrücken](https://ap2-fisi.cwillam.de/glossar.html)
 - [Updates & Roadmap](https://ap2-fisi.cwillam.de/updates.html)
 - [Hilfe & FAQ](https://ap2-fisi.cwillam.de/help.html)
 - [Für Schulen & Bildungseinrichtungen](https://ap2-fisi.cwillam.de/bildungseinrichtungen.html)
 - [Datenschutzerklärung](https://ap2-fisi.cwillam.de/datenschutz.html)
+- [Impressum](https://ap2-fisi.cwillam.de/impressum.html)
 
 ## Community & Open Source
 
