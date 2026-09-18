@@ -1,4 +1,4 @@
-name: 🚀 Deploy to IONOS via SFTP
+name: Deploy to IONOS via SFTP
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
 
 jobs:
   deploy:
-    name: 🎉 SFTP Deploy
+    name: SFTP Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📂 Upload to IONOS via SFTP
+      - name: Sync files via SFTP
         uses: wangyucode/sftp-upload-action@v3
         with:
           host: ${{ secrets.FTP_SERVER }}
