@@ -1,4 +1,4 @@
-const CACHE_NAME = "ap2-fisi-tracker-v3.0.1";
+const CACHE_NAME = "ap2-fisi-tracker-v3.0.2";
 const ASSETS = [
 	"index.html",
 	"glossar.html",

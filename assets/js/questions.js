@@ -486,7 +486,7 @@ window.ANKI_QUESTIONS = {
     { id: '4.2_12', q: 'Was ist ein Oligopol?', a: 'Wenige Anbieter stehen vielen Nachfrägern gegenüber (z.B. Tankstellen, Mobilfunkanbieter).' },
     { id: '4.2_13', q: 'Was ist ein Polypol?', a: 'Viele Anbieter stehen vielen Nachfrägern gegenüber (vollkommene Konkurrenz).' },
     { id: '4.2_14', q: 'Was versteht man unter einem "Angebotsmonopol"?', a: 'Ein einziger Verkäufer beherrscht den Markt für ein Produkt oder eine Dienstleistung.' },
-    { id: '4.2_15', q: 'Was ist ein "Nachfrageoligopol" (Oligopson)?', a: 'Viele Anbieter stehen nur wenigen großen Nachfrägern gegenüber (z.B. Molkereien vs. Supermarktketten).' },
+    { id: '4.2_15', q: 'Was ist ein "Nachfrageoligopol" (Oligopson)?', a: 'Viele Anbieter stehen nur wenigen großen Nachfragern gegenüber (z.B. Molkereien vs. Supermarktketten).' },
     { id: '4.2_16', q: 'Wie entsteht ein Gleichgewichtspreis im Polypol?', a: 'Durch das Zusammentreffen von Angebot und Nachfrage; der Preis räumt den Markt.' },
     { id: '4.2_17', q: 'Was passiert mit der Nachfrage bei steigenden Preisen (Normalfall)?', a: 'Die nachgefragte Menge sinkt.' },
     { id: '4.2_18', q: 'Was ist ein "zweiseitiges Oligopol"?', a: 'Wenige Anbieter stehen wenigen Nachfrägern gegenüber.' },
