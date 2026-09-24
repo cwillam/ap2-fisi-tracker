@@ -1,4 +1,4 @@
-const CACHE_NAME = "ap2-fisi-tracker-v3.0.4";
+const CACHE_NAME = "ap2-fisi-tracker-v3.1.0";
 const ASSETS = [
 	"index.html",
 	"glossar.html",
@@ -18,7 +18,7 @@ const ASSETS = [
 	"assets/js/confetti.js?v=3.0.0",
 	"assets/js/data.js?v=3.0.0",
 	"assets/js/questions.js?v=3.0.3",
-	"assets/js/app.js?v=3.0.0",
+	"assets/js/app.js?v=3.1.0",
 	"assets/js/skripte.js?v=3.0.0",
 	"assets/js/subnet.js?v=3.0.3",
 	"assets/js/sql.js?v=3.0.0",
