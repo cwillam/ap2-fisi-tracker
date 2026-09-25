@@ -261,28 +261,38 @@
         </p>
 
         <!-- 3 Tabs (IPv4, IPv6, VLSM) -->
-        <div class="inline-flex justify-center mt-6 gap-1 sm:gap-2 bg-dark-card p-1 rounded-full border border-dark-border mx-auto shadow-sm">
-          <button
-            id="btn-ipv4"
-            onclick="switchTab('ipv4')"
-            class="px-4 sm:px-5 py-1.5 rounded-full text-xs font-mono font-bold transition-all bg-emerald-600 text-white shadow-lg shadow-emerald-900/20"
-          >
-            IPv4 Grundlagen
-          </button>
-          <button
-            id="btn-ipv6"
-            onclick="switchTab('ipv6')"
-            class="px-4 sm:px-5 py-1.5 rounded-full text-xs font-mono font-bold text-dark-muted hover:text-white transition-all"
-          >
-            IPv6 Kompression
-          </button>
-          <button
-            id="btn-vlsm"
-            onclick="switchTab('vlsm')"
-            class="px-4 sm:px-5 py-1.5 rounded-full text-xs font-mono font-bold text-dark-muted hover:text-white transition-all"
-          >
-            VLSM Subnetting
-          </button>
+        <div class="flex flex-col items-center mt-6">
+          <div class="flex items-center gap-2 text-[11px] font-mono text-dark-muted mb-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold uppercase tracking-wider text-slate-300">3 Trainings-Bereiche:</span>
+            <span class="text-dark-dim hidden xs:inline">· Klicke zum Wechseln</span>
+          </div>
+          <div class="inline-flex justify-center gap-1 sm:gap-2 bg-dark-card/90 p-1.5 rounded-2xl border border-dark-border shadow-inner max-w-full overflow-x-auto">
+            <button
+              id="btn-ipv4"
+              onclick="switchTab('ipv4')"
+              class="px-4 sm:px-5 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/25 flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="network" class="w-3.5 h-3.5"></i>
+              <span>IPv4 Grundlagen</span>
+            </button>
+            <button
+              id="btn-ipv6"
+              onclick="switchTab('ipv6')"
+              class="px-4 sm:px-5 py-2 rounded-xl text-xs font-mono font-bold transition-all text-dark-muted hover:text-white hover:bg-dark-bg/50 flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="hash" class="w-3.5 h-3.5"></i>
+              <span>IPv6 Kompression</span>
+            </button>
+            <button
+              id="btn-vlsm"
+              onclick="switchTab('vlsm')"
+              class="px-4 sm:px-5 py-2 rounded-xl text-xs font-mono font-bold transition-all text-dark-muted hover:text-white hover:bg-dark-bg/50 flex items-center gap-2 cursor-pointer"
+            >
+              <i data-lucide="split" class="w-3.5 h-3.5"></i>
+              <span>VLSM Subnetting</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -634,7 +644,7 @@
 
     <!-- Scripts -->
     <script src="assets/js/lucide.min.js?v=3.0.0"></script>
-    <script src="assets/js/subnet.js?v=3.0.3"></script>
+    <script src="assets/js/subnet.js?v=3.0.4"></script>
     <script>
       function openSupportModal() {
         const modal = document.getElementById("supportModal");

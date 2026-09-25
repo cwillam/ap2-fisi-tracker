@@ -468,8 +468,8 @@ function switchTab(tab) {
 	if (tabIpv6) tabIpv6.classList.add("hidden");
 	if (tabVlsm) tabVlsm.classList.add("hidden");
 
-	const inactiveClass = "px-5 py-1.5 rounded-full text-xs font-bold text-dark-muted hover:text-white transition-all";
-	const activeClass = "px-5 py-1.5 rounded-full text-xs font-bold transition-all bg-dark-accent text-white shadow-lg shadow-emerald-900/20";
+	const inactiveClass = "px-4 sm:px-5 py-2 rounded-xl text-xs font-mono font-bold transition-all text-dark-muted hover:text-white hover:bg-dark-bg/50 flex items-center gap-2 cursor-pointer";
+	const activeClass = "px-4 sm:px-5 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/25 flex items-center gap-2 cursor-pointer";
 	
 	if (btnIpv4) btnIpv4.className = inactiveClass;
 	if (btnIpv6) btnIpv6.className = inactiveClass;
