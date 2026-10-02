@@ -676,7 +676,7 @@ window.ANKI_QUESTIONS = {
     { id: '2.1.4_1', q: 'Wie viele Bits hat eine IPv4-Adresse und wie viele Oktette sind das?', a: '32 Bit, aufgeteilt in 4 Oktette zu je 8 Bit.' },
     { id: '2.1.4_2', q: 'Was beschreibt die Subnetzmaske?', a: 'Sie trennt die IP-Adresse in einen Netzwerkanteil (Einsen) und einen Hostanteil (Nullen).' },
     { id: '2.1.4_3', q: 'Wie viele nutzbare Host-Adressen bietet ein /24 Netzwerk?', a: '2^8 - 2 = 254 Adressen (Netz- und Broadcastadresse werden abgezogen).' },
-    { id: '2.1.4_4', q: 'Welche IP-Adresse hat das Subnetz 192.168.10.0/26?', a: 'Netzadresse: 192.168.10.0, Broadcast: 192.168.10.63, Erste Host: .1, Letzte Host: .62.' },
+    { id: '2.1.4_4', q: 'Welche IP-Adressen kennzeichnen das Subnetz 192.168.10.0/26 (Netzadresse, Broadcast, Hostbereich)?', a: 'Netzadresse: 192.168.10.0, Broadcast: 192.168.10.63, Erster Host: 192.168.10.1, Letzter Host: 192.168.10.62.' },
     { id: '2.1.4_5', q: 'Wofür steht die Abkürzung VLSM?', a: 'Variable Length Subnet Masking. Die Aufteilung eines IP-Bereichs in unterschiedlich große Subnetze je nach Bedarf.' },
     { id: '2.1.4_6', q: 'Nenne die drei privaten IP-Bereiche nach RFC 1918.', a: '10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.' },
     { id: '2.1.4_7', q: 'Was ist eine "Wildcard Mask" (oft bei OSPF/ACLs genutzt)?', a: 'Das bitweise Inverse der Subnetzmaske (Einsen und Nullen vertauscht). Z.B. Maske 255.255.255.0 -> Wildcard 0.0.0.255.' },
