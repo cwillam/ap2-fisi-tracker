@@ -1,6 +1,6 @@
-# AP2 Tracker FISI - Dein Lernbegleiter (v3.0.0 Update)
+# AP2 Tracker FISI - Dein Lernbegleiter (v3.1.5 Update)
 
-[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de) [![Version](https://img.shields.io/badge/Version-v3.0.0-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/cwillam/ap2-fisi-tracker) [![License](https://img.shields.io/badge/License-AGPLv3-blue?style=for-the-badge)](LICENSE) [![Hosting](https://img.shields.io/badge/Hosted_on-IONOS-003D51?style=for-the-badge&logo=ionos)](https://ap2-fisi.cwillam.de) [![Privacy](https://img.shields.io/badge/Privacy-100%25_Local-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de) [![Version](https://img.shields.io/badge/Version-v3.1.5-10b981?style=for-the-badge)](https://ap2-fisi.cwillam.de)
 
 > 🐛 [**Bug melden**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=bug.yml) · 💡 [**Feature wünschen**](https://github.com/cwillam/ap2-fisi-tracker/issues/new?template=feature.yml)
 
@@ -24,6 +24,15 @@ Der **AP2 Tracker FISI** wurde entwickelt, um Systemintegratoren eine strukturie
 Im Fokus stehen die Kerngebiete der Systemintegration: Netzwerktechnik, Routing & Switching, Firewalls & VPN, Active Directory, Serverdienste (DNS/DHCP), Virtualisierung & Cloud, Storage- und Backup-Konzepte sowie IT-Sicherheit.
 
 ---
+
+### Highlights v3.1.5 (Subnetz-Präzisierung, Lesezeichen & Quick-Dock)
+
+- **Fachliche Nachschärfung Subnetting (v3.1.5):** Präzisierung der Adressgrenzen und Kürzungsregeln (Karte 2.1.4_4: Netzadresse, Broadcast und Hostbereich bei /26) sowie RFC-5952-Regelwerk.
+- **Karten-Lesezeichen & Favoriten-Modus:** Anspruchsvolle Netzwerk- und Server-Lernkarten favorisieren und gezielt in separaten Runden üben.
+- **Flexible Stapelgröße (Batch-Size):** Wähle vor dem Start 10, 20, 50 oder alle Karten für handliche Lerneinheiten unterwegs.
+- **Active-Recall-Wiederholung:** Fehlversuche am Rundenende mit einem Klick sofort wiederholen, bis der Stoff sitzt.
+- **3-Modul Quick-Dock:** Barrierefreie Leiste am unteren Bildschirmrand für den nahtlosen Wechsel zwischen Lernkarten, Skript-Labor und Subnetz-Trainer.
+- **Service Worker & Cache-Busting:** Zuverlässige Offline-Aktualisierung via Cache `v3.1.5`.
 
 ### Highlights v3.0.0 (Großes Redesign & Skript-Labor)
 
