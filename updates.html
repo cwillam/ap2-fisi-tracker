@@ -26,7 +26,7 @@
     <link rel="preload" href="assets/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Tailwind 3 Engine (Local, Zero-CDN) -->
-    <script src="assets/js/tailwind.js?v=3.0.0"></script>
+    <script src="assets/js/tailwind.js?v=3.1.5"></script>
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -80,7 +80,7 @@
     </script>
 
     <!-- Stylesheets -->
-    <link href="assets/css/style.css?v=3.0.0" rel="stylesheet" />
+    <link href="assets/css/style.css?v=3.1.5" rel="stylesheet" />
 
     <style>
       .custom-scroll::-webkit-scrollbar {
@@ -140,7 +140,7 @@
             </div>
           </a>
           <span class="hidden md:inline-flex items-center font-mono text-[10px] text-dark-dim border border-dark-border rounded px-2 py-0.5 uppercase tracking-wider">
-            Updates &amp; Roadmap · v3.0.0
+            Updates &amp; Roadmap · v3.1.5
           </span>
         </div>
 
@@ -274,7 +274,7 @@
             <div class="flex items-center gap-2 text-emerald-400 text-xs font-mono mb-2 uppercase tracking-wider">
               <span class="kbd-cap bg-emerald-600/15 border-emerald-500/30 text-emerald-400 px-2 py-0.5 text-[10px]">ENTWICKLUNGS-HISTORIE</span>
               <span class="text-dark-dim">·</span>
-              <span class="text-emerald-400 font-bold">v3.1.3 LIVE</span>
+              <span class="text-emerald-400 font-bold">v3.1.5 LIVE</span>
             </div>
             <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
               <span>Changelog &amp; Roadmap</span>
@@ -308,12 +308,49 @@
 
       <!-- TAB 1: UPDATES / CHANGELOG -->
       <div id="tabUpdatesContent" class="space-y-6">
-        <!-- v3.1.3 · AKTUELL -->
+        <!-- v3.1.5 · AKTUELL -->
         <article class="bg-dark-card border border-emerald-500/40 rounded-xl p-5 sm:p-6 space-y-3.5 shadow-sm relative">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-dark-border pb-3">
             <div class="flex items-center gap-2.5 flex-wrap">
               <span class="kbd-cap bg-emerald-600/20 border-emerald-500/50 text-emerald-400 font-mono text-xs font-bold px-2.5 py-0.5">
-                v3.1.3 · AKTUELL
+                v3.1.5 · AKTUELL
+              </span>
+              <h2 class="text-base sm:text-lg font-bold text-white">
+                Subnetz-Präzisierung, Lernkarten-Nachschärfung &amp; Cache-Busting
+              </h2>
+            </div>
+            <span class="text-xs font-mono text-dark-dim">3. Oktober 2026</span>
+          </div>
+
+          <p class="text-xs text-dark-muted leading-relaxed">
+            Fachliche Qualitätsprüfung für Systemintegratoren: Präzisierung der Adressgrenzen und Kürzungsregeln im Subnetz-Trainer sowie Aktualisierung von Prüfungsfragen zu Netzwerken und Serverdiensten.
+          </p>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-dark-muted pt-1">
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span><strong class="text-dark-text font-semibold">Subnetting-Präzisierung:</strong> Klarstellung von Netzadressen, Broadcast und Hostbereichen (z.B. bei /26) und IPv6-Regeln nach RFC 5952.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span><strong class="text-dark-text font-semibold">Active-Recall &amp; Lesezeichen:</strong> Vollständig integrierte Merkliste und Prüfungsschleife für Fehlversuche.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span><strong class="text-dark-text font-semibold">Offline-Cache v3.1.5:</strong> Aktualisierte Service-Worker-Cache-Strategie für zuverlässigen Offline-Betrieb.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5"></i>
+              <span><strong class="text-dark-text font-semibold">Google Play Live:</strong> Harmonisierung aller Metadaten für das offizielle Store-Release.</span>
+            </li>
+          </ul>
+        </article>
+
+        <!-- v3.1.3 -->
+        <article class="bg-dark-card border border-emerald-500/40 rounded-xl p-5 sm:p-6 space-y-3.5 shadow-sm relative">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-dark-border pb-3">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="kbd-cap bg-emerald-600/20 border-emerald-500/50 text-emerald-400 font-mono text-xs font-bold px-2.5 py-0.5">
+                v3.1.3
               </span>
               <h2 class="text-base sm:text-lg font-bold text-white">
                 Lernkarten-Lesezeichen, Active-Recall-Schleife &amp; Quick-Dock
@@ -808,7 +845,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="assets/js/lucide.min.js?v=3.0.0"></script>
+    <script src="assets/js/lucide.min.js?v=3.1.5"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         if (window.lucide) {
@@ -894,7 +931,7 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("sw.js?v=3.0.0")
+            .register("sw.js?v=3.1.5")
             .then((reg) => console.log("PWA Service Worker registered successfully", reg))
             .catch((err) => console.error("PWA Service Worker registration failed", err));
         });
